@@ -12,12 +12,30 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
 
-  const signup = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const signup = async (email, password) => {
+    let user = await createUserWithEmailAndPassword(auth, email, password);
+    let currUser = user.user;
+    let response = {
+      email: currUser.email,
+      firebaseId: currUser.uid
+    }
+    if (currUser) {
+      setCurrentUser(response);
+      return response;
+    }
   };
 
-  const login = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  const login = async (email, password) => {
+    let user = await signInWithEmailAndPassword(auth, email, password)
+    let currUser = user.user;
+    let response = {
+      email: currUser.email,
+      firebaseId: currUser.uid
+    }
+    if (currUser) {
+      setCurrentUser(response);
+      return response;
+    }
   };
 
   const logout = () => {

@@ -13,7 +13,6 @@ const UpdateProfile = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log('submitted')
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError('Passwords do not match')
@@ -24,7 +23,6 @@ const UpdateProfile = () => {
     setError('');
 
     if (emailRef.current.value !== currentUser.email) {
-      console.log('trying to update email', 'email ref', emailRef.current.value, 'curr user', currentUser.email)
       promises.push(updateUserEmail(emailRef.current.value))
     }
 

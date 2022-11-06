@@ -7,7 +7,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('in private route');
     if (!currentUser) {
       navigate('/login', {replace: true});
     }

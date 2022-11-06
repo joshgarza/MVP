@@ -1,10 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const Login = ({ getUserData }) => {
-// const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login, currentUser } = useAuth();
@@ -14,18 +12,14 @@ const Login = ({ getUserData }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-
     try {
       setError('');
       setLoading(true);
-
-      await login(emailRef.current.value, passwordRef.current.value);
-      // call function that sends axios request and updates client state
-      // getUserData(currentUser.uid);
-
-      axios.get('/api/test')
-        .then(result => console.log(result))
-      navigate('/');
+      const user = await login(emailRef.current.value, passwordRef.current.value);
+      if (user) {
+        navigate('/');
+        getUserData(user);
+      }
     } catch (err) {
       setError(err);
     }

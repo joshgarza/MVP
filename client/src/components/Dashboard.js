@@ -7,13 +7,8 @@ const Dashboard = ({ getUserData }) => {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // getUserData(currentUser.uid);
-  }, [currentUser]);
-
   const handleLogout = async () => {
     setError('');
-
     try {
       await logout();
       navigate('/login');
@@ -26,7 +21,6 @@ const Dashboard = ({ getUserData }) => {
     <>
       <div>
         <h2>Profile</h2>
-        {currentUser && console.log(currentUser.uid)}
         {error && console.log(error)}
         <strong>Email: {currentUser && currentUser.email}</strong>
         <Link to="/update-profile">Update Profile</Link>

@@ -2,8 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
-const SignUp = ({ getUserData }) => {
-// const SignUp = () => {
+const SignUp = ({ createNewUser }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -14,21 +13,17 @@ const SignUp = ({ getUserData }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    console.log('submitted');
-
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError('Passwords do not match');
     }
-
     try {
       setError('');
       setLoading(true);
-
-      await signup(emailRef.current.value, passwordRef.current.value);
-
-      getUserData();
-
-      navigate('/');
+      let user = await signup(emailRef.current.value, passwordRef.current.value);
+      if (user) {
+        navigate('/');
+        createNewUser(user);
+      }
     } catch (err) {
       setError(err);
     }
