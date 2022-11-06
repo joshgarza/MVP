@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = ({ getUserData }) => {
 // const Login = () => {
@@ -22,6 +23,8 @@ const Login = ({ getUserData }) => {
       // call function that sends axios request and updates client state
       // getUserData(currentUser.uid);
 
+      axios.get('/api/test')
+        .then(result => console.log(result))
       navigate('/');
     } catch (err) {
       setError(err);
@@ -48,7 +51,7 @@ const Login = ({ getUserData }) => {
             ref={passwordRef}
           />
         </label>
-        <button disabled={loading} type="submit">Log innn</button>
+        <button disabled={loading} type="submit">Log in</button>
       </form>
       <div>
         <Link to='/forgot-password'>Forgot password?</Link>
