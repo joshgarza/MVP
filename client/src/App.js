@@ -29,6 +29,8 @@ const App = () => {
     setUserInfo(null)
   }
 
+  // TODO: set routes based on usertype
+    // client dashboard and coach dashboard
   return (
     <>
       <Router>

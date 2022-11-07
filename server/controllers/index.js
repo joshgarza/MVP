@@ -6,15 +6,27 @@ const userControllers = {
       email: req.query.email,
       id: req.query.firebaseId
     }
-    res.status(200).send(user)
+    models.getUser(user, (err, data) => {
+      if (err) {
+        console.log('Error getting user info', err)
+        res.status(404).end()
+      }
+      res.status(200).send(data)
+    })
   },
   createUser: (req, res) => {
     let user = {
-      email: req.query.email,
-      id: req.query.firebaseId,
-      userType: req.query.userType
+      email: req.body.params.email,
+      id: req.body.params.firebaseId,
+      userType: req.body.params.userType
     }
-    res.status(201).end()
+    models.createUser(user, (err, data) => {
+      if (err) {
+        console.log('Error creating user', err)
+        res.status(404).end()
+      }
+      res.status(201).end()
+    })
   }
 }
 
