@@ -9,6 +9,7 @@ const SignUp = ({ createNewUser }) => {
   const { signup } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState('');
+  const [userType, setUserType] = useState('Client');
   const navigate = useNavigate();
 
   const onSubmit = async (event) => {
@@ -19,22 +20,33 @@ const SignUp = ({ createNewUser }) => {
     try {
       setError('');
       setLoading(true);
-      let user = await signup(emailRef.current.value, passwordRef.current.value);
-      if (user) {
-        navigate('/');
-        createNewUser(user);
-      }
+      let user = await signup(emailRef.current.value, passwordRef.current.value, userType);
+
+
+      navigate('/');
+      createNewUser(user);
     } catch (err) {
       setError(err);
     }
     setLoading(false);
   };
 
+  const handleChange = (event) => {
+    setUserType(event.target.value)
+  }
+
   return (
     <>
       <h2>SignUp</h2>
       {error && console.log('error', {error})}
       <form onSubmit={onSubmit}>
+        <label>
+          User type
+          <select onChange={handleChange}>
+            <option value="Client">Client</option>
+            <option value="Coach">Coach</option>
+          </select>
+        </label>
         <label>
           Email:
           <input

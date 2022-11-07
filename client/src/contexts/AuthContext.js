@@ -8,16 +8,18 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
+
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
 
-  const signup = async (email, password) => {
+  const signup = async (email, password, userType) => {
     let user = await createUserWithEmailAndPassword(auth, email, password);
     let currUser = user.user;
     let response = {
       email: currUser.email,
-      firebaseId: currUser.uid
+      firebaseId: currUser.uid,
+      userType: userType
     }
     if (currUser) {
       setCurrentUser(response);

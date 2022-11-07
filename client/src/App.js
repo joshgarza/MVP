@@ -13,20 +13,28 @@ const App = () => {
 
   const getUserData = async (user) => {
     let userData = await axios.get(`/api/login/${user.firebaseId}`, {params: user});
+    console.log(userData)
     setUserInfo(userData.data);
   };
 
   const createNewUser = async (user) => {
-    let userData = await axios.get(`/api/signup/${user.firebaseId}`, {params: user});
-    setUserInfo(userData.data);
+    let userDataPost = await axios.post(`/api/signup/${user.firebaseId}`, {params: user});
+    if (userDataPost) {
+      let userData = await axios.get(`/api/login/${user.firebaseId}`, {params: user});
+      setUserInfo(userData.data);
+    }
   };
+
+  const clearUserInfo = () => {
+    setUserInfo(null)
+  }
 
   return (
     <>
       <Router>
         <Routes>
           <Route element={<PrivateRoute />}>
-            <Route path="/" element={<Dashboard getUserData={getUserData}/>} />
+            <Route path="/" element={<Dashboard getUserData={getUserData} clearUserInfo={clearUserInfo}/>} />
           </Route>
           <Route element={<PrivateRoute />}>
             <Route path="/update-profile" element={<UpdateProfile />} />
