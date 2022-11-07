@@ -39,7 +39,7 @@ body {
 .usertype-select {
   background-color: transparent;
   color: white;
-  margin-left: 1em;
+  margin-bottom: 1em;
 }
 .usertype-label {
 
@@ -81,6 +81,9 @@ body {
   padding: 0em 0em 1em;
   margin: 0em 0em 1em;
 }
+.login-button {
+  margin-top: .2em;
+}
 .input-label-shown {
   margin: 0em 0em .5em;
 }
@@ -90,5 +93,5 @@ body {
 .login-email-label
 .login-password-label
 
-.login-button
+
 .btn
