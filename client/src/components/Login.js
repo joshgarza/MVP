@@ -27,33 +27,37 @@ const Login = ({ getUserData }) => {
   };
 
   return (
-    <>
-      <h2>Log in</h2>
+    <div className="login-container">
+      <h2 className="login-title">Log in</h2>
       {error && console.log('error', {error})}
-      <form onSubmit={onSubmit}>
-        <label>
+      <form className="login-form" onSubmit={onSubmit}>
+        <label className="login-email-label input-label-hidden">
           Email:
-          <input
-            type="email"
-            ref={emailRef}
-          />
         </label>
-        <label>
+        <input
+          type="email"
+          ref={emailRef}
+          placeholder="email"
+          className="login-email-input input-field"
+        />
+        <label className="login-password-label input-label-hidden">
           Password:
-          <input
-            type="password"
-            ref={passwordRef}
-          />
         </label>
-        <button disabled={loading} type="submit">Log in</button>
+        <input
+          type="password"
+          ref={passwordRef}
+          placeholder="password"
+          className="login-password-input input-field"
+        />
+        <button className="login-button btn" disabled={loading} type="submit">Log in</button>
       </form>
-      <div>
-        <Link to='/forgot-password'>Forgot password?</Link>
+      <div className="forgot-password-div">
+        <Link className="forgot-password-link" to='/forgot-password'>Forgot password?</Link>
       </div>
-      <div>
-        Need an account? <Link to='/signup'>Sign up</Link>
+      <div className="signup-link-div">
+        Need an account? <Link className="signup-link" to='/signup'>Sign up</Link>
       </div>
-    </>
+    </div>
   );
 };
 

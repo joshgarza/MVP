@@ -36,47 +36,55 @@ const SignUp = ({ createNewUser }) => {
   }
 
   return (
-    <>
-      <h2>SignUp</h2>
+    <div className="login-container">
+      <h2 className="login-title">SignUp</h2>
       {error && console.log('error', {error})}
-      <form onSubmit={onSubmit}>
-        <label>
-          User type
-          <select onChange={handleChange}>
-            <option value="Client">Client</option>
-            <option value="Coach">Coach</option>
+      <form className="login-form" onSubmit={onSubmit}>
+        <div className="usertype-container">
+          <label className="usertype-label">
+            User type
+          </label>
+          <select className="usertype-select" onChange={handleChange}>
+            <option className="usertype-option" value="Client">Client</option>
+            <option className="usertype-option" value="Coach">Coach</option>
           </select>
-        </label>
-        <label>
+        </div>
+        <label className="input-label-hidden">
           Email:
-          <input
-            type="email"
-            ref={emailRef}
-            required
-          />
         </label>
-        <label>
+        <input
+          type="email"
+          ref={emailRef}
+          required
+          placeholder="email"
+          className="login-email-input input-field"
+        />
+        <label className="input-label-hidden">
           Password:
-          <input
-            type="password"
-            ref={passwordRef}
-            required
-          />
         </label>
-        <label>
+        <input
+          type="password"
+          ref={passwordRef}
+          required
+          placeholder="password"
+          className="login-password-input input-field"
+        />
+        <label className="input-label-hidden">
           Password Confirmation:
-          <input
-            type="password"
-            ref={passwordConfirmRef}
-            required
-          />
         </label>
-        <button disabled={loading} type="submit">Sign up</button>
+        <input
+          type="password"
+          ref={passwordConfirmRef}
+          required
+          placeholder="confirm password"
+          className="login-password-input input-field"
+        />
+        <button className="login-button btn" disabled={loading} type="submit">Sign up</button>
       </form>
-      <div>
-        Already have an account? <Link to='/login'>Log in</Link>
+      <div className="signup-link-div">
+        Already have an account? <Link className="signup-link" to='/login'>Log in</Link>
       </div>
-    </>
+    </div>
   );
 };
 
