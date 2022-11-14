@@ -13,8 +13,9 @@ const App = () => {
 
   const getUserData = async (user) => {
     let userData = await axios.get(`/api/login/${user.firebaseId}`, {params: user});
-    console.log(userData)
-    setUserInfo(userData.data);
+    if (userData) {
+      setUserInfo(userData.data)
+    }
   };
 
   const createNewUser = async (user) => {
@@ -29,14 +30,12 @@ const App = () => {
     setUserInfo(null)
   }
 
-  // TODO: set routes based on usertype
-    // client dashboard and coach dashboard
   return (
     <>
       <Router>
         <Routes>
           <Route element={<PrivateRoute />}>
-            <Route path="/" element={<Dashboard getUserData={getUserData} clearUserInfo={clearUserInfo}/>} />
+            <Route path="/" element={<Dashboard userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo}/>} />
           </Route>
           <Route element={<PrivateRoute />}>
             <Route path="/update-profile" element={<UpdateProfile />} />
@@ -49,34 +48,5 @@ const App = () => {
     </>
   );
 };
-
-
-// const App = () => {
-//   const [backendData, setBackendData] = useState([{}]);
-
-//   useEffect(() => {
-//     axios.get('/api')
-//       .then(result => {
-//         setBackendData(result.data)
-//       })
-
-//     return (
-//       console.log('fetched data')
-//     )
-//   }, [])
-
-//   return (
-//     <>
-//       <div>
-//         Hello world!
-//         <Dashboard />
-//         <SignUp />
-//         <Login />
-//         <ForgotPassword />
-//         <UpdateProfile />
-//       </div>
-//     </>
-//   )
-// }
 
 export default App;

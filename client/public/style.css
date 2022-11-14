@@ -6,53 +6,67 @@ body {
   width: 100vw;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr 1fr; */
+  /* grid-template-rows: 1fr 1fr 1fr; */
   font-family: 'Roboto', sans-serif;
   color: white;
 }
 
+.logout-btn {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+/* LOGIN AND SIGNUP COMPONENTS */
+
 .login-container {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 3fr 8fr 1fr 1fr;
-  grid-column: 2;
-  grid-row: 2;
+  width: 100vw;
+  height: 100vh;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 4fr .5fr .5fr 1fr;
+  /* grid-column: 2; */
+  /* grid-row: 2; */
   justify-content: center;
   align-items: center;
 }
 .login-title {
   display: grid;
-  grid-row: 1;
+  grid-column: 2;
+  grid-row: 2;
   justify-content: center;
 }
 .login-form {
   display: grid;
-  grid-row: 2;
-  margin-bottom: 1em;
+  grid-column: 2;
+  grid-row: 3;
+  /* margin-bottom: 1em; */
 }
 .usertype-container {
   display: grid;
+  grid-column: 1;
+  grid-row: 1;
   grid-template-columns: 1fr 2fr;
 }
 .usertype-select {
   background-color: transparent;
+  grid-column: 2;
+  grid-row: 1;
   color: white;
   margin-bottom: 1em;
 }
-.usertype-label {
-
-}
-.forgot-password-div
-.forgot-password-link {
+.forgot-password-div {
   display: grid;
-  grid-column: 1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 4;
   font-size: .8em;
   color: grey;
 }
 .signup-link-div {
+  grid-column: 2;
+  grid-row: 5;
   font-size: .8em;
 }
 .signup-link {
@@ -90,8 +104,39 @@ body {
 .input-label-hidden {
   display: none;
 }
-.login-email-label
-.login-password-label
 
+/* COACH VIEW */
+.coach-view {
+  display: grid;
+  grid-template-columns: 1fr, 1fr;
+  grid-template-rows: 1fr, 10fr;
+}
+.coach-view-title {
 
-.btn
+}
+.addworkout-btn {
+  grid-column: 1;
+  width: 10em;
+  height: 2em;
+}
+.client-list {
+  grid-column: 1;
+}
+.client-list-item {
+
+}
+.comment-list {
+  grid-column: 2;
+}
+.single-comment-container {
+
+}
+.comment_client {
+
+}
+.comment_date {
+
+}
+.comment_comment{
+
+}
