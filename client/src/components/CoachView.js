@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const CoachView = ({ getUserData, clearUserInfo }) => {
   const [error, setError] = useState('');
-  const { currentUser, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -21,9 +21,9 @@ const CoachView = ({ getUserData, clearUserInfo }) => {
   return (
     <>
       <div>
-        <Link to="dashboard">Dashboard</Link>
-        <Link to="program">Add Workouts</Link>
-        <Link to="profile">Profile</Link>
+        <Link to="dashboard">Dashboard </Link>
+        <Link to="program">Add Workouts </Link>
+        <Link to="profile">Profile </Link>
       </div>
       <div className="logout-btn">
         <button onClick={handleLogout}>Log Out</button>
