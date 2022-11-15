@@ -6,8 +6,10 @@ import { useAuth } from './contexts/AuthContext';
 import {
   AddWorkout,
   ClientView,
+  ClientDashboard,
   CoachDashboard,
   CoachView,
+  ClientWorkouts,
   ForgotPassword,
   Login,
   PrivateRoute,
@@ -15,9 +17,10 @@ import {
   UpdateProfile
 } from './components';
 
-const initialList = ['Alex Allain', 'Maja W.', 'Laura Kelly'];
 const baseDate = new Date(2022, 0, 1, 0, 0, 15);
 const currDate = new Date(2022, 0, 10, 0, 0, 15);
+
+const initialList = ['Alex Allain', 'Maja W.', 'Laura Kelly'];
 
 const initialComments = [
   {
@@ -42,8 +45,9 @@ const App = () => {
   const { currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState();
   const [userRole, setUserRole] = useState();
-  const [clientList, setClientList] = useState(initialList)
-  const [clientComments, setClientComments] = useState(initialComments)
+  const [clientList, setClientList] = useState(initialList);
+  const [clientComments, setClientComments] = useState(initialComments);
+  const [workout, setWorkout] = useState([{"exercise":"squat","reps":"4","rpe":"8"},{"exercise":"bench","reps":"3","rpe":"8"}])
 
   const getUserData = async (user) => {
     let userData = await axios.get(`/api/login/${user.firebaseId}`, {params: user});
@@ -73,10 +77,13 @@ const App = () => {
     <>
       <Router>
         <Routes>
-          <Route path="coach" element={
-            <PrivateRoute isAllowed={!!currentUser && userRole === "Coach"}>
-              <CoachView userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo} />
-            </PrivateRoute>}
+          <Route
+            path="coach"
+            element={
+              <PrivateRoute isAllowed={!!currentUser && userRole === "Coach"}>
+                <CoachView userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo} />
+              </PrivateRoute>
+            }
           >
             <Route index element={<CoachDashboard clientList={clientList} clientComments={clientComments}/>} />
             <Route path='dashboard' element={<CoachDashboard clientList={clientList} clientComments={clientComments}/>} />
@@ -90,7 +97,12 @@ const App = () => {
                 <ClientView userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo} />
               </PrivateRoute>
             }
-          />
+          >
+            <Route index element={<ClientDashboard />} />
+            <Route path='dashboard' element={<ClientDashboard />} />
+            <Route path='profile' element={<UpdateProfile />} />
+            <Route path='workouts' element={<ClientWorkouts workout={workout}/>} />
+          </Route>
           <Route path='/signup' element={<Signup createNewUser={createNewUser} />} />
           <Route path='/login' element={<Login getUserData={getUserData} />} />
           <Route path='/forgot-password' element={<ForgotPassword/>} />

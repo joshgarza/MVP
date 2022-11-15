@@ -82,20 +82,20 @@ const AddWorkout = ({ clientList }) => {
     }
   }
 
-  const renderAssignment = (e, i) => {
-    e.preventDefault();
-    return (
-      <>
-        <input type="text" name="reps" value={workout[i].reps} onChange={(e) => handleChange(e, i)}></input>
-        <label>RPE</label>
-        <input type="text" name="rpe" value={workout[i].rpe} onChange={(e) => handleChange(e, i)}></input>
-        <label>Sets</label>
-        <input type="text" name="sets" value={workout[i].sets} onChange={(e) => handleChange(e, i)}></input>
-        <label>Weight</label>
-        <input type="text" name="weight" value={workout[i].weight} onChange={(e) => handleChange(e, i)}></input>
-      </>
-    )
-  }
+  // const renderAssignment = (e, i) => {
+  //   e.preventDefault();
+  //   return (
+  //     <>
+  //       <input type="text" name="reps" value={workout[i].reps} onChange={(e) => handleChange(e, i)}></input>
+  //       <label>RPE</label>
+  //       <input type="text" name="rpe" value={workout[i].rpe} onChange={(e) => handleChange(e, i)}></input>
+  //       <label>Sets</label>
+  //       <input type="text" name="sets" value={workout[i].sets} onChange={(e) => handleChange(e, i)}></input>
+  //       <label>Weight</label>
+  //       <input type="text" name="weight" value={workout[i].weight} onChange={(e) => handleChange(e, i)}></input>
+  //     </>
+  //   )
+  // }
 
   const renderWorkoutRow = (i) => {
     return (

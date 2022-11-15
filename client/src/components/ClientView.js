@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const ClientView = ({ getUserData, clearUserInfo }) => {
@@ -20,10 +20,15 @@ const ClientView = ({ getUserData, clearUserInfo }) => {
 
   return (
     <>
-      <div>Client View</div>
+      <div>
+        <Link to="dashboard">Dashboard</Link>
+        <Link to="workouts">Workouts</Link>
+        <Link to="profile">Profile</Link>
+      </div>
       <div className="logout-btn">
         <button onClick={handleLogout}>Log Out</button>
       </div>
+      <Outlet />
     </>
   )
 }
