@@ -7,16 +7,6 @@ const CoachDashboard = ({ userInfo, clientList, clientComments, getUserData, cle
   const { logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    setError('');
-    try {
-      await logout();
-      navigate('/login');
-      clearUserInfo();
-    } catch (err) {
-      setError(err);
-    }
-  };
   return (
     <>
       {error && console.log(error)}
@@ -38,9 +28,6 @@ const CoachDashboard = ({ userInfo, clientList, clientComments, getUserData, cle
             )
           })}
         </div>
-      </div>
-      <div className="logout-btn">
-        <button onClick={handleLogout}>Log Out</button>
       </div>
     </>
   );
