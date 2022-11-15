@@ -1,21 +1,19 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext';
 import React, { useEffect } from 'react';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { currentUser } = useAuth();
+const PrivateRoute = ({ isAllowed, redirectPath='/login', children }) => {
+  // const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!currentUser) {
+    if (!isAllowed) {
       navigate('/login', {replace: true});
     }
   });
 
   return (
-    <>
-      <Outlet />
-    </>
+    children ? children : <Outlet />
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
-const SignUp = ({ createNewUser }) => {
+const Signup = ({ createNewUser }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -88,4 +88,4 @@ const SignUp = ({ createNewUser }) => {
   );
 };
 
-export default SignUp;
+export default Signup;
