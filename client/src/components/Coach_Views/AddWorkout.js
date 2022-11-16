@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TextField, Box, Typography } from '@mui/material';
 
 const initialWorkoutValues = {
   exercise: '',
@@ -76,6 +77,7 @@ const AddWorkout = ({ clientList }) => {
       setError('Error: Assignment must contain at least one slot')
     } else {
       console.log(assignment)
+      // send POST request to server with assignment as payload
       setConfirmation(`Workout assigned: ${JSON.stringify(assignment)}`)
       setWorkout([{...initialWorkoutValues}])
       setError('')
@@ -99,22 +101,22 @@ const AddWorkout = ({ clientList }) => {
 
   const renderWorkoutRow = (i) => {
     return (
-      <>
-        <div>Slot: {i + 1}</div>
-        <form>
-          <label>Exercise</label>
-          <input type="text" name="exercise" value={workout[i].exercise} onChange={(e) => handleChange(e, i)}></input>
-          <label>Reps</label>
-          <input type="text" name="reps" value={workout[i].reps} onChange={(e) => handleChange(e, i)}></input>
-          <label>RPE</label>
-          <input type="text" name="rpe" value={workout[i].rpe} onChange={(e) => handleChange(e, i)}></input>
-          <label>Weight</label>
-          <input type="text" name="weight" value={workout[i].weight} onChange={(e) => handleChange(e, i)}></input>
-          <label>Sets</label>
-          <input type="text" name="sets" value={workout[i].sets} onChange={(e) => handleChange(e, i)}></input>
+      <Box>
+        <br/>
+        <Typography variant="h6">Slot: {i + 1}</Typography>
+        <Box>
+          <TextField variant="standard" label="Exercise" name="exercise" value={workout[i].exercise} onChange={(e) => handleChange(e, i)}></TextField>
+          <br/>
+          <TextField variant="standard" label="Reps" name="reps" value={workout[i].reps} onChange={(e) => handleChange(e, i)}></TextField>
+          <br/>
+          <TextField variant="standard" label="RPE" name="rpe" value={workout[i].rpe} onChange={(e) => handleChange(e, i)}></TextField>
+          <br/>
+          <TextField variant="standard" label="Weight" name="weight" value={workout[i].weight} onChange={(e) => handleChange(e, i)}></TextField>
+          <br/>
+          <TextField variant="standard" label="Sets" name="sets" value={workout[i].sets} onChange={(e) => handleChange(e, i)}></TextField>
           {/* <button onClick={(e) => renderAssignment(e, i)}>Add to assignment</button> */}
-        </form>
-      </>
+        </Box>
+      </Box>
     )
   }
 
@@ -127,7 +129,7 @@ const AddWorkout = ({ clientList }) => {
 
   return (
     <>
-      <div>Workout page</div>
+      <Typography variant="h4">Workout page</Typography>
       <label>Clients:</label>
       <select value={workout.client} name="client" onChange={(e) => setClient(e.target.value)}>
         {clientList.map((client, i) => {
@@ -144,9 +146,11 @@ const AddWorkout = ({ clientList }) => {
       }}>Remove Row</button>
       <button onClick={submitWorkout}>Submit Workout</button>
       {submitted && <div>Workout submitted</div>}
-      {workout.map((workout, i) => {
-        return renderWorkoutRow(i)
-      })}
+      <Box>
+        {workout.map((workout, i) => {
+          return renderWorkoutRow(i)
+        })}
+      </Box>
       {error && <div>{error}</div>}
       {confirmation && <div>{confirmation}</div>}
     </>

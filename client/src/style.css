@@ -1,5 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
-  background-color: black;
+  background-color: white;
 }
 #root {
   height: 100vh;
@@ -10,7 +14,7 @@ body {
   /* grid-template-columns: 1fr 1fr 1fr; */
   /* grid-template-rows: 1fr 1fr 1fr; */
   font-family: 'Roboto', sans-serif;
-  color: white;
+  color: black;
 }
 
 .logout-btn {
@@ -54,7 +58,7 @@ body {
   background-color: transparent;
   grid-column: 2;
   grid-row: 1;
-  color: white;
+  /* color: white; */
   margin-bottom: 1em;
 }
 .forgot-password-div {
@@ -79,7 +83,7 @@ body {
   background-color: transparent;
   border: none;
   border-bottom: 1px solid grey;
-  color: white;
+  /* color: white; */
 }
 .login-email-input {
   padding: 1em 0em 1em;

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { Button } from '@mui/material';
 
 const ClientView = ({ getUserData, clearUserInfo }) => {
   const [error, setError] = useState('');
@@ -21,9 +22,9 @@ const ClientView = ({ getUserData, clearUserInfo }) => {
   return (
     <>
       <div>
-        <Link to="dashboard">Dashboard</Link>
-        <Link to="workouts">Workouts</Link>
-        <Link to="profile">Profile</Link>
+        <Button component={RouterLink} to="dashboard">Dashboard</Button>
+        <Button component={RouterLink} to="workouts">Workouts</Button>
+        <Button component={RouterLink} to="profile">Profile</Button>
       </div>
       <div className="logout-btn">
         <button onClick={handleLogout}>Log Out</button>

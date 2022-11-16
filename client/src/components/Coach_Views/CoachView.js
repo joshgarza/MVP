@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { Button } from '@mui/material';
 
 const CoachView = ({ getUserData, clearUserInfo }) => {
   const [error, setError] = useState('');
@@ -21,9 +22,9 @@ const CoachView = ({ getUserData, clearUserInfo }) => {
   return (
     <>
       <div>
-        <Link to="dashboard">Dashboard </Link>
-        <Link to="program">Add Workouts </Link>
-        <Link to="profile">Profile </Link>
+        <Button component={RouterLink} to="dashboard">Dashboard</Button>
+        <Button component={RouterLink} to="program">Program</Button>
+        <Button component={RouterLink} to="profile">Profile</Button>
       </div>
       <div className="logout-btn">
         <button onClick={handleLogout}>Log Out</button>

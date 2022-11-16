@@ -1,13 +1,13 @@
-import AddWorkout from './AddWorkout';
-import ClientDashboard from './ClientDashboard';
-import ClientView from './ClientView';
-import ClientWorkouts from './ClientWorkouts';
-import CoachDashboard from './CoachDashboard';
-import CoachView from './CoachView';
-import ForgotPassword from './ForgotPassword';
-import Login from './Login';
+import AddWorkout from './Coach_Views/AddWorkout';
+import ClientDashboard from './Client_Views/ClientDashboard';
+import ClientView from './Client_Views/ClientView';
+import ClientWorkouts from './Client_Views/ClientWorkouts';
+import CoachDashboard from './Coach_Views/CoachDashboard';
+import CoachView from './Coach_Views/CoachView';
+import ForgotPassword from './Landing_Page/ForgotPassword';
+import Login from './Landing_Page/Login';
 import PrivateRoute from './PrivateRoute';
-import Signup from './Signup';
+import Signup from './Landing_Page/Signup';
 import UpdateProfile from './UpdateProfile';
 
 export {

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Button from '@mui/material/Button';
+import { TextField, Box, Typography } from '@mui/material';
 
 const ClientWorkouts = ({ workout }) => {
   const workoutCopy = JSON.parse(JSON.stringify(workout));
@@ -32,14 +34,14 @@ const ClientWorkouts = ({ workout }) => {
       <>
         {Object.keys(slot).map((key, i) => {
           return (
-            <div>
-              <label>{key}</label>
-              <input type="text" value={slot[key]} name={key} onChange={((e) => updateAssignment(e, i))} />
-            </div>
+            <Box>
+              {/* <label>{key}</label> */}
+              <TextField id="filled-basic" label={key} variant="filled" type="text" value={slot[key]} name={key} onChange={((e) => updateAssignment(e, i))} />
+            </Box>
           )
         })}
-        <label>Result</label>
-        <input type="text" value={results[i]} onChange={(e) => updateResults(e, i)}/>
+        {/* <label>Result</label> */}
+        <TextField id="filled-basic" label="Result" variant="filled" type="text" value={results[i]} onChange={(e) => updateResults(e, i)}/>
       </>
     )
   }
@@ -61,19 +63,19 @@ const ClientWorkouts = ({ workout }) => {
 
   return (
     <>
-      <div>Client Workouts</div>
-      <div>
+      <Typography variant="h4">Client Workouts</Typography>
+      <Box>
         {assignment.map((slot, i) => {
           // console.log(workout)
           return (
             <>
-              <div>Slot: {i + 1}</div>
+              <Typography variant="h6">Slot: {i + 1}</Typography>
               {renderAssignment(slot, i)}
             </>
           )
         })}
-      </div>
-      <button onClick={submitResults}>Submit Results</button>
+      </Box>
+      <Button variant="contained" component="label" onClick={submitResults}>Submit Results</Button>
       {error && <div>{error}</div>}
       {confirmation && <div>{confirmation}</div>}
     </>

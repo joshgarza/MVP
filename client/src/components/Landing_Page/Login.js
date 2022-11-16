@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = ({ getUserData }) => {
@@ -36,8 +36,8 @@ const Login = ({ getUserData }) => {
   };
 
   return (
-    <div className="login-container">
-      <h2 className="login-title">Log in</h2>
+    <div className="">
+      <h2 className="text-3xl font-bold underline">Log in</h2>
       {error && console.log('error', {error})}
       <form className="login-form" onSubmit={onSubmit}>
         <label className="login-email-label input-label-hidden">
