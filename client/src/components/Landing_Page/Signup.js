@@ -36,54 +36,36 @@ const Signup = ({ createNewUser }) => {
   }
 
   return (
-    <div className="login-container">
-      <h2 className="login-title">SignUp</h2>
-      {error && console.log('error', {error})}
-      <form className="login-form" onSubmit={onSubmit}>
-        <div className="usertype-container">
-          <label className="usertype-label">
-            User type
-          </label>
-          <select className="usertype-select" onChange={handleChange}>
-            <option className="usertype-option" value="Client">Client</option>
-            <option className="usertype-option" value="Coach">Coach</option>
+    <div className="w-screen h-screen flex justify-center items-center">
+      <form className="w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={onSubmit}>
+        {/* <h2 className="text-lg">SignUp</h2> */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">User type</label>
+          <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}>
+            <option className="" value="Client">Client</option>
+            <option className="" value="Coach">Coach</option>
           </select>
         </div>
-        <label className="input-label-hidden">
-          Email:
-        </label>
-        <input
-          type="email"
-          ref={emailRef}
-          required
-          placeholder="email"
-          className="login-email-input input-field"
-        />
-        <label className="input-label-hidden">
-          Password:
-        </label>
-        <input
-          type="password"
-          ref={passwordRef}
-          required
-          placeholder="password"
-          className="login-password-input input-field"
-        />
-        <label className="input-label-hidden">
-          Password Confirmation:
-        </label>
-        <input
-          type="password"
-          ref={passwordConfirmRef}
-          required
-          placeholder="confirm password"
-          className="login-password-input input-field"
-        />
-        <button className="login-button btn" disabled={loading} type="submit">Sign up</button>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="email" ref={emailRef} required placeholder="email" />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+          <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="password" ref={passwordRef} required placeholder="password" />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Password Confirmation:</label>
+          <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="password" ref={passwordConfirmRef} required placeholder="confirm password" />
+        </div>
+        <div className="mb-6">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading} type="submit">Sign up</button>
+        </div>
+        <div className="text-sm">
+          Already have an account? <Link className="font-bold text-sm text-blue-500 hover:text-blue-800" to='/login'>Log in</Link>
+        </div>
       </form>
-      <div className="signup-link-div">
-        Already have an account? <Link className="signup-link" to='/login'>Log in</Link>
-      </div>
+      {error && console.log('error', {error})}
     </div>
   );
 };

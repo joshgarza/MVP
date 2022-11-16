@@ -146,11 +146,11 @@ const AddWorkout = ({ clientList }) => {
       }}>Remove Row</button>
       <button onClick={submitWorkout}>Submit Workout</button>
       {submitted && <div>Workout submitted</div>}
-      <Box>
+      <div className="flex flex-wrap">
         {workout.map((workout, i) => {
           return renderWorkoutRow(i)
         })}
-      </Box>
+      </div >
       {error && <div>{error}</div>}
       {confirmation && <div>{confirmation}</div>}
     </>
