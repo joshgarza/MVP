@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { TextField, Box, Typography } from '@mui/material';
 
+
+// TODO: adjust when get workouts is getting called so that the get request happens anytime we load dashboard or workouts
 const ClientWorkouts = ({ workout }) => {
   const workoutCopy = JSON.parse(JSON.stringify(workout));
   const [results, setResults] = useState([]);
@@ -30,19 +32,20 @@ const ClientWorkouts = ({ workout }) => {
 
   const renderAssignment = (slot, i) => {
     console.log(workout)
+    const filtered = Object.keys(slot).filter((key) => {
+      return key !== 'client_id' && key !== 'id' && slot[key].length !== 0;
+    })
     return (
-      <>
-        {Object.keys(slot).map((key, i) => {
+      <div className="">
+        {filtered.map((key, i) => {
           return (
-            <Box>
-              {/* <label>{key}</label> */}
+            <Box key={i}>
               <TextField id="filled-basic" label={key} variant="filled" type="text" value={slot[key]} name={key} onChange={((e) => updateAssignment(e, i))} />
             </Box>
           )
         })}
-        {/* <label>Result</label> */}
         <TextField id="filled-basic" label="Result" variant="filled" type="text" value={results[i]} onChange={(e) => updateResults(e, i)}/>
-      </>
+      </div>
     )
   }
 
@@ -52,7 +55,7 @@ const ClientWorkouts = ({ workout }) => {
     assignment.forEach((entry, i) => {
       if (results[i] === undefined || results[i].length === 0) {
         incomplete = true;
-        return setError(`Results in slot: ${i + 1} must contain a value`)
+        return setError(`Result in Assignment: ${i + 1} must contain a value`)
       } else if (!incomplete) {
         submission.push([entry, results[i]])
         console.log(submission, 'to submit')
@@ -63,21 +66,24 @@ const ClientWorkouts = ({ workout }) => {
 
   return (
     <>
-      <Typography variant="h4">Client Workouts</Typography>
-      <Box>
-        {assignment.map((slot, i) => {
-          // console.log(workout)
-          return (
-            <>
-              <Typography variant="h6">Slot: {i + 1}</Typography>
-              {renderAssignment(slot, i)}
-            </>
-          )
-        })}
-      </Box>
-      <Button variant="contained" component="label" onClick={submitResults}>Submit Results</Button>
-      {error && <div>{error}</div>}
-      {confirmation && <div>{confirmation}</div>}
+      <div className="flex-col w-screen h-screen">
+        <div className="my-4 px-2 text-xl">Assigned Workout:</div>
+        <div className="mb-4 px-2 flex items-center">
+          <button className="bg-[#394D79] hover:bg-[#293757] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" component="label" onClick={submitResults}>Submit Results</button>
+          {error && <div className="ml-2">{error}</div>}
+          {confirmation && <div className="ml-2">{confirmation}</div>}
+        </div>
+        <Box className="mx-4 flex flex-wrap">
+          {assignment.map((slot, i) => {
+            return (
+              <div key={i} className="mx-2 flex-col">
+                <Typography variant="h6">Assignment: {i + 1}</Typography>
+                {renderAssignment(slot, i)}
+              </div>
+            )
+          })}
+        </Box>
+      </div>
     </>
   )
 }

@@ -39,7 +39,7 @@ const CoachView = ({ getUserData, clearUserInfo }) => {
           <Link className="block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800" to="dashboard" onClick={() => setIsOpen(!isOpen)}>Dashboard</Link>
           <Link className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800" to="program" onClick={() => setIsOpen(!isOpen)}>Add Workouts</Link>
           <Link className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800" to="profile" onClick={() => setIsOpen(!isOpen)}>Profile</Link>
-          <button className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800" onClick={handleLogout}>Log Out</button>
+          <div className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800 hover:cursor-pointer" onClick={handleLogout}>Log Out</div>
         </div>
       </header>
       <Outlet />

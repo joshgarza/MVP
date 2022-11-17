@@ -43,41 +43,36 @@ const UpdateProfile = () => {
   return (
     <>
       {currentUser &&
-        <>
-          <h2>Update Profile</h2>
-          {error && console.log('error', {error})}
-          <form onSubmit={onSubmit}>
-            <label>
-              Email:
-              <input
-                type="email"
-                ref={emailRef}
-                defaultValue={currentUser.email}
-                placeholder={currentUser.email}
-              />
-            </label>
-            <label>
-              Password:
-              <input
-                type="password"
-                ref={passwordRef}
-                placeholder="Leave blank to keep the same"
-              />
-            </label>
-            <label>
-              Password Confirmation:
-              <input
-                type="password"
-                ref={passwordConfirmRef}
-                placeholder="Leave blank to keep the same"
-              />
-            </label>
-            <button disabled={loading} type="submit">Update Profile</button>
-          </form>
-          <div>
-            <Link to='/'>Cancel</Link>
+        <div className="w-screen h-screen flex justify-center items-center">
+          <div className="w-[90%]">
+            <div className="text-3xl">Update Profile</div>
+            <form className="w-[100%] bg-white shadow-md rounded px-20 py-28 mb-4" onSubmit={onSubmit}>
+              <div className="mb-4">
+                <label>Email:</label>
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="email" ref={emailRef} defaultValue={currentUser.email} placeholder={currentUser.email} />
+              </div>
+              <div className="mb-4">
+                <label>Password:</label>
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="password" ref={passwordRef} placeholder="Leave blank to keep the same" />
+              </div>
+              <div className="mb-4">
+                <label>Password Confirmation:</label>
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="password" ref={passwordConfirmRef} placeholder="Leave blank to keep the same" />
+              </div>
+              <div className="flex justify-between">
+                <div className="mb-4 w-[50%]">
+                  <button className="bg-[#394D79] hover:bg-[#293757] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading} type="submit">Update Profile</button>
+                </div>
+                <div className="mb-4 w-[50%]">
+                  <div className="bg-[#9E9E9E] hover:bg-[#717171] text-white font-bold py-2 px-4 flex justify-center rounded focus:outline-none focus:shadow-outline">
+                    <Link to='../dashboard'>Cancel</Link>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
-        </>
+          {error && console.log('error', {error})}
+        </div>
       }
     </>
   )

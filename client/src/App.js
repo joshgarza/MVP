@@ -47,7 +47,7 @@ const App = () => {
   const [userRole, setUserRole] = useState();
   const [clientList, setClientList] = useState(initialList);
   const [clientComments, setClientComments] = useState(initialComments);
-  const [workout, setWorkout] = useState([{"exercise":"squat","reps":"4","rpe":"8"},{"exercise":"bench","reps":"3","rpe":"8"}])
+  const [workout, setWorkout] = useState([])
 
   const getUserData = async (user) => {
     let userData = await axios.get(`/api/login/${user.firebaseId}`, {params: user});
@@ -73,6 +73,15 @@ const App = () => {
     setUserRole('')
   }
 
+  const getUserWorkouts = () => {
+    axios.get(`/api/workout/${userInfo.id}`)
+      .then(result => {
+        console.log(result)
+        setWorkout(result.data)
+      })
+      .catch(error => console.log(error))
+  }
+
   return (
     <>
       <Router>
@@ -94,12 +103,12 @@ const App = () => {
             path="client"
             element={
               <PrivateRoute isAllowed={!!currentUser && userRole === "Client"}>
-                <ClientView userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo} />
+                <ClientView userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo} getUserWorkouts={getUserWorkouts}/>
               </PrivateRoute>
             }
           >
-            <Route index element={<ClientDashboard />} />
-            <Route path='dashboard' element={<ClientDashboard />} />
+            <Route index element={<ClientDashboard workout={workout}/>} />
+            <Route path='dashboard' element={<ClientDashboard workout={workout}/>} />
             <Route path='profile' element={<UpdateProfile />} />
             <Route path='workouts' element={<ClientWorkouts workout={workout}/>} />
           </Route>

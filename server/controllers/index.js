@@ -27,6 +27,36 @@ const userControllers = {
       }
       res.status(201).end()
     })
+  },
+  addWorkout: (req, res) => {
+    for (let assignment of req.body.assignment) {
+      const workout = {
+        clientId: req.body.clientId,
+        exercise: assignment.exercise,
+        reps: assignment.reps,
+        rpe: assignment.rpe ?? '',
+        sets: assignment.sets ?? '',
+        weight: assignment.weight ?? ''
+      }
+      models.addWorkout(workout, (err, data) => {
+        if (err) {
+          console.log('Error adding workout', err)
+          res.status(404).end();
+        }
+        console.log(data)
+        res.status(201).end();
+      })
+    }
+  },
+  getWorkouts: (req, res) => {
+    models.getWorkouts(req.params.id, (err, data) => {
+      if (err) {
+        console.log('Error getting workouts', err)
+        res.status(404).end();
+      }
+      console.log(data)
+      res.status(200).send(data);
+    })
   }
 }
 
