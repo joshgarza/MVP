@@ -117,6 +117,7 @@ const App = () => {
           <Route path='/signup' element={<Signup createNewUser={createNewUser} />} />
           <Route path='/login' element={<Login getUserData={getUserData} />} />
           <Route path='/forgot-password' element={<ForgotPassword/>} />
+          {/* TODO: replace element with NoMatch element that renders a workable page with a Go Home button */}
           <Route path="*" element={<p>There's nothing here: 404!</p>} />
         </Routes>
       </Router>
