@@ -73,8 +73,10 @@ const App = () => {
     setUserRole('')
   }
 
+  // TODO: resolve bug when getting user info that doesn't have workouts
   const getUserWorkouts = () => {
-    axios.get(`/api/workout/${userInfo.id}`)
+    // axios.get(`/api/workout/${userInfo.id}`)
+    axios.get(`/api/workout/4`)
       .then(result => {
         console.log(result)
         setWorkout(result.data)

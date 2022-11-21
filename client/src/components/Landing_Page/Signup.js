@@ -21,10 +21,19 @@ const Signup = ({ createNewUser }) => {
       setError('');
       setLoading(true);
       let user = await signup(emailRef.current.value, passwordRef.current.value, userType);
-
-
-      navigate('/');
-      createNewUser(user);
+      if (user) {
+        const newUserCreation = await createNewUser(user);
+        if (newUserCreation) {
+          console.log('signed up as', userType)
+          if (userType === 'Client') {
+            navigate('/client')
+          } else if (userType === 'Coach') {
+            navigate('/coach')
+          } else {
+            console.log('ERROR signing up')
+          }
+        }
+      }
     } catch (err) {
       setError(err);
     }

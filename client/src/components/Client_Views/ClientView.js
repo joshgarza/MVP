@@ -10,7 +10,7 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userInfo.id) {
+    if (userInfo?.id) {
       getUserWorkouts();
     }
   }, [])
@@ -25,6 +25,11 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
       setError(err);
     }
   };
+  if (!currentUser) {
+    return (
+      navigate('/login')
+    )
+  }
 
   return (
     <>
@@ -46,7 +51,7 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
           <Link className="block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800" to="dashboard" onClick={() => setIsOpen(!isOpen)}>Dashboard</Link>
           <Link className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800" to="workouts" onClick={() => setIsOpen(!isOpen)}>Workouts</Link>
           <Link className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800" to="profile" onClick={() => setIsOpen(!isOpen)}>Profile</Link>
-          <button className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800 hover:cursor-pointer" onClick={handleLogout}>Log Out</button>
+          <div className="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800 hover:cursor-pointer" onClick={handleLogout}>Log Out</div>
         </div>
       </header>
       <Outlet />
