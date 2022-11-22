@@ -30,13 +30,13 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
       navigate('/login')
     )
   }
-
+  // TODO: logo should be clickable and redirect to dashboard
   return (
     <>
       <header className="bg-gray-900">
         <div className="flex items-center justify-between px-4 py-3">
           <div>
-            <div className="h-8 text-white">Logo</div>
+            <img className="h-12" src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"/>
           </div>
           <div>
             <button className="block text-gray-500 hover:text-white focus:text-white focus:outline-none" type="button" onClick={() => setIsOpen(!isOpen)}>

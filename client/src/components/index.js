@@ -8,6 +8,7 @@ import ForgotPassword from './Landing_Page/ForgotPassword';
 import Login from './Landing_Page/Login';
 import PrivateRoute from './PrivateRoute';
 import Signup from './Landing_Page/Signup';
+import Test from './Test'
 import UpdateProfile from './UpdateProfile';
 
 export {
@@ -21,5 +22,6 @@ export {
   Login,
   PrivateRoute,
   Signup,
+  Test,
   UpdateProfile
 }
