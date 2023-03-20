@@ -36,15 +36,15 @@ const ClientWorkouts = ({ workout }) => {
       return key !== 'client_id' && key !== 'id' && slot[key].length !== 0;
     })
     return (
-      <div className="">
+      <div>
         {filtered.map((key, i) => {
           return (
             <Box key={i}>
-              <TextField id="filled-basic" label={key} variant="filled" type="text" value={slot[key]} name={key} onChange={((e) => updateAssignment(e, i))} />
+              <TextField id="filled-basic" label={key} variant="standard" type="text" value={slot[key]} name={key} onChange={((e) => updateAssignment(e, i))} />
             </Box>
           )
         })}
-        <TextField id="filled-basic" label="Result" variant="filled" type="text" value={results[i]} onChange={(e) => updateResults(e, i)}/>
+        <TextField id="filled-basic" label="Result" variant="standard" type="text" value={results[i]} onChange={(e) => updateResults(e, i)}/>
       </div>
     )
   }
@@ -73,10 +73,10 @@ const ClientWorkouts = ({ workout }) => {
           {error && <div className="ml-2">{error}</div>}
           {confirmation && <div className="ml-2">{confirmation}</div>}
         </div>
-        <Box className="mx-4 flex flex-wrap">
+        <Box className="mx-4 flex flex-wrap [&>*]:mb-[1rem]">
           {assignment.map((slot, i) => {
             return (
-              <div key={i} className="mx-2 flex-col">
+              <div key={i} className="mx-2 flex-col bg-[#e7f2f8] rounded-3xl p-[1rem]">
                 <Typography variant="h6">Assignment: {i + 1}</Typography>
                 {renderAssignment(slot, i)}
               </div>

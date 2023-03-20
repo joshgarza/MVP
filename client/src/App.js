@@ -5,6 +5,7 @@ import { formatDistance } from 'date-fns';
 import { useAuth } from './contexts/AuthContext';
 import {
   AddWorkout,
+  CalendarView,
   ClientView,
   ClientDashboard,
   CoachDashboard,
@@ -21,7 +22,7 @@ import {
 const baseDate = new Date(2022, 0, 1, 0, 0, 15);
 const currDate = new Date(2022, 0, 10, 0, 0, 15);
 
-const initialList = ['Alex Allain', 'Maja W.', 'Laura Kelly'];
+const initialList = ['Alex A.', 'Bahman B.', 'Betsy F.', 'Dan S.', 'David B.', 'Eric S.', 'John C.', 'Jon L.', 'Jordan S.', 'Josh M.', 'Maja W.', 'Nitin R.', 'Paul C.', 'Paul S.', 'Ryan M.'];
 
 const initialComments = [
   {
@@ -100,7 +101,8 @@ const App = () => {
             <Route index element={<CoachDashboard clientList={clientList} clientComments={clientComments}/>} />
             <Route path='dashboard' element={<CoachDashboard clientList={clientList} clientComments={clientComments}/>} />
             <Route path='profile' element={<UpdateProfile />} />
-            <Route path='program' element={<AddWorkout clientList={clientList}/>} />
+            {/* <Route path='program' element={<AddWorkout clientList={clientList}/>} /> */}
+            <Route path='program' element={<CalendarView clientList={clientList}/>} />
           </Route>
           <Route
             path="client"
@@ -116,6 +118,7 @@ const App = () => {
             <Route path='workouts' element={<ClientWorkouts workout={workout}/>} />
           </Route>
           <Route path='/signup' element={<Signup createNewUser={createNewUser} />} />
+          <Route path='/' element={<Login getUserData={getUserData} />} />
           <Route path='/login' element={<Login getUserData={getUserData} />} />
           <Route path='/forgot-password' element={<ForgotPassword/>} />
           {/* TODO: replace element with NoMatch element that renders a workable page with a Go Home button */}

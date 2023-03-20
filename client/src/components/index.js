@@ -1,4 +1,5 @@
 import AddWorkout from './Coach_Views/AddWorkout';
+import CalendarView from './Coach_Views/CalendarView';
 import ClientDashboard from './Client_Views/ClientDashboard';
 import ClientView from './Client_Views/ClientView';
 import ClientWorkouts from './Client_Views/ClientWorkouts';
@@ -13,6 +14,7 @@ import UpdateProfile from './UpdateProfile';
 
 export {
   AddWorkout,
+  CalendarView,
   ClientDashboard,
   ClientView,
   ClientWorkouts,

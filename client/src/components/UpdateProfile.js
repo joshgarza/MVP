@@ -44,7 +44,7 @@ const UpdateProfile = () => {
     <>
       {currentUser &&
         <div className="w-screen h-screen flex justify-center items-center">
-          <div className="w-[90%]">
+          <div className="w-[65%]">
             <div className="text-3xl">Update Profile</div>
             <form className="w-[100%] bg-white shadow-md rounded px-20 py-28 mb-4" onSubmit={onSubmit}>
               <div className="mb-4">

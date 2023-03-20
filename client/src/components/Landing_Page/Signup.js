@@ -74,6 +74,9 @@ const Signup = ({ createNewUser }) => {
           Already have an account? <Link className="font-bold text-sm text-blue-500 hover:text-blue-800" to='/login'>Log in</Link>
         </div>
       </form>
+      <div className="mx-[5rem]">
+        <img className="h-[10rem]" src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"/>
+      </div>
       {error && console.log('error', {error})}
     </div>
   );

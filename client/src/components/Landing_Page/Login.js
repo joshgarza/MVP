@@ -1,8 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { generateCalendar } from '../../util/calendar.js';
 
 const Login = ({ getUserData }) => {
+  console.log(generateCalendar())
+
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login, currentUser } = useAuth();
@@ -58,6 +61,9 @@ const Login = ({ getUserData }) => {
         </div>
         {error && console.log('error', {error})}
       </form>
+      <div className="mx-[5rem]">
+        <img className="h-[10rem]" src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"/>
+      </div>
     </div>
   );
 };

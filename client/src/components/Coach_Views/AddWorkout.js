@@ -107,7 +107,7 @@ const AddWorkout = ({ clientList }) => {
 
   const renderWorkoutRow = (i) => {
     return (
-      <Box>
+      <Box className="bg-[#e7f2f8] rounded-3xl p-[1rem]">
         <br/>
         <Typography variant="h6">Slot: {i + 1}</Typography>
         <Box className="mx-2">
@@ -136,7 +136,7 @@ const AddWorkout = ({ clientList }) => {
 
   return (
     <>
-      <div className="flex-col w-screen h-screen">
+      <div className="flex-col w-screen h-screen mx-[2rem]">
         <div className="mt-4 text-xl">Workout Creation</div>
         <div className="mt-4">
           <div className="mb-4">
@@ -162,7 +162,7 @@ const AddWorkout = ({ clientList }) => {
           </div>
           {submitted && <div>Workout submitted</div>}
         </div>
-        <div className="flex flex-wrap mx-2">
+        <div className="flex flex-wrap [&>*]:mx-[1rem] [&>*]:my-[1rem]">
           {workout.map((workout, i) => {
             return renderWorkoutRow(i)
           })}

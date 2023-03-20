@@ -43,6 +43,9 @@ const ForgotPassword = () => {
         {error && <div className="mt-4">{(error)}</div>}
         {message && <div className="mt-4">{message}</div>}
       </form>
+      <div className="mx-[5rem]">
+        <img className="h-[10rem]" src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"/>
+      </div>
     </div>
   )
 }
