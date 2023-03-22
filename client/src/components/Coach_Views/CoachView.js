@@ -21,7 +21,7 @@ const CoachView = ({ getUserData, clearUserInfo }) => {
 
   return (
     <>
-      <header className="bg-gray-900">
+      <header className="bg-gray-900 h-18">
         <div className="flex items-center justify-between px-4 py-3">
           <div>
           <img className="h-12" src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"/>
@@ -35,7 +35,7 @@ const CoachView = ({ getUserData, clearUserInfo }) => {
             </button>
           </div>
         </div>
-        <div className={isOpen ? 'animate-slide-in-right h-full w-[18rem] flex flex-col flex-grow absolute top-0 right-0 bg-black  px-6 pt-2 pb-4 z-10': "animate-slide-out-right h-full w-[18rem] flex flex-col flex-grow absolute top-0 right-0 bg-black  px-6 pt-2 pb-4 z-10"}>
+        <div className={isOpen ? 'animate-slide-in-right h-[100%] w-[30%] flex flex-col flex-grow absolute top-0 right-0 bg-black  px-6 pt-2 pb-4 z-10': "animate-slide-out-right h-[100%] w-[30%] flex flex-col flex-grow absolute top-0 right-0 bg-black  px-6 pt-2 pb-4 z-10"}>
           <div className="h-20"></div>
           <Link className="block px-2 py-1 text-white text-3xl font-semibold rounded hover:bg-gray-800" to="dashboard" onClick={() => setIsOpen(!isOpen)}>Dashboard</Link>
           <Link className="mt-1 block px-2 py-1 text-white text-3xl font-semibold rounded hover:bg-gray-800" to="program" onClick={() => setIsOpen(!isOpen)}>Add Workouts</Link>
