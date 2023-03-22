@@ -11,7 +11,8 @@ export const generateCalendar = (day = dayjs().date(), month = dayjs().month(), 
     arrayOfDates.push({
       day: date.date(),
       month: date.month(),
-      year: date.year()
+      year: date.year(),
+      dateString: date.toDate().toDateString()
     })
   }
 
