@@ -6,15 +6,6 @@ import { useState, useEffect } from 'react';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FcPlus } from "react-icons/fc";
 
-// const clientWorkouts = {
-//   // 'Alex A.': {
-//   //   'Tue Mar 21 2023': true,
-//   // },
-//   // 'Bahman B.': {
-//   //   'Wed Mar 22 2023': true,
-//   // },
-// }
-
 
 const CalendarView = ({ clientList, clientWorkouts }) => {
   dayjs.extend(weekOfYear)
@@ -71,7 +62,6 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
           }}
           />
         </div>
-
       </div>
       <div className="grid grid-cols-7 h-1/8 py-8">
         {days.map((day, index) => {
@@ -105,7 +95,6 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
                     Add Workout
                   </div>
                 }
-
               </div>
             </div>
           )

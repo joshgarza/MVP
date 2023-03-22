@@ -55,10 +55,10 @@ const App = () => {
   useEffect(() => {
     const allWorkouts = {}
     clientList.map((name) => {
-      allWorkouts[name] = {};
+      return allWorkouts[name] = {};
     })
     clientList.map((name) => {
-      allWorkouts[name]['Tue Mar 21 2023'] = true;
+      return allWorkouts[name]['Tue Mar 21 2023'] = true;
     })
     setClientWorkouts(allWorkouts)
   }, [])
