@@ -7,8 +7,6 @@ const CoachDashboard = ({ userInfo, clientList, clientComments, getUserData, cle
   // const { logout } = useAuth();
   const navigate = useNavigate();
 
-  console.log('logging')
-
   return (
     <>
       <div className="h-[calc(100%-4.5rem)] w-full flex flex-wrap px-4 py-3">

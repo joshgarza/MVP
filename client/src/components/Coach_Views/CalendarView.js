@@ -6,32 +6,51 @@ import { useState } from 'react';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FcPlus } from "react-icons/fc";
 
+const clientWorkouts = {
+  'Alex A.': {
+    'Tue Mar 21 2023': true,
+  },
+  'Bahman B.': {
+    'Wed Mar 22 2023': true,
+  },
+}
 
 
-const CalendarView = () => {
+const CalendarView = ({ clientList }) => {
   dayjs.extend(weekOfYear)
   dayjs.extend(dayOfYear)
   const days = ["S", "M", "T", "W", "T", "F", "S"];
   const currDate = dayjs();
   const [today, setToday] = useState(currDate);
   const [displayDate, setDisplayDate] = useState(today);
-  const [workouts, setWorkouts] = useState({
-    'Tue Mar 21 2023': true,
-  })
-
-  // console.log(currDate.toDate().toDateString())
-  // console.log(generateCalendar(today.date(), today.month(), today.year()))
+  const [selectedClient, setSelectedClient] = useState('Alex A.')
+  const [workouts, setWorkouts] = useState(clientWorkouts[selectedClient])
 
   const addWorkout = (date) => {
+    clientWorkouts[selectedClient][date] = true;
     setWorkouts({
-      ...workouts,
-      [date]: true
+      ...clientWorkouts[selectedClient]
     })
+    console.log(workouts)
+  }
+
+  const selectClient = (name) => {
+    setSelectedClient(name);
+    setWorkouts(clientWorkouts[name])
   }
 
   return (
     <div className="w-screen h-[90%] flex-col px-2">
       <div className="flex justify-between items-center gap-2">
+        <select className="px-2 w-80" onChange={(e) => {
+          selectClient(e.target.value)
+        }}>
+          {clientList.map((name, index) => {
+            return (
+              <option key={index} value={name}>{name}</option>
+            )
+          })}
+        </select>
         <h1 className="h-1/8 p-8">
           {displayDate.format('MMMM')} {displayDate.format('D')}, {displayDate.format('YYYY')}
         </h1>
