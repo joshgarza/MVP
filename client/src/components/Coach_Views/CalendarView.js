@@ -2,36 +2,35 @@ import { generateCalendar } from '../../util/calendar.js';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import dayOfYear from 'dayjs/plugin/dayOfYear'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FcPlus } from "react-icons/fc";
 
-const clientWorkouts = {
-  'Alex A.': {
-    'Tue Mar 21 2023': true,
-  },
-  'Bahman B.': {
-    'Wed Mar 22 2023': true,
-  },
-}
+// const clientWorkouts = {
+//   // 'Alex A.': {
+//   //   'Tue Mar 21 2023': true,
+//   // },
+//   // 'Bahman B.': {
+//   //   'Wed Mar 22 2023': true,
+//   // },
+// }
 
 
-const CalendarView = ({ clientList }) => {
+const CalendarView = ({ clientList, clientWorkouts }) => {
   dayjs.extend(weekOfYear)
   dayjs.extend(dayOfYear)
   const days = ["S", "M", "T", "W", "T", "F", "S"];
   const currDate = dayjs();
   const [today, setToday] = useState(currDate);
   const [displayDate, setDisplayDate] = useState(today);
-  const [selectedClient, setSelectedClient] = useState('Alex A.')
-  const [workouts, setWorkouts] = useState(clientWorkouts[selectedClient])
+  const [selectedClient, setSelectedClient] = useState('Alex A.');
+  const [workouts, setWorkouts] = useState(clientWorkouts[selectedClient]);
 
   const addWorkout = (date) => {
     clientWorkouts[selectedClient][date] = true;
     setWorkouts({
       ...clientWorkouts[selectedClient]
     })
-    console.log(workouts)
   }
 
   const selectClient = (name) => {

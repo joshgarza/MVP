@@ -22,7 +22,7 @@ import {
 const baseDate = new Date(2022, 0, 1, 0, 0, 15);
 const currDate = new Date(2022, 0, 10, 0, 0, 15);
 
-const initialList = ['Alex A.', 'Bahman B.', 'Betsy F.', 'Dan S.', 'David B.', 'Eric S.', 'John C.', 'Jon L.', 'Jordan S.', 'Josh M.', 'Maja W.', 'Nitin R.', 'Paul C.', 'Paul S.', 'Ryan M.'];
+const initialList = ['Alex A.', 'Bahman B.', 'Jordan S.'];
 
 const initialComments = [
   {
@@ -49,7 +49,19 @@ const App = () => {
   const [userRole, setUserRole] = useState();
   const [clientList, setClientList] = useState(initialList);
   const [clientComments, setClientComments] = useState(initialComments);
-  const [workout, setWorkout] = useState([])
+  const [clientWorkouts, setClientWorkouts] = useState({});
+  const [workout, setWorkout] = useState([]);
+
+  useEffect(() => {
+    const allWorkouts = {}
+    clientList.map((name) => {
+      allWorkouts[name] = {};
+    })
+    clientList.map((name) => {
+      allWorkouts[name]['Tue Mar 21 2023'] = true;
+    })
+    setClientWorkouts(allWorkouts)
+  }, [])
 
   const getUserData = async (user) => {
     let userData = await axios.get(`/api/login/${user.firebaseId}`, {params: user});
@@ -102,7 +114,7 @@ const App = () => {
             <Route path='dashboard' element={<CoachDashboard clientList={clientList} clientComments={clientComments}/>} />
             <Route path='profile' element={<UpdateProfile />} />
             {/* <Route path='program' element={<AddWorkout clientList={clientList}/>} /> */}
-            <Route path='program' element={<CalendarView clientList={clientList}/>} />
+            <Route path='program' element={<CalendarView clientList={clientList} clientWorkouts={clientWorkouts}/>} />
           </Route>
           <Route
             path="client"
