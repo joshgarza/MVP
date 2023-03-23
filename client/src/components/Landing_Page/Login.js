@@ -1,105 +1,97 @@
-import React, { useRef, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
-import { generateCalendar } from '../../util/calendar.js';
+import { useState } from 'react';
 
-const Login = ({ getUserData }) => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const { login, currentUser } = useAuth();
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState('');
-  const navigate = useNavigate();
 
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      setError('');
-      setLoading(true);
-      const user = await login(emailRef.current.value, passwordRef.current.value);
-      if (user) {
-        const userRole = await getUserData(user);
-        if (userRole) {
-          console.log('logging in as', userRole)
-          if (userRole === "Client") {
-            navigate('/client')
-          } else if (userRole === "Coach") {
-            navigate('/coach')
-          } else {
-            console.log('not loading')
-          }
-        }
-      }
-    } catch (err) {
-      setError(err);
-    }
-    setLoading(false);
-  };
+//how do we handle wave loading????
+
+const workout = {
+  'Alex A.': {
+    'Tue Mar 21 2023': [
+      {
+        exercise: '',
+        reps: '',
+        rpe: '',
+        sets: '',
+        weight: '',
+        backoffPercent: '',
+        e1rmPercent: '',
+      },
+    ]
+  }
+}
+
+const WorkoutBuilder = () => {
+  const [workout, setWorkout] = useState();
+  const [grid, setGrid] = useState([[0], [0]]);
+
+  const assignmentForm = (rowIdx, colIdx) => {
+    let letter = String.fromCharCode(65 + rowIdx);
+
+    return (
+      <div className="flex flex-col w-48 gap-2">
+        {letter}{colIdx + 1}
+        <label>Exercise</label>
+        <input type="text" className="border"></input>
+        <button className="rounded-2xl bg-slate-300 p-2" onClick={() => {
+          extendExercise(rowIdx)
+        }}>
+          Extend exercise
+        </button>
+      </div>
+    )
+  }
+
+  const extendExercise = (rowIdx) => {
+    let copyGrid = [...grid];
+    copyGrid[rowIdx].push(0)
+    setGrid(copyGrid)
+  }
+
+  const addExercise = () => {
+    let copyGrid = [...grid];
+    copyGrid.push([0])
+    setGrid(copyGrid)
+  }
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <form className="w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={onSubmit}>
-        {/* <h2 className="w-48 text-3xl font-bold underline">Log in</h2> */}
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="email" ref={emailRef} placeholder="email" />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-          <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="password" ref={passwordRef} placeholder="password" />
-        </div>
-        <div className="mb-6 flex items-center justify-between">
-          <button className="bg-[#394D79] hover:bg-[#293757] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading} type="submit">Log in</button>
-          <div className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-            <Link className="" to='/forgot-password'>Forgot password?</Link>
-          </div>
-        </div>
-        <div className="">
-          Need an account? <Link className="font-bold text-sm text-blue-500 hover:text-blue-800" to='/signup'>Sign up</Link>
-        </div>
-        {error && console.log('error', {error})}
-      </form>
-      <div className="mx-[5rem]">
-        <img className="h-[10rem]" src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"/>
-      </div>
+    <div className="grid overflow-scroll">
+      {grid.map((row, i) => {
+        return grid[i].map((col, j) => {
+          return (
+            assignmentForm(i, j)
+          )
+        })
+      })}
+      <button className="rounded-2xl bg-slate-300 p-2" onClick={() => {
+        addExercise()
+      }}>Add new exercise</button>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default WorkoutBuilder
 
+// Drag and drop order. As click subExercise or new exercise, append exercise order list.
 
+// On submit, send workout object and exercise order
 
-// return (
-//   <div className="login-container">
-//     <h2 className="text-3xl font-bold underline">Log in</h2>
-//     {error && console.log('error', {error})}
-//     <form className="login-form" onSubmit={onSubmit}>
-//       <label className="login-email-label input-label-hidden">
-//         Email:
-//       </label>
-//       <input
-//         type="email"
-//         ref={emailRef}
-//         placeholder="email"
-//         className="login-email-input input-field"
-//       />
-//       <label className="login-password-label input-label-hidden">
-//         Password:
-//       </label>
-//       <input
-//         type="password"
-//         ref={passwordRef}
-//         placeholder="password"
-//         className="login-password-input input-field"
-//       />
-//       <button className="login-button btn" disabled={loading} type="submit">Log in</button>
-//     </form>
-//     <div className="forgot-password-div">
-//       <Link className="forgot-password-link" to='/forgot-password'>Forgot password?</Link>
-//     </div>
-//     <div className="signup-link-div">
-//       Need an account? <Link className="signup-link" to='/signup'>Sign up</Link>
-//     </div>
-//   </div>
-// );
+// {
+//   Date: {
+//     workoutOrder: [0,1],
+//     workouts: [
+//      {
+//        Assignment: {
+//           exerciseOrder: [0,2,1,3,5,4],
+//           exercises: [
+//             {
+//               exercise: “squat”,
+
+//             },
+//           ],
+//         },
+//       },
+//       {
+//         Exercise: “run”,
+//       }
+//     ]
+//   }
+// }

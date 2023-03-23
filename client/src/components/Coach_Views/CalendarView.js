@@ -10,7 +10,7 @@ import { FcPlus } from "react-icons/fc";
 const CalendarView = ({ clientList, clientWorkouts }) => {
   dayjs.extend(weekOfYear)
   dayjs.extend(dayOfYear)
-  const days = ["S", "M", "T", "W", "T", "F", "S"];
+  const days = ["Sunday", "Monday", "Tuesday", "Wed", "T", "F", "S"];
   const currDate = dayjs();
   const [today, setToday] = useState(currDate);
   const [displayDate, setDisplayDate] = useState(today);
