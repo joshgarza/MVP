@@ -21,20 +21,26 @@ const workout = {
 
 const WorkoutBuilder = () => {
   const [workout, setWorkout] = useState();
-  const [grid, setGrid] = useState([[0], [0]]);
+  const [grid, setGrid] = useState([]);
 
   const assignmentForm = (rowIdx, colIdx) => {
-    let letter = String.fromCharCode(65 + rowIdx);
+    let letter = String.fromCharCode(65 + grid[rowIdx][colIdx]);
+    console.log(grid[rowIdx][colIdx])
 
     return (
-      <div className="flex flex-col w-48 gap-2">
+      <div className="flex gap-2 items-center justify-center">
         {letter}{colIdx + 1}
         <label>Exercise</label>
         <input type="text" className="border"></input>
-        <button className="rounded-2xl bg-slate-300 p-2" onClick={() => {
+        <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
           extendExercise(rowIdx)
         }}>
           Extend exercise
+        </button>
+        <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
+          removeExtension(rowIdx, colIdx)
+        }}>
+          Remove extension
         </button>
       </div>
     )
@@ -42,14 +48,31 @@ const WorkoutBuilder = () => {
 
   const extendExercise = (rowIdx) => {
     let copyGrid = [...grid];
-    copyGrid[rowIdx].push(0)
+    copyGrid[rowIdx].push(rowIdx)
     setGrid(copyGrid)
   }
 
   const addExercise = () => {
     let copyGrid = [...grid];
-    copyGrid.push([0])
+    copyGrid.push([grid.length])
     setGrid(copyGrid)
+  }
+
+  const removeExtension = (rowIdx, colIdx) => {
+    // splice out element and update grid
+    let copyGrid = [...grid];
+
+    if (copyGrid[rowIdx].length === 1) {
+      console.log(rowIdx)
+      copyGrid.splice(rowIdx, 1)
+    } else {
+      copyGrid[rowIdx].splice(colIdx, 1);
+    }
+    setGrid(copyGrid)
+  }
+
+  const removeExercise = (rowIdx) => {
+    // splice out element and update grid
   }
 
   return (
