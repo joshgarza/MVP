@@ -111,7 +111,7 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
         </div>
       </div>
       {showModal && createPortal(
-        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate}/>,
+        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate} clientId={4}/>,
         document.getElementById('modal')
       )}
     </>
