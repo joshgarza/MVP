@@ -7,6 +7,7 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FcPlus } from 'react-icons/fc';
 import { createPortal } from 'react-dom';
 import WorkoutBuilder from './WorkoutBuilder.js'
+import axios from 'axios';
 
 
 const CalendarView = ({ clientList, clientWorkouts }) => {
@@ -16,10 +17,17 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
   const currDate = dayjs();
   const [today, setToday] = useState(currDate);
   const [displayDate, setDisplayDate] = useState(today);
-  const [selectedClient, setSelectedClient] = useState('Alex A.');
+  const [selectedClient, setSelectedClient] = useState(clientList[0]);
   const [workouts, setWorkouts] = useState(clientWorkouts[selectedClient]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(currDate);
+
+  const clientId = 4;
+
+  useEffect(() => {
+    axios.get(`/api/workout/${clientId}`)
+      .then(result => console.log(result))
+  }, [])
 
   const addWorkout = (date) => {
     // call modal here
@@ -38,15 +46,14 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
 
   return (
     <>
-
       <div className="w-screen h-[90%] flex-col px-2">
         <div className="flex justify-between items-center gap-2">
           <select className="px-2 w-80" onChange={(e) => {
             selectClient(e.target.value)
           }}>
-            {clientList.map((name, index) => {
+            {clientList.map((client, index) => {
               return (
-                <option key={index} value={name}>{name}</option>
+                <option key={index} value={client}>{client}</option>
               )
             })}
           </select>

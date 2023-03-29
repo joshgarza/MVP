@@ -22,7 +22,23 @@ import {
 const baseDate = new Date(2022, 0, 1, 0, 0, 15);
 const currDate = new Date(2022, 0, 10, 0, 0, 15);
 
-const initialList = ['Alex A.', 'Bahman B.', 'Jordan S.'];
+// const initialList = [
+//   {
+//     name: 'Alex A.',
+//     id: 4,
+//   },
+//   {
+//     name: 'Bahman B.',
+//     id: 1,
+//   },
+//   {
+//     name: 'Jordan S.',
+//     id: 1,
+//   },
+// ];
+const initialList = [
+  'Alex A.', 'Bahman B.', 'Jordan S.'
+];
 
 const initialComments = [
   {
@@ -41,6 +57,23 @@ const initialComments = [
     date: formatDistance(currDate, baseDate)  + ' ago',
   },
 ]
+// const initialComments = [
+//   {
+//     client: initialList[0].name,
+//     comment: 'Finished the workout no problem!',
+//     date: formatDistance(currDate, baseDate) + ' ago',
+//   },
+//   {
+//     client: initialList[1].name,
+//     comment: 'Had a rough time with squats today',
+//     date: formatDistance(currDate, baseDate)  + ' ago',
+//   },
+//   {
+//     client: initialList[2].name,
+//     comment: 'Hit a new PR! Super psyched :)',
+//     date: formatDistance(currDate, baseDate)  + ' ago',
+//   },
+// ]
 
 
 const App = () => {
@@ -54,11 +87,11 @@ const App = () => {
 
   useEffect(() => {
     const allWorkouts = {}
-    clientList.map((name) => {
-      return allWorkouts[name] = {};
+    clientList.map((client) => {
+      return allWorkouts[client] = {};
     })
-    clientList.map((name) => {
-      return allWorkouts[name]['Tue Mar 21 2023'] = true;
+    clientList.map((client) => {
+      return allWorkouts[client]['Tue Mar 28 2023'] = true;
     })
     setClientWorkouts(allWorkouts)
   }, [])

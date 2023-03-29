@@ -3,8 +3,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const CoachDashboard = ({ userInfo, clientList, clientComments, getUserData, clearUserInfo }) => {
-  // const [error, setError] = useState('');
-  // const { logout } = useAuth();
   const navigate = useNavigate();
 
   return (
