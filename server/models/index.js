@@ -37,23 +37,28 @@ module.exports = {
     }
   },
   addWorkout: async (query, callback) => {
+    const { clientId, date, exercise, set, reps, rir, backoffPercent, weight } = query
     try {
       pool.query(
         `INSERT INTO workouts(
           client_id,
+          date,
           exercise,
+          set,
           reps,
-          rpe,
-          sets,
+          rir,
+          backoffPercent,
           weight
         )
         VALUES (
-          ${query.clientId},
-          '${query.exercise}',
-          '${query.reps}',
-          '${query.rpe}',
-          '${query.sets}',
-          '${query.weight}'
+          ${clientId},
+          '${date}',
+          '${exercise}',
+          '${set}',
+          '${reps}',
+          '${rir}',
+          '${backoffPercent}',
+          '${weight}'
         )`
       )
       callback(null, query)

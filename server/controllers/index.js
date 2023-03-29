@@ -29,26 +29,36 @@ const userControllers = {
     })
   },
   addWorkout: (req, res) => {
-    console.log(req.body['Mon Mar 27 2023'][0].sets)
-    res.status(201).end();
-    // for (let assignment of req.body.assignment) {
-    //   const workout = {
-    //     clientId: req.body.clientId,
-    //     exercise: assignment.exercise,
-    //     reps: assignment.reps,
-    //     rpe: assignment.rpe ?? '',
-    //     sets: assignment.sets ?? '',
-    //     weight: assignment.weight ?? ''
-    //   }
-    //   models.addWorkout(workout, (err, data) => {
-    //     if (err) {
-    //       console.log('Error adding workout', err)
-    //       res.status(404).end();
-    //     }
-    //     console.log(data)
-    //     res.status(201).end();
-    //   })
-    // }
+    const { clientId, date, workout } = req.body;
+    const workoutData = [];
+    workout.forEach(slot => {
+      const exercise = slot.exercise;
+
+      slot.sets.forEach((set, i) => {
+        const { reps, rir, backoffPercent, weight } = set
+
+        const setData = {
+          clientId: clientId,
+          date: date,
+          exercise: exercise,
+          set: i,
+          reps: reps,
+          rir: rir ?? '',
+          backoffPercent: backoffPercent ?? '',
+          weight: weight ?? '',
+        }
+
+        models.addWorkout(setData, (err, data) => {
+          if (err) {
+            console.log('Error adding workout', err)
+            res.status(404).end();
+          }
+          console.log(data)
+          workoutData.push(data)
+        })
+      })
+    })
+    res.status(201).end(JSON.stringify(workoutData));
   },
   getWorkouts: (req, res) => {
     models.getWorkouts(req.params.id, (err, data) => {
