@@ -122,6 +122,7 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookup }) => {
       .then(result => {
         console.log(result)
         populateClientLookup();
+        onClose();
       })
       .catch(err => console.log(err))
   }

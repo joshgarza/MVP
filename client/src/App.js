@@ -46,8 +46,8 @@ const App = () => {
   const [userInfo, setUserInfo] = useState();
   const [userRole, setUserRole] = useState();
   const [clientComments, setClientComments] = useState(initialComments);
-  const [workout, setWorkout] = useState([]);
   const [clientLookupTable, setClientLookupTable] = useState({});
+  const [workout, setWorkout] = useState([]);
 
   useEffect(() => {
     if (userRole === 'Coach') {
