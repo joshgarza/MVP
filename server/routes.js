@@ -4,9 +4,7 @@ const router = require('express').Router();
 router.get('/login/:id', controllers.userControllers.loginUser);
 router.post('/signup/:id', controllers.userControllers.createUser);
 router.get('/workout/:id', controllers.userControllers.getWorkouts);
+router.get('/workout', controllers.userControllers.getAllClients)
 router.post('/workout', controllers.userControllers.addWorkout);
-
-
-// /api/workout/${userInfo.id}
 
 module.exports = router;

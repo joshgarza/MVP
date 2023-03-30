@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const WorkoutBuilder = ({ onClose, date, clientId }) => {
+const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookup }) => {
   const [workout, setWorkout] = useState([]);
 
   const structure =
@@ -119,7 +119,10 @@ const WorkoutBuilder = ({ onClose, date, clientId }) => {
       workout: workout
     }
     axios.post('/api/workout', data)
-      .then(result => console.log(result))
+      .then(result => {
+        console.log(result)
+        populateClientLookup();
+      })
       .catch(err => console.log(err))
   }
 

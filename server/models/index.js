@@ -80,5 +80,19 @@ module.exports = {
     } catch (error) {
       callback(error, null)
     }
+  },
+  getAllClients: async (query, callback) => {
+    try {
+      const allClientsData = await pool.query(
+        `SELECT * FROM workouts`
+      )
+      if (allClientsData.rows.length === 0) {
+        callback(null, {});
+      } else {
+        callback(null, allClientsData.rows)
+      }
+    } catch (error) {
+      callback(error, null)
+    }
   }
 }

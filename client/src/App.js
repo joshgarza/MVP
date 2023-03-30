@@ -22,79 +22,38 @@ import {
 const baseDate = new Date(2022, 0, 1, 0, 0, 15);
 const currDate = new Date(2022, 0, 10, 0, 0, 15);
 
-// const initialList = [
-//   {
-//     name: 'Alex A.',
-//     id: 4,
-//   },
-//   {
-//     name: 'Bahman B.',
-//     id: 1,
-//   },
-//   {
-//     name: 'Jordan S.',
-//     id: 1,
-//   },
-// ];
-const initialList = [
-  'Alex A.', 'Bahman B.', 'Jordan S.'
-];
-
 const initialComments = [
   {
-    client: initialList[0],
+    client: 'Alex A.',
     comment: 'Finished the workout no problem!',
     date: formatDistance(currDate, baseDate) + ' ago',
   },
   {
-    client: initialList[1],
+    client: 'Bahman B.',
     comment: 'Had a rough time with squats today',
     date: formatDistance(currDate, baseDate)  + ' ago',
   },
   {
-    client: initialList[2],
+    client: 'Jordan S.',
     comment: 'Hit a new PR! Super psyched :)',
     date: formatDistance(currDate, baseDate)  + ' ago',
   },
 ]
-// const initialComments = [
-//   {
-//     client: initialList[0].name,
-//     comment: 'Finished the workout no problem!',
-//     date: formatDistance(currDate, baseDate) + ' ago',
-//   },
-//   {
-//     client: initialList[1].name,
-//     comment: 'Had a rough time with squats today',
-//     date: formatDistance(currDate, baseDate)  + ' ago',
-//   },
-//   {
-//     client: initialList[2].name,
-//     comment: 'Hit a new PR! Super psyched :)',
-//     date: formatDistance(currDate, baseDate)  + ' ago',
-//   },
-// ]
 
-
+// move relevant functions that are unique to either coach or client to their respective dashboards or abstract everything to a common file we can pull from
 const App = () => {
   const { currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState();
   const [userRole, setUserRole] = useState();
-  const [clientList, setClientList] = useState(initialList);
   const [clientComments, setClientComments] = useState(initialComments);
-  const [clientWorkouts, setClientWorkouts] = useState({});
   const [workout, setWorkout] = useState([]);
+  const [clientLookupTable, setClientLookupTable] = useState({});
 
   useEffect(() => {
-    const allWorkouts = {}
-    clientList.map((client) => {
-      return allWorkouts[client] = {};
-    })
-    clientList.map((client) => {
-      return allWorkouts[client]['Tue Mar 28 2023'] = true;
-    })
-    setClientWorkouts(allWorkouts)
-  }, [])
+    if (userRole === 'Coach') {
+      populateClientLookup();
+    }
+  }, [userRole])
 
   const getUserData = async (user) => {
     let userData = await axios.get(`/api/login/${user.firebaseId}`, {params: user});
@@ -120,9 +79,18 @@ const App = () => {
     setUserRole('')
   }
 
+  const populateClientLookup = () => {
+    axios.get('/api/workout')
+      .then(result => {
+        setClientLookupTable(result.data);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   // TODO: resolve bug when getting user info that doesn't have workouts
   const getUserWorkouts = () => {
-    // axios.get(`/api/workout/${userInfo.id}`)
     axios.get(`/api/workout/4`)
       .then(result => {
         console.log(result)
@@ -143,11 +111,10 @@ const App = () => {
               </PrivateRoute>
             }
           >
-            <Route index element={<CoachDashboard clientList={clientList} clientComments={clientComments}/>} />
-            <Route path='dashboard' element={<CoachDashboard clientList={clientList} clientComments={clientComments}/>} />
+            <Route index element={<CoachDashboard clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
+            <Route path='dashboard' element={<CoachDashboard clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
             <Route path='profile' element={<UpdateProfile />} />
-            {/* <Route path='program' element={<AddWorkout clientList={clientList}/>} /> */}
-            <Route path='program' element={<CalendarView clientList={clientList} clientWorkouts={clientWorkouts}/>} />
+            <Route path='program' element={<CalendarView clientLookupTable={clientLookupTable} populateClientLookup={populateClientLookup} />} />
           </Route>
           <Route
             path="client"

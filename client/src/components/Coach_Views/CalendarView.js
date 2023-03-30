@@ -1,7 +1,7 @@
 import { generateCalendar } from '../../util/calendar.js';
 import dayjs from 'dayjs';
-import weekOfYear from 'dayjs/plugin/weekOfYear'
-import dayOfYear from 'dayjs/plugin/dayOfYear'
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { useState, useEffect } from 'react';
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FcPlus } from 'react-icons/fc';
@@ -10,38 +10,35 @@ import WorkoutBuilder from './WorkoutBuilder.js'
 import axios from 'axios';
 
 
-const CalendarView = ({ clientList, clientWorkouts }) => {
+const CalendarView = ({ clientLookupTable, populateClientLookup }) => {
   dayjs.extend(weekOfYear)
   dayjs.extend(dayOfYear)
-  const days = ["Sunday", "Monday", "Tuesday", "Wed", "T", "F", "S"];
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const currDate = dayjs();
   const [today, setToday] = useState(currDate);
   const [displayDate, setDisplayDate] = useState(today);
-  const [selectedClient, setSelectedClient] = useState(clientList[0]);
-  const [workouts, setWorkouts] = useState(clientWorkouts[selectedClient]);
+  const [selectedClient, setSelectedClient] = useState('4');
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(currDate);
 
   const clientId = 4;
 
-  useEffect(() => {
-    axios.get(`/api/workout/${clientId}`)
-      .then(result => console.log(result))
-  }, [])
-
-  const addWorkout = (date) => {
-    // call modal here
+  const addWorkoutModal = (date) => {
     setShowModal(true)
     setSelectedDate(date)
-    clientWorkouts[selectedClient][date] = true;
-    setWorkouts({
-      ...clientWorkouts[selectedClient]
-    })
   }
 
   const selectClient = (name) => {
     setSelectedClient(name);
-    setWorkouts(clientWorkouts[name])
+  }
+
+  const mapClientListOptions = () => {
+    return Object.keys(clientLookupTable).map((clientId, i) => {
+      const client = clientLookupTable[clientId]
+      return (
+        <option key={i} value={clientId}>{client.name}</option>
+      )
+    })
   }
 
   return (
@@ -51,11 +48,7 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
           <select className="px-2 w-80" onChange={(e) => {
             selectClient(e.target.value)
           }}>
-            {clientList.map((client, index) => {
-              return (
-                <option key={index} value={client}>{client}</option>
-              )
-            })}
+            {mapClientListOptions()}
           </select>
           <h1 className="h-1/8 p-8">
             {displayDate.format('MMMM')} {displayDate.format('D')}, {displayDate.format('YYYY')}
@@ -95,14 +88,12 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
                   {date.day}
                 </h1>
                 <div className="flex items-center justify-center gap-2 cursor-pointer" onClick={() => {
-                  if (workouts[date.dateString]) {
-                    console.log('it exists')
-                  } else {
-                    addWorkout(date.dateString)
+                  if (!clientLookupTable[selectedClient].workouts.date[date.dateString]) {
+                    addWorkoutModal(date.dateString)
                   }
                 }}>
                   {
-                    workouts[date.dateString]
+                    clientLookupTable[selectedClient].workouts.date[date.dateString]
                     ?
                     <div className="bg-slate-500">Workout Plan</div>
                     :
@@ -118,7 +109,7 @@ const CalendarView = ({ clientList, clientWorkouts }) => {
         </div>
       </div>
       {showModal && createPortal(
-        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate} clientId={4}/>,
+        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate} populateClientLookup={populateClientLookup} clientId={4}/>,
         document.getElementById('modal')
       )}
     </>

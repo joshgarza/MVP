@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const CoachDashboard = ({ userInfo, clientList, clientComments, getUserData, clearUserInfo }) => {
+const CoachDashboard = ({ clientLookupTable, clientComments }) => {
   const navigate = useNavigate();
+
+  const mapClientList = () => {
+    return Object.keys(clientLookupTable).map((clientId, i) => {
+      const client = clientLookupTable[clientId]
+      console.log(client)
+      return (
+        <li key={i}>{client.name}</li>
+      )
+    })
+  }
 
   return (
     <>
@@ -14,7 +25,7 @@ const CoachDashboard = ({ userInfo, clientList, clientComments, getUserData, cle
             <div className="h-full bg-[#f0ede8]/[0.5] shadow-md rounded-2xl p-[1rem] overflow-auto">
               <div className="text-xl">Client List</div>
               <div className="rounded px-8 pt-6 pb-8 mb-4 flex-col justify-center items-center">
-                {clientList.map((client, i) => <li key={i} className="">{client}</li>)}
+                {mapClientList()}
               </div>
             </div>
           </div>
