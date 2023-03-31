@@ -61,11 +61,11 @@ const Signup = ({ createNewUser }) => {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-          <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="password" ref={passwordRef} required placeholder="password" />
+          <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" value="123456" type="password" ref={passwordRef} required placeholder="password" />
         </div>
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-bold mb-2">Password Confirmation:</label>
-          <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="password" ref={passwordConfirmRef} required placeholder="confirm password" />
+          <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" value="123456" type="password" ref={passwordConfirmRef} required placeholder="confirm password" />
         </div>
         <div className="mb-6">
           <button className="bg-[#394D79] hover:bg-[#293757] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading} type="submit">Sign up</button>

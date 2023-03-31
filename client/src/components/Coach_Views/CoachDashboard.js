@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { apiRequests } from '../../util/apiRequests.js';
 
 const CoachDashboard = ({ clientLookupTable, clientComments }) => {
   const navigate = useNavigate();
+  const [addClientField, setAddClientField] = useState("");
+  const [clientAdded, setClientAdded] = useState(false);
+  const [error, setError] = useState(false);
 
   const mapClientList = () => {
     return Object.keys(clientLookupTable).map((clientId, i) => {
@@ -16,6 +20,35 @@ const CoachDashboard = ({ clientLookupTable, clientComments }) => {
     })
   }
 
+  const isEmail = (email) => {
+    return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+  }
+
+  const handleAddClient = (e) => {
+    e.preventDefault();
+
+    if (isEmail(addClientField)) {
+      const coachId = 1;
+
+      apiRequests.addClient(coachId, addClientField)
+        .then(result => {
+          setClientAdded(true)
+        })
+        .catch(error => {
+          console.log(error);
+          setError('Error adding client')
+        })
+
+    } else {
+      setError('Invalid email format')
+    }
+    const timer = setTimeout(() => {
+      setClientAdded(false)
+      setError(false)
+      clearTimeout(timer)
+    }, 5000)
+  }
+
   return (
     <>
       <div className="h-[calc(100%-4.5rem)] w-full flex flex-wrap px-4 py-3">
@@ -24,6 +57,16 @@ const CoachDashboard = ({ clientLookupTable, clientComments }) => {
           <div className="w-[20rem] h-[90%]">
             <div className="h-full bg-[#f0ede8]/[0.5] shadow-md rounded-2xl p-[1rem] overflow-auto">
               <div className="text-xl">Client List</div>
+              <form  onSubmit={(e) => {
+                  handleAddClient(e)
+                }}>
+                <input type="email" placeholder="Enter client email" value={addClientField} onChange={(e) => {
+                  setAddClientField(e.target.value)
+                }}></input>
+                <button className="rounded-2xl bg-slate-300 p-2 m-2">Add client</button>
+                {clientAdded && <div>Client added!</div>}
+                {error && <div>{error}</div>}
+              </form>
               <div className="rounded px-8 pt-6 pb-8 mb-4 flex-col justify-center items-center">
                 {mapClientList()}
               </div>

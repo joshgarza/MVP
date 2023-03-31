@@ -36,6 +36,37 @@ module.exports = {
       callback(error, null);
     }
   },
+  addClient: async (query, callback) => {
+    const { coachId, clientEmail } = query;
+    try {
+      pool.query(
+        `SELECT id
+        FROM users
+        WHERE email='${clientEmail}'`
+      ).then(result => {
+          if (result.rows.length > 0) {
+            const clientId = result.rows[0].id;
+
+            pool.query(
+              `INSERT INTO clients(
+                id,
+                coach_id
+              )
+              VALUES (
+                ${clientId},
+                ${coachId}
+              )`
+            ).then(result => {
+              callback(null, result);
+            })
+          } else {
+            callback('Error adding connection', null)
+          }
+        })
+    } catch (error) {
+      callback(error, null);
+    }
+  },
   addWorkout: async (query, callback) => {
     const { clientId, date, exercise, set, reps, rir, backoffPercent, weight } = query
     try {

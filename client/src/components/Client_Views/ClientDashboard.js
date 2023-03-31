@@ -98,13 +98,13 @@ const ClientDashboard = ({ workout }) => {
             {workout !== undefined &&
               <div className="rounded px-8 pt-6 pb-8 mb-4 flex-col justify-start items-center">
                 Next:
-                {workout.map((slot, i) => {
+                {/* {workout?.map((slot, i) => {
                   return (
                     <div key={i} className="mx-2 flex">
                       <div>{slot.exercise} x {slot.reps} reps @{slot.rpe}{slot.weight}</div>
                     </div>
                   )
-                })}
+                })} */}
               </div>
             }
           </div>

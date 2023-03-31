@@ -6,5 +6,6 @@ router.post('/signup/:id', controllers.userControllers.createUser);
 router.get('/workout/:id', controllers.userControllers.getWorkouts);
 router.get('/workout', controllers.userControllers.getAllClients)
 router.post('/workout', controllers.userControllers.addWorkout);
+router.post('/addClient', controllers.userControllers.addClient);
 
 module.exports = router;

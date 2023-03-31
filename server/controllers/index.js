@@ -15,6 +15,7 @@ const userControllers = {
     })
   },
   createUser: (req, res) => {
+    const coachId = 1;
     let user = {
       email: req.body.params.email,
       id: req.body.params.firebaseId,
@@ -25,7 +26,17 @@ const userControllers = {
         console.log('Error creating user', err)
         res.status(404).end()
       }
-      res.status(201).end()
+    })
+    res.status(201).end()
+  },
+  addClient: (req, res) => {
+    models.addClient(req.body, (err, data) => {
+      if (err) {
+        console.log('Error adding client', err)
+        res.status(404).end()
+      }
+      console.log(data)
+      res.status(201).end();
     })
   },
   addWorkout: (req, res) => {
@@ -78,51 +89,54 @@ const userControllers = {
       }
       const clientData = {};
 
-      for (let entry of data) {
-        const { client_id, date, exercise, set, reps, rir, backoffPercent, weight } = entry;
+      if (Object.keys(data).length > 0) {
+        for (let entry of data) {
+          const { client_id, date, exercise, set, reps, rir, backoffPercent, weight } = entry;
 
-        if (clientData[client_id]) {
-          const workoutDate = clientData[client_id].workouts.date;
-          if (workoutDate[date]){
-            workoutDate[date].push({
-              exercise: exercise,
-              set: set,
-              reps: reps,
-              rir: rir,
-              weight: weight,
-              backoffPercent: backoffPercent
-            })
+          if (clientData[client_id]) {
+            const workoutDate = clientData[client_id].workouts.date;
+            if (workoutDate[date]){
+              workoutDate[date].push({
+                exercise: exercise,
+                set: set,
+                reps: reps,
+                rir: rir,
+                weight: weight,
+                backoffPercent: backoffPercent
+              })
+            } else {
+              workoutDate[date] = [{
+                exercise: exercise,
+                set: set,
+                reps: reps,
+                rir: rir,
+                weight: weight,
+                backoffPercent: backoffPercent
+              }]
+            }
           } else {
-            workoutDate[date] = [{
-              exercise: exercise,
-              set: set,
-              reps: reps,
-              rir: rir,
-              weight: weight,
-              backoffPercent: backoffPercent
-            }]
-          }
-        } else {
-          clientData[client_id] = {
-            // update name later; need to adjust schema and post request from client; denormalize all our data
-            name: 'Alex A.',
-            workouts: {
-              date: {
-                [date]: [
-                  {
-                    exercise: exercise,
-                    set: set,
-                    reps: reps,
-                    rir: rir,
-                    weight: weight,
-                    backoffPercent: backoffPercent
-                  }
-                ]
+            clientData[client_id] = {
+              // update name later; need to adjust schema and post request from client; denormalize all our data
+              name: 'Alex A.',
+              workouts: {
+                date: {
+                  [date]: [
+                    {
+                      exercise: exercise,
+                      set: set,
+                      reps: reps,
+                      rir: rir,
+                      weight: weight,
+                      backoffPercent: backoffPercent
+                    }
+                  ]
+                }
               }
             }
           }
         }
       }
+
       res.status(200).send(clientData)
     })
   }

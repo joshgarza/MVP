@@ -51,7 +51,7 @@ const App = () => {
 
   useEffect(() => {
     if (userRole === 'Coach') {
-      populateClientLookup();
+      populateClientLookupTable();
     }
   }, [userRole])
 
@@ -79,7 +79,7 @@ const App = () => {
     setUserRole('')
   }
 
-  const populateClientLookup = () => {
+  const populateClientLookupTable = () => {
     axios.get('/api/workout')
       .then(result => {
         setClientLookupTable(result.data);
@@ -114,7 +114,7 @@ const App = () => {
             <Route index element={<CoachDashboard clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
             <Route path='dashboard' element={<CoachDashboard clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
             <Route path='profile' element={<UpdateProfile />} />
-            <Route path='program' element={<CalendarView clientLookupTable={clientLookupTable} populateClientLookup={populateClientLookup} />} />
+            <Route path='program' element={<CalendarView clientLookupTable={clientLookupTable} populateClientLookupTable={populateClientLookupTable} />} />
           </Route>
           <Route
             path="client"
