@@ -22,11 +22,21 @@ const CalendarView = ({ clientLookupTable, populateClientLookupTable }) => {
   const [selectedDate, setSelectedDate] = useState(currDate);
   const [showModal, setShowModal] = useState(false);
 
-  const clientId = 4;
-
   const addWorkoutModal = (date) => {
     setShowModal(true)
     setSelectedDate(date)
+  }
+
+  const displayWorkoutShorthand = (date) => {
+    const workout = clientLookupTable[selectedClient].workouts[date]
+    return (
+      <div onClick={() => {
+        setShowModal(true)
+        setSelectedDate(date)
+      }}>
+        <div>{workout.map((slot) => slot.exercise)}</div>
+      </div>
+    )
   }
 
   const selectClient = (name) => {
@@ -94,16 +104,14 @@ const CalendarView = ({ clientLookupTable, populateClientLookupTable }) => {
                     {date.day}
                   </h1>
                   <div className="flex items-center justify-center gap-2 cursor-pointer" onClick={() => {
-                    console.log(clientLookupTable[selectedClient])
                     if (!clientLookupTable[selectedClient].workouts[date.dateString]) {
                       addWorkoutModal(date.dateString)
                     }
                   }}>
-                    {console.log(clientLookupTable[selectedClient], 'lookup table')}
                     {
                       clientLookupTable[selectedClient].workouts[date.dateString]
                       ?
-                      <div className="bg-slate-500">Workout Plan</div>
+                      displayWorkoutShorthand(date.dateString)
                       :
                       <div className="flex items-center justify-center gap-2">
                         <FcPlus className=""/>
@@ -124,7 +132,7 @@ const CalendarView = ({ clientLookupTable, populateClientLookupTable }) => {
         </div>
       }
       {showModal && createPortal(
-        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate} populateClientLookupTable={populateClientLookupTable} clientId={selectedClient}/>,
+        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate} populateClientLookupTable={populateClientLookupTable} clientLookupTable={clientLookupTable} clientId={selectedClient}/>,
         document.getElementById('modal')
       )}
     </>

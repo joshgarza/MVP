@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable }) => {
+const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, clientLookupTable }) => {
   const [workout, setWorkout] = useState([]);
+
+  useEffect(() => {
+    if (clientLookupTable[clientId].workouts[date] !== undefined) {
+      setWorkout(clientLookupTable[clientId].workouts[date])
+    }
+  }, []);
 
   const structure =
     {
@@ -23,6 +29,24 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable }) 
     backoffPercent: '',
     weight: '',
   }
+
+//   {
+//     "3": {
+//         "name": "josh",
+//         "workouts": {
+//             "Wed Mar 29 2023": [
+//                 {
+//                     "exercise": "squat",
+//                     "sets": [{
+//                       "reps": "4",
+//                       "rir": "2",
+//                       "weight": ""
+//                     }]
+//                 }
+//             ]
+//         }
+//     }
+// }
 
   const assignmentForm = (rowIdx) => {
     const slot = workout[rowIdx];
