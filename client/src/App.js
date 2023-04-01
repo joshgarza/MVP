@@ -80,7 +80,9 @@ const App = () => {
   }
 
   const populateClientLookupTable = () => {
-    axios.get('/api/workout')
+    const data = userInfo.id;
+    console.log(data)
+    axios.get(`/api/getAllClients/${data}`)
       .then(result => {
         setClientLookupTable(result.data);
       })
@@ -111,8 +113,8 @@ const App = () => {
               </PrivateRoute>
             }
           >
-            <Route index element={<CoachDashboard clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
-            <Route path='dashboard' element={<CoachDashboard clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
+            <Route index element={<CoachDashboard userInfo={userInfo} clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
+            <Route path='dashboard' element={<CoachDashboard userInfo={userInfo} clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
             <Route path='profile' element={<UpdateProfile />} />
             <Route path='program' element={<CalendarView clientLookupTable={clientLookupTable} populateClientLookupTable={populateClientLookupTable} />} />
           </Route>

@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = ({ createNewUser }) => {
+  const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -20,7 +21,7 @@ const Signup = ({ createNewUser }) => {
     try {
       setError('');
       setLoading(true);
-      let user = await signup(emailRef.current.value, passwordRef.current.value, userType);
+      let user = await signup(nameRef.current.value, emailRef.current.value, passwordRef.current.value, userType);
       if (user) {
         const newUserCreation = await createNewUser(user);
         if (newUserCreation) {
@@ -54,6 +55,10 @@ const Signup = ({ createNewUser }) => {
             <option className="" value="Client">Client</option>
             <option className="" value="Coach">Coach</option>
           </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" ref={nameRef} required placeholder="full name" />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Email:</label>

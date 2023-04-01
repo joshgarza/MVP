@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { apiRequests } from '../../util/apiRequests.js';
 
-const CoachDashboard = ({ clientLookupTable, clientComments }) => {
+const CoachDashboard = ({ userInfo, clientLookupTable, clientComments }) => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [addClientField, setAddClientField] = useState("");
   const [clientAdded, setClientAdded] = useState(false);
   const [error, setError] = useState(false);
@@ -28,9 +28,10 @@ const CoachDashboard = ({ clientLookupTable, clientComments }) => {
     e.preventDefault();
 
     if (isEmail(addClientField)) {
-      const coachId = 1;
+      // const coachId = 1;
+      console.log(currentUser)
 
-      apiRequests.addClient(coachId, addClientField)
+      apiRequests.addClient(userInfo.id, addClientField)
         .then(result => {
           setClientAdded(true)
         })

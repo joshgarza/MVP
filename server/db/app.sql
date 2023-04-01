@@ -14,15 +14,12 @@ CREATE TABLE IF NOT EXISTS users(
   id SERIAL PRIMARY KEY,
   firebase_id VARCHAR(40) NOT NULL,
   email VARCHAR(320) NOT NULL,
-  user_type VARCHAR(25) NOT NULL
+  user_type VARCHAR(25) NOT NULL,
+  name VARCHAR(100) NOT NULL
 );
 
--- CREATE TABLE IF NOT EXISTS coaches(
---   id INT REFERENCES users (id)
--- );
-
-CREATE TABLE IF NOT EXISTS clients(
-  id INT REFERENCES users (id),
+CREATE TABLE IF NOT EXISTS clientAssignments(
+  client_id INT UNIQUE REFERENCES users (id),
   coach_id INT REFERENCES users (id)
 );
 

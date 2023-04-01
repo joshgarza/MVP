@@ -1,11 +1,11 @@
-const controllers = require('./controllers/index.js');
+const controllers = require('./controllers');
 const router = require('express').Router();
 
-router.get('/login/:id', controllers.userControllers.loginUser);
-router.post('/signup/:id', controllers.userControllers.createUser);
-router.get('/workout/:id', controllers.userControllers.getWorkouts);
-router.get('/workout', controllers.userControllers.getAllClients)
-router.post('/workout', controllers.userControllers.addWorkout);
-router.post('/addClient', controllers.userControllers.addClient);
+router.get('/login/:id', controllers.loginUser);
+router.post('/signup/:id', controllers.createUser);
+router.get('/workout/:id', controllers.getWorkouts);
+router.get('/getAllClients/:id', controllers.getAllClients)
+router.post('/workout', controllers.addWorkout);
+router.post('/addClient', controllers.addClient);
 
 module.exports = router;

@@ -16,8 +16,9 @@ const CalendarView = ({ clientLookupTable, populateClientLookupTable }) => {
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const currDate = dayjs();
   const [today, setToday] = useState(currDate);
+  const initialClient = Object.keys(clientLookupTable)[0];
   const [displayDate, setDisplayDate] = useState(currDate);
-  const [selectedClient, setSelectedClient] = useState('4');
+  const [selectedClient, setSelectedClient] = useState(initialClient);
   const [selectedDate, setSelectedDate] = useState(currDate);
   const [showModal, setShowModal] = useState(false);
 
@@ -93,12 +94,14 @@ const CalendarView = ({ clientLookupTable, populateClientLookupTable }) => {
                     {date.day}
                   </h1>
                   <div className="flex items-center justify-center gap-2 cursor-pointer" onClick={() => {
-                    if (!clientLookupTable[selectedClient].workouts.date[date.dateString]) {
+                    console.log(clientLookupTable[selectedClient])
+                    if (!clientLookupTable[selectedClient].workouts[date.dateString]) {
                       addWorkoutModal(date.dateString)
                     }
                   }}>
+                    {console.log(clientLookupTable[selectedClient], 'lookup table')}
                     {
-                      clientLookupTable[selectedClient].workouts.date[date.dateString]
+                      clientLookupTable[selectedClient].workouts[date.dateString]
                       ?
                       <div className="bg-slate-500">Workout Plan</div>
                       :
@@ -121,7 +124,7 @@ const CalendarView = ({ clientLookupTable, populateClientLookupTable }) => {
         </div>
       }
       {showModal && createPortal(
-        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate} populateClientLookupTable={populateClientLookupTable} clientId={4}/>,
+        <WorkoutBuilder onClose={() => setShowModal(false)} date={selectedDate} populateClientLookupTable={populateClientLookupTable} clientId={selectedClient}/>,
         document.getElementById('modal')
       )}
     </>
