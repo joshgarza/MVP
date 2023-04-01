@@ -113,8 +113,8 @@ const App = () => {
               </PrivateRoute>
             }
           >
-            <Route index element={<CoachDashboard userInfo={userInfo} clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
-            <Route path='dashboard' element={<CoachDashboard userInfo={userInfo} clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
+            <Route index element={<CoachDashboard userInfo={userInfo} populateClientLookupTable={populateClientLookupTable} clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
+            <Route path='dashboard' element={<CoachDashboard userInfo={userInfo} populateClientLookupTable={populateClientLookupTable} clientLookupTable={clientLookupTable} clientComments={clientComments}/>} />
             <Route path='profile' element={<UpdateProfile />} />
             <Route path='program' element={<CalendarView clientLookupTable={clientLookupTable} populateClientLookupTable={populateClientLookupTable} />} />
           </Route>

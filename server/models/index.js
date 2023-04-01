@@ -100,10 +100,14 @@ module.exports = {
       } else {
         const allClientsData = {};
 
+        console.log(clients.rows)
+
         for (let i = 0; i < clients.rows.length; i++) {
           const clientId = clients.rows[i].client_id;
           const client = await pool.query(`SELECT * FROM users WHERE id=${clientId}`)
-          const { name } = client.rows[i]
+
+          console.log('client', client)
+          const { name } = client.rows[0]
 
           allClientsData[clientId] = {
             name: name,

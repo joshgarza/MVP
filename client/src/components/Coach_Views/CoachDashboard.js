@@ -3,17 +3,21 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { apiRequests } from '../../util/apiRequests.js';
 
-const CoachDashboard = ({ userInfo, clientLookupTable, clientComments }) => {
+const CoachDashboard = ({ userInfo, populateClientLookupTable, clientLookupTable, clientComments }) => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [addClientField, setAddClientField] = useState("");
   const [clientAdded, setClientAdded] = useState(false);
   const [error, setError] = useState(false);
 
+  useEffect(() => {
+    populateClientLookupTable();
+  }, [])
+
   const mapClientList = () => {
     return Object.keys(clientLookupTable).map((clientId, i) => {
       const client = clientLookupTable[clientId]
-      console.log(client)
+      console.log('mapping', client)
       return (
         <li key={i}>{client.name}</li>
       )
@@ -28,12 +32,10 @@ const CoachDashboard = ({ userInfo, clientLookupTable, clientComments }) => {
     e.preventDefault();
 
     if (isEmail(addClientField)) {
-      // const coachId = 1;
-      console.log(currentUser)
-
       apiRequests.addClient(userInfo.id, addClientField)
         .then(result => {
           setClientAdded(true)
+          populateClientLookupTable()
         })
         .catch(error => {
           console.log(error);
