@@ -81,7 +81,6 @@ const App = () => {
 
   const populateClientLookupTable = () => {
     const data = userInfo.id;
-    console.log(data)
     axios.get(`/api/getAllClients/${data}`)
       .then(result => {
         setClientLookupTable(result.data);

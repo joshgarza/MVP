@@ -17,7 +17,6 @@ const CoachDashboard = ({ userInfo, populateClientLookupTable, clientLookupTable
   const mapClientList = () => {
     return Object.keys(clientLookupTable).map((clientId, i) => {
       const client = clientLookupTable[clientId]
-      console.log('mapping', client)
       return (
         <li key={i}>{client.name}</li>
       )
