@@ -30,9 +30,10 @@ CREATE TABLE IF NOT EXISTS workouts(
   coach_id INT REFERENCES users (id),
   date VARCHAR(100) NOT NULL,
   exercise VARCHAR(100) NOT NULL,
-  set VARCHAR(3) NOT NULL,
+  exercise_order INT NOT NULL,
+  set INT NOT NULL,
   reps VARCHAR(3) NOT NULL,
   rir VARCHAR(3),
-  backoffPercent VARCHAR(3),
+  backoff_percent VARCHAR(3),
   weight VARCHAR(4)
 );

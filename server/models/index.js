@@ -35,24 +35,26 @@ module.exports = {
     }
   },
   addWorkout: async (query, callback) => {
-    const { clientId, date, exercise, set, reps, rir, backoffPercent, weight } = query
+    const { clientId, date, exercise, exerciseOrder, set, reps, rir, backoffPercent, weight } = query
     try {
       pool.query(
         `INSERT INTO workouts(
           client_id,
           date,
           exercise,
+          exercise_order,
           set,
           reps,
           rir,
-          backoffPercent,
+          backoff_percent,
           weight
         )
         VALUES (
           ${clientId},
           '${date}',
           '${exercise}',
-          '${set}',
+          ${exerciseOrder},
+          ${set},
           '${reps}',
           '${rir}',
           '${backoffPercent}',
@@ -100,13 +102,9 @@ module.exports = {
       } else {
         const allClientsData = {};
 
-        console.log(clients.rows)
-
         for (let i = 0; i < clients.rows.length; i++) {
           const clientId = clients.rows[i].client_id;
           const client = await pool.query(`SELECT * FROM users WHERE id=${clientId}`)
-
-          console.log('client', client)
           const { name } = client.rows[0]
 
           allClientsData[clientId] = {
@@ -117,26 +115,39 @@ module.exports = {
           const workouts = await pool.query(`SELECT * FROM workouts WHERE client_id=${clientId}`)
 
           workouts.rows.forEach(entry => {
-            const { date, exercise, set, reps, rir, backoffPercent, weight } = entry;
+            const { date, exercise, exercise_order, set, reps, rir, backoff_percent, weight } = entry;
 
-            if (allClientsData[clientId].workouts[date]) {
-              workoutExists.push({
-                exercise: exercise,
-                set: set,
-                reps: reps,
-                rir: rir,
-                weight: weight,
-                backoffPercent: backoffPercent
-              })
+            const setStructure = {
+              reps: reps,
+              rir: rir,
+              backoffPercent: backoff_percent,
+              weight: weight
+            }
+
+            // workout exists on that date
+            if (allClientsData[clientId].workouts[date]){
+              const currWorkout = allClientsData[clientId].workouts[date];
+
+              if (currWorkout[exercise_order] !== undefined) {
+                const currExercise = currWorkout[exercise_order];
+                currExercise.sets[set] = setStructure;
+              } else {
+                currWorkout[exercise_order] = {
+                  exercise: exercise,
+                  sets: []
+                }
+                currWorkout[exercise_order].sets[set] = setStructure;
+              }
             } else {
-              allClientsData[clientId].workouts[date] = [{
+              // workout doesn't exist yet
+              allClientsData[clientId].workouts[date] = [];
+              const currWorkout = allClientsData[clientId].workouts[date]
+              currWorkout[exercise_order] = {
                 exercise: exercise,
-                set: set,
-                reps: reps,
-                rir: rir,
-                weight: weight,
-                backoffPercent: backoffPercent
-              }]
+                sets: []
+              }
+              const currWorkoutSets = currWorkout[exercise_order].sets;
+              currWorkoutSets[set] = setStructure;
             }
           })
         }

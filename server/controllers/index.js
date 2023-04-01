@@ -14,17 +14,19 @@ module.exports = {
   addWorkout: (req, res) => {
     const { clientId, date, workout } = req.body;
     const workoutData = [];
-    workout.forEach(slot => {
+    console.log(workout)
+    workout.forEach((slot, i) => {
       const exercise = slot.exercise;
 
-      slot.sets.forEach((set, i) => {
+      slot.sets.forEach((set, j) => {
         const { reps, rir, backoffPercent, weight } = set
 
         const setData = {
           clientId: clientId,
           date: date,
           exercise: exercise,
-          set: i,
+          exerciseOrder: i,
+          set: j,
           reps: reps,
           rir: rir ?? '',
           backoffPercent: backoffPercent ?? '',
