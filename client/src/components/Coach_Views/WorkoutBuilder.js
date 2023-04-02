@@ -17,6 +17,7 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, cl
       exercise: '',
       sets: [
         {
+          rpe: '',
           reps: '',
           rir: '',
           backoffPercent: '',
@@ -26,6 +27,7 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, cl
     };
 
   const setStructure = {
+    rpe: '',
     reps: '',
     rir: '',
     backoffPercent: '',
@@ -138,12 +140,32 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, cl
     setWorkout(copyWorkout);
   }
 
+  const sanitizeInputs = (sanitizedWorkout) => {
+    sanitizedWorkout.forEach(slot => {
+      slot.exercise = slot.exercise === '' ? null : slot.exercise;
+      slot.sets.forEach(set => {
+        set.reps = set.reps === '' ? null : parseInt(set.reps)
+        set.rir = set.rir === '' ? null : parseInt(set.rir)
+        set.rpe = set.rpe === '' ? null : parseInt(set.rpe)
+        set.backoffPercent = set.backoffPercent === '' ? null : parseInt(set.backoffPercent)
+        set.weight = set.weight === '' ? null : parseInt(set.weight)
+      })
+    })
+
+    console.log(sanitizedWorkout)
+
+    return sanitizedWorkout
+  }
+
   const submitWorkout = () => {
+
+    console.log('incoming workout', workout)
     const data = {
       clientId: clientId,
       date: date,
-      workout: workout
+      workout: sanitizeInputs(workout)
     }
+
     axios.post('/api/workout', data)
       .then(result => {
         console.log(result)
@@ -154,22 +176,38 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, cl
   }
 
   const editWorkout = () => {
-    const data = {
-      clientId: clientId,
-      date: date,
-      workout: workout
-    }
+    console.log(workout, 'edit workout')
+    if (workout.length === 0) {
+      deleteWorkout();
+    } else {
+      const data = {
+        clientId: clientId,
+        date: date,
+        workout: workout
+      }
+      data.workout.forEach(slot => {
+        slot.sets.forEach(set => {
+          set.reps = parseInt(set.reps)
+          set.rir = parseInt(set.rir)
+          set.rpe = parseInt(set.rpe)
+          set.backoffPercent = parseInt(set.backoffPercent)
+          set.weight = parseInt(set.weight)
+        })
+      })
 
-    axios.put('/api/workout', data)
-      .then(result => {
-        console.log(result)
-        populateClientLookupTable();
-        onClose();
-      })
-      .catch(err => {
-        console.log(err)
-        // alert('Error updating workout')
-      })
+      console.log(data.workout)
+
+      axios.put('/api/workout', data)
+        .then(result => {
+          console.log(result)
+          populateClientLookupTable();
+          onClose();
+        })
+        .catch(err => {
+          console.log(err)
+          // alert('Error updating workout')
+        })
+    }
   }
 
   const deleteWorkout = () => {
