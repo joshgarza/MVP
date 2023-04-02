@@ -1,4 +1,4 @@
-const models = require('../models');
+const { models } = require('../models');
 
 module.exports = {
   addClient: (req, res) => {
@@ -42,7 +42,11 @@ module.exports = {
         })
       })
     })
-    res.status(201).end(JSON.stringify(workoutData));
+    if (workout.length === 0) {
+      res.status(404).end()
+    } else {
+      res.status(201).end(JSON.stringify(workoutData));
+    }
   },
   createUser: (req, res) => {
     let user = {
@@ -58,6 +62,15 @@ module.exports = {
       }
     })
     res.status(201).end()
+  },
+  editWorkouts: (req, res) => {
+    models.editWorkouts(req.body, (err, data) => {
+      if (err) {
+        console.log('Error editing workout:', err)
+        res.status(404).end();
+      }
+      res.status(201).end()
+    })
   },
   getAllClients: (req, res) => {
     const coachId = req.params.id;

@@ -1,6 +1,39 @@
 const { pool } = require('../db/db.js');
 
-module.exports = {
+const addWorkoutHelper = (workout, clientId, date) => {
+  const workoutData = [];
+
+  workout.forEach((slot, i) => {
+    const exercise = slot.exercise;
+
+    slot.sets.forEach((set, j) => {
+      const { reps, rir, backoffPercent, weight } = set
+
+      const setData = {
+        clientId: clientId,
+        date: date,
+        exercise: exercise,
+        exerciseOrder: i,
+        set: j,
+        reps: reps,
+        rir: rir ?? '',
+        backoffPercent: backoffPercent ?? '',
+        weight: weight ?? '',
+      }
+
+      this.addWorkout(setData, (err, data) => {
+        if (err) {
+          console.log('Error adding workout', err)
+        }
+        workoutData.push(data)
+      })
+
+    })
+  })
+  return workoutData
+}
+
+const models = {
   addClient: async (query, callback) => {
     const { coachId, clientEmail } = query;
     try {
@@ -88,6 +121,40 @@ module.exports = {
       callback(error, null);
     }
   },
+  editWorkouts: async (query, callback) => {
+    const { workout, clientId, date } = query;
+
+    try {
+      // console.log(workout)
+      workout.forEach((slot, i) => {
+        const { exercise } = slot
+        console.log(exercise)
+        slot.sets.forEach((set, j) => {
+          const { id, reps, rir, backoffPercent, weight } = set;
+          console.log(set)
+          pool.query(`
+            UPDATE workouts
+            SET
+            exercise='${exercise}',
+            reps='${reps}',
+            rir='${rir}',
+            backoff_percent='${backoffPercent}',
+            weight='${weight}'
+            WHERE
+            id=${id}
+          `).then(result => {
+            callback(null, result)
+          }).catch(error => {
+            callback(error, null)
+          })
+        })
+      })
+    } catch(error) {
+      callback(error, null)
+    }
+
+
+  },
   getAllClients: async (query, callback) => {
     const coachId = query;
 
@@ -115,9 +182,10 @@ module.exports = {
           const workouts = await pool.query(`SELECT * FROM workouts WHERE client_id=${clientId}`)
 
           workouts.rows.forEach(entry => {
-            const { date, exercise, exercise_order, set, reps, rir, backoff_percent, weight } = entry;
+            const { id, date, exercise, exercise_order, set, reps, rir, backoff_percent, weight } = entry;
 
             const setStructure = {
+              id: id,
               reps: reps,
               rir: rir,
               backoffPercent: backoff_percent,
@@ -188,3 +256,5 @@ module.exports = {
     }
   },
 }
+
+module.exports.models = models;
