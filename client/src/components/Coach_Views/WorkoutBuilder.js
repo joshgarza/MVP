@@ -168,7 +168,25 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, cl
       })
       .catch(err => {
         console.log(err)
-        alert('Error updating workout')
+        // alert('Error updating workout')
+      })
+  }
+
+  const deleteWorkout = () => {
+    const data = {
+      clientId: clientId,
+      date: date
+    }
+
+    axios.delete('/api/workout', { data: data })
+      .then(result => {
+        console.log(result);
+        populateClientLookupTable();
+        onClose();
+      })
+      .catch(err => {
+        console.log(err)
+        // alert('Error deleting workout')
       })
   }
 
@@ -183,9 +201,14 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, cl
                 submitWorkout()
               }}>Submit Workout</button>
               :
-              <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
-                editWorkout()
-              }}>Edit Workout</button>
+              <>
+                <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
+                  editWorkout()
+                }}>Edit Workout</button>
+                <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
+                  deleteWorkout()
+                }}>Delete Workout</button>
+              </>
             }
             <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={onClose}>Close</button>
           </div>
