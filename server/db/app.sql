@@ -32,8 +32,9 @@ CREATE TABLE IF NOT EXISTS workouts(
   exercise VARCHAR(100) NOT NULL,
   exercise_order INT NOT NULL,
   set INT NOT NULL,
-  reps VARCHAR(3) NOT NULL,
-  rir VARCHAR(3),
-  backoff_percent VARCHAR(3),
-  weight VARCHAR(4)
+  reps INT NOT NULL,
+  rir INT,
+  rpe INT,
+  backoff_percent INT,
+  weight INT
 );

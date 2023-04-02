@@ -14,12 +14,12 @@ module.exports = {
   addWorkout: (req, res) => {
     const { clientId, date, workout } = req.body;
     const workoutData = [];
-    console.log(workout)
+
     workout.forEach((slot, i) => {
       const exercise = slot.exercise;
 
       slot.sets.forEach((set, j) => {
-        const { reps, rir, backoffPercent, weight } = set
+        const { reps, rir, backoffPercent, weight, rpe } = set
 
         const setData = {
           clientId: clientId,
@@ -27,10 +27,11 @@ module.exports = {
           exercise: exercise,
           exerciseOrder: i,
           set: j,
-          reps: reps,
-          rir: rir ?? '',
-          backoffPercent: backoffPercent ?? '',
-          weight: weight ?? '',
+          reps: reps === '' ? null : reps,
+          rir: rir === '' ? null : rir,
+          rpe: rpe === '' ? null : rpe,
+          backoffPercent: backoffPercent === '' ? null : backoffPercent,
+          weight: weight === '' ? null : weight,
         }
 
         models.addWorkout(setData, (err, data) => {
@@ -73,6 +74,7 @@ module.exports = {
     })
   },
   editWorkouts: (req, res) => {
+    console.log('incoming body', req.body.workout[0])
     models.editWorkouts(req.body, (err, data) => {
       if (err) {
         console.log('Error editing workout:', err)

@@ -1,38 +1,5 @@
 const { pool } = require('../db/db.js');
 
-const addWorkoutHelper = (workout, clientId, date) => {
-  const workoutData = [];
-
-  workout.forEach((slot, i) => {
-    const exercise = slot.exercise;
-
-    slot.sets.forEach((set, j) => {
-      const { reps, rir, backoffPercent, weight } = set
-
-      const setData = {
-        clientId: clientId,
-        date: date,
-        exercise: exercise,
-        exerciseOrder: i,
-        set: j,
-        reps: reps,
-        rir: rir ?? '',
-        backoffPercent: backoffPercent ?? '',
-        weight: weight ?? '',
-      }
-
-      this.addWorkout(setData, (err, data) => {
-        if (err) {
-          console.log('Error adding workout', err)
-        }
-        workoutData.push(data)
-      })
-
-    })
-  })
-  return workoutData
-}
-
 const models = {
   addClient: async (query, callback) => {
     const { coachId, clientEmail } = query;
@@ -68,7 +35,8 @@ const models = {
     }
   },
   addWorkout: async (query, callback) => {
-    const { clientId, date, exercise, exerciseOrder, set, reps, rir, backoffPercent, weight } = query
+    const { clientId, date, exercise, exerciseOrder, set, reps, rir, rpe, backoffPercent, weight } = query
+
     try {
       pool.query(
         `INSERT INTO workouts(
@@ -79,6 +47,7 @@ const models = {
           set,
           reps,
           rir,
+          rpe,
           backoff_percent,
           weight
         )
@@ -88,13 +57,20 @@ const models = {
           '${exercise}',
           ${exerciseOrder},
           ${set},
-          '${reps}',
-          '${rir}',
-          '${backoffPercent}',
-          '${weight}'
+          ${reps},
+          ${rir},
+          ${rpe},
+          ${backoffPercent},
+          ${weight}
         )`
       )
-      callback(null, query)
+        .then(result => {
+          console.log('successful addition')
+          callback(null, query)
+        })
+        .catch(error => {
+          callback(error, null)
+        })
     } catch (error) {
       callback(error, null);
     }
@@ -144,7 +120,20 @@ const models = {
         const { exercise } = slot
 
         slot.sets.forEach((set, j) => {
-          const { id, reps, rir, backoffPercent, weight } = set;
+          const { id, reps, rir, rpe, backoffPercent, weight } = set;
+
+          const setData = {
+            clientId: clientId,
+            date: date,
+            exercise: exercise  === '' || undefined ? null : exercise,
+            exerciseOrder: i,
+            set: j,
+            reps: reps === '' || undefined ? null : reps,
+            rir: rir === '' || undefined ? null : rir,
+            rpe: rpe === '' || undefined ? null : rpe,
+            backoffPercent: backoffPercent === '' || undefined ? null : backoffPercent,
+            weight: weight === '' || undefined ? null : weight,
+          }
 
           pool.query(`SELECT * FROM workouts WHERE id=${id}`)
             .then(result => {
@@ -152,11 +141,12 @@ const models = {
               pool.query(`
                 UPDATE workouts
                 SET
-                exercise='${exercise}',
-                reps='${reps}',
-                rir='${rir}',
-                backoff_percent='${backoffPercent}',
-                weight='${weight}'
+                exercise='${setData.exercise}',
+                reps=${setData.reps},
+                rir=${setData.rir},
+                rpe=${setData.rpe},
+                backoff_percent=${setData.backoffPercent},
+                weight=${setData.weight}
                 WHERE
                 id=${id}
               `)
@@ -165,6 +155,7 @@ const models = {
                   // callback(null, result)
                 })
                 .catch(error => {
+                  console.log('error in updating row')
                   callback(error, null)
                 })
             })
@@ -179,19 +170,21 @@ const models = {
                   set,
                   reps,
                   rir,
+                  rpe,
                   backoff_percent,
                   weight
                 )
                 VALUES (
-                  ${clientId},
-                  '${date}',
-                  '${exercise}',
-                  ${i},
-                  ${j},
-                  '${reps}',
-                  '${rir}',
-                  '${backoffPercent}',
-                  '${weight}'
+                  ${setData.clientId},
+                  '${setData.date}',
+                  '${setData.exercise}',
+                  ${setData.exerciseOrder},
+                  ${setData.set},
+                  ${setData.reps},
+                  ${setData.rir},
+                  ${setData.rpe},
+                  ${setData.backoffPercent},
+                  ${setData.weight}
                 )`
               )
                 .then(result => {
@@ -201,7 +194,6 @@ const models = {
                   callback(error, null)
                 })
             })
-
         })
       })
       callback(null, true)
@@ -238,12 +230,13 @@ const models = {
           const workouts = await pool.query(`SELECT * FROM workouts WHERE client_id=${clientId}`)
 
           workouts.rows.forEach(entry => {
-            const { id, date, exercise, exercise_order, set, reps, rir, backoff_percent, weight } = entry;
+            const { id, date, exercise, exercise_order, set, reps, rir, rpe, backoff_percent, weight } = entry;
 
             const setStructure = {
               id: id,
               reps: reps,
               rir: rir,
+              rpe: rpe,
               backoffPercent: backoff_percent,
               weight: weight
             }
