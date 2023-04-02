@@ -63,6 +63,15 @@ module.exports = {
     })
     res.status(201).end()
   },
+  deleteWorkout: (req, res) => {
+    models.deleteWorkout(req.body, (err, data) => {
+      if (err) {
+        console.log('Error deleting workout:', err)
+        res.status(404).end()
+      }
+      res.status(204).end()
+    })
+  },
   editWorkouts: (req, res) => {
     models.editWorkouts(req.body, (err, data) => {
       if (err) {

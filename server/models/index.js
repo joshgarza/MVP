@@ -121,6 +121,20 @@ const models = {
       callback(error, null);
     }
   },
+  deleteWorkout: async (query, callback) => {
+    const { clientId, date } = query;
+    try {
+      pool.query(`
+        DELETE FROM workouts
+        WHERE client_id=${clientId}
+        AND date='${date}'
+      `).then(result => {
+        callback(null, result)
+      })
+    } catch(error) {
+      callback(error, null)
+    }
+  },
   editWorkouts: async (query, callback) => {
     const { workout, clientId, date } = query;
 
@@ -128,27 +142,69 @@ const models = {
       // console.log(workout)
       workout.forEach((slot, i) => {
         const { exercise } = slot
-        console.log(exercise)
+
         slot.sets.forEach((set, j) => {
           const { id, reps, rir, backoffPercent, weight } = set;
-          console.log(set)
-          pool.query(`
-            UPDATE workouts
-            SET
-            exercise='${exercise}',
-            reps='${reps}',
-            rir='${rir}',
-            backoff_percent='${backoffPercent}',
-            weight='${weight}'
-            WHERE
-            id=${id}
-          `).then(result => {
-            callback(null, result)
-          }).catch(error => {
-            callback(error, null)
-          })
+
+          pool.query(`SELECT * FROM workouts WHERE id=${id}`)
+            .then(result => {
+              console.log('it exists')
+              pool.query(`
+                UPDATE workouts
+                SET
+                exercise='${exercise}',
+                reps='${reps}',
+                rir='${rir}',
+                backoff_percent='${backoffPercent}',
+                weight='${weight}'
+                WHERE
+                id=${id}
+              `)
+                .then(result => {
+                  console.log('successful update')
+                  // callback(null, result)
+                })
+                .catch(error => {
+                  callback(error, null)
+                })
+            })
+            .catch(error => {
+              console.log('it doesnt exist')
+              pool.query(
+                `INSERT INTO workouts(
+                  client_id,
+                  date,
+                  exercise,
+                  exercise_order,
+                  set,
+                  reps,
+                  rir,
+                  backoff_percent,
+                  weight
+                )
+                VALUES (
+                  ${clientId},
+                  '${date}',
+                  '${exercise}',
+                  ${i},
+                  ${j},
+                  '${reps}',
+                  '${rir}',
+                  '${backoffPercent}',
+                  '${weight}'
+                )`
+              )
+                .then(result => {
+                  console.log('successful addition')
+                })
+                .catch(error => {
+                  callback(error, null)
+                })
+            })
+
         })
       })
+      callback(null, true)
     } catch(error) {
       callback(error, null)
     }

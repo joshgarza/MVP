@@ -5,6 +5,7 @@ router.get('/login/:id', controllers.loginUser);
 router.post('/signup/:id', controllers.createUser);
 router.get('/workout/:id', controllers.getWorkouts);
 router.put('/workout', controllers.editWorkouts);
+router.delete('/workout', controllers.deleteWorkout);
 router.get('/getAllClients/:id', controllers.getAllClients)
 router.post('/workout', controllers.addWorkout);
 router.post('/addClient', controllers.addClient);
