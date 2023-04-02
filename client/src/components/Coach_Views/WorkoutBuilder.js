@@ -3,10 +3,12 @@ import axios from 'axios';
 
 const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, clientLookupTable }) => {
   const [workout, setWorkout] = useState([]);
+  const [edit, setEdit] = useState(false);
 
   useEffect(() => {
     if (clientLookupTable[clientId].workouts[date] !== undefined) {
       setWorkout(clientLookupTable[clientId].workouts[date])
+      setEdit(true);
     }
   }, []);
 
@@ -151,15 +153,40 @@ const WorkoutBuilder = ({ onClose, date, clientId, populateClientLookupTable, cl
       .catch(err => console.log(err))
   }
 
+  const editWorkout = () => {
+    const data = {
+      clientId: clientId,
+      date: date,
+      workout: workout
+    }
+
+    axios.put('/api/workout', data)
+      .then(result => {
+        console.log(result)
+        populateClientLookupTable();
+        onClose();
+      })
+      .catch(err => {
+        console.log(err)
+        alert('Error updating workout')
+      })
+  }
+
   return (
     <>
       <div className="fixed inset-0 bg-slate-700/50 w-screen h-screen grid items-center justify-center">
         <div className="grid items-center justify-center bg-slate-700 w-[40rem] h-[100%] px-8 py-2">
           <div className="flex justify-between items-center p-8 my-2 w-[40rem]">
             <div className="text-white">{date}</div>
-            <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
-              submitWorkout()
-            }}>Submit Workout</button>
+            {!edit ?
+              <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
+                submitWorkout()
+              }}>Submit Workout</button>
+              :
+              <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={() => {
+                editWorkout()
+              }}>Edit Workout</button>
+            }
             <button className="rounded-2xl bg-slate-300 p-2 m-2" onClick={onClose}>Close</button>
           </div>
           <div className="overflow-y-auto h-[40rem]">

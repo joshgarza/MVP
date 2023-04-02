@@ -34,7 +34,8 @@ const CalendarView = ({ clientLookupTable, populateClientLookupTable }) => {
         setShowModal(true)
         setSelectedDate(date)
       }}>
-        <div>{workout.map((slot) => slot.exercise)}</div>
+        <div>{workout.map((slot, i) => {
+          return <div key={i}>{slot.exercise}</div>})}</div>
       </div>
     )
   }
