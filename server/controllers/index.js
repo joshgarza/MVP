@@ -13,7 +13,6 @@ module.exports = {
   },
   addWorkout: (req, res) => {
     const { clientId, date, workout } = req.body;
-    const workoutData = [];
 
     workout.forEach((slot, i) => {
       const exercise = slot.exercise;
@@ -34,20 +33,17 @@ module.exports = {
           weight: weight === '' ? null : weight,
         }
 
-        models.addWorkout(setData, (err, data) => {
-          if (err) {
-            console.log('Error adding workout', err)
-            res.status(404).end();
-          }
-          workoutData.push(data)
-        })
+        models.addWorkout(setData)
+          .then(result => {
+            console.log('successful addition')
+            res.status(201).end(JSON.stringify(workoutData));
+          })
+          .catch(error => {
+            console.log('error adding workout')
+            res.status(404).end()
+          })
       })
     })
-    if (workout.length === 0) {
-      res.status(404).end()
-    } else {
-      res.status(201).end(JSON.stringify(workoutData));
-    }
   },
   createUser: (req, res) => {
     let user = {

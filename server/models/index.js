@@ -35,45 +35,34 @@ const models = {
     }
   },
   addWorkout: async (query, callback) => {
-    const { clientId, date, exercise, exerciseOrder, set, reps, rir, rpe, backoffPercent, weight } = query
+    const { clientId, date, exercise, exerciseOrder, set, reps, rir, rpe, backoffPercent, weight } = query;
 
-    try {
-      pool.query(
-        `INSERT INTO workouts(
-          client_id,
-          date,
-          exercise,
-          exercise_order,
-          set,
-          reps,
-          rir,
-          rpe,
-          backoff_percent,
-          weight
-        )
-        VALUES (
-          ${clientId},
-          '${date}',
-          '${exercise}',
-          ${exerciseOrder},
-          ${set},
-          ${reps},
-          ${rir},
-          ${rpe},
-          ${backoffPercent},
-          ${weight}
-        )`
+    return pool.query(
+      `INSERT INTO workouts(
+        client_id,
+        date,
+        exercise,
+        exercise_order,
+        set,
+        reps,
+        rir,
+        rpe,
+        backoff_percent,
+        weight
       )
-        .then(result => {
-          console.log('successful addition')
-          callback(null, query)
-        })
-        .catch(error => {
-          callback(error, null)
-        })
-    } catch (error) {
-      callback(error, null);
-    }
+      VALUES (
+        ${clientId},
+        '${date}',
+        '${exercise}',
+        ${exerciseOrder},
+        ${set},
+        ${reps},
+        ${rir},
+        ${rpe},
+        ${backoffPercent},
+        ${weight}
+      )`
+    )
   },
   createUser: async (query, callback) => {
     try {
