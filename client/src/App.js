@@ -6,11 +6,16 @@ import { useAuth } from './contexts/AuthContext';
 import {
   AddWorkout,
   CalendarView,
-  ClientView,
+  ClientCalendar,
+  ClientChat,
   ClientDashboard,
+  ClientNavBar,
+  ClientProfile,
+  ClientProgress,
+  ClientView,
+  ClientWorkouts,
   CoachDashboard,
   CoachView,
-  ClientWorkouts,
   ForgotPassword,
   Login,
   PrivateRoute,
@@ -121,14 +126,16 @@ const App = () => {
             path="client"
             element={
               <PrivateRoute isAllowed={!!currentUser && userRole === "Client"}>
-                <ClientView userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo} getUserWorkouts={getUserWorkouts}/>
+                <ClientNavBar userInfo={userInfo} getUserData={getUserData} clearUserInfo={clearUserInfo} getUserWorkouts={getUserWorkouts}/>
               </PrivateRoute>
             }
           >
-            <Route index element={<ClientDashboard workout={workout}/>} />
-            <Route path='dashboard' element={<ClientDashboard workout={workout}/>} />
-            <Route path='profile' element={<UpdateProfile />} />
-            <Route path='workouts' element={<ClientWorkouts workout={workout}/>} />
+            <Route index element={<ClientDashboard />} />
+            <Route path='dashboard' element={<ClientDashboard />} />
+            <Route path='calendar' element={<ClientCalendar />} />
+            <Route path='progress' element={<ClientProgress />} />
+            <Route path='chat' element={<ClientChat />} />
+            <Route path='profile' element={<ClientProfile />} />
           </Route>
           <Route path='/signup' element={<Signup createNewUser={createNewUser} />} />
           <Route path='/' element={<Login getUserData={getUserData} />} />
