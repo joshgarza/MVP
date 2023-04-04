@@ -4,7 +4,6 @@ import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import { useAuth } from './contexts/AuthContext';
 import {
-  AddWorkout,
   CalendarView,
   ClientCalendar,
   ClientChat,
@@ -12,8 +11,6 @@ import {
   ClientNavBar,
   ClientProfile,
   ClientProgress,
-  ClientView,
-  ClientWorkouts,
   CoachDashboard,
   CoachView,
   ForgotPassword,

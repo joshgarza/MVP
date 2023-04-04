@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from 'axios';
 import { AiOutlineHome, AiOutlineCalendar, AiOutlineLineChart, AiOutlineProfile } from 'react-icons/ai';
 import { BsChatDots } from "react-icons/bs";
 
-const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) => {
+const ClientNavBar = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState('');
+  const [selected, setSelected] = useState('dashboard')
   const [navOptions, setNavOptions] = useState([
     {name: 'dashboard', touched: false},
     {name: 'calendar', touched: false},
@@ -23,17 +23,18 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
     }
   }, [])
 
-  const iconStyle = 'h-full w-full p-4 text-4xl flex items-center justify-center';
+  const iconStyle = 'w-full p-4 text-4xl flex items-center justify-center rounded-3xl';
 
   const mapNavOptions = () => {
     return navOptions.map((navOption, i) => {
+      const { name, touched } = navOption
       return (
-        <Link className={`${iconStyle} ${navOptions[i].touched ? 'bg-gray-400' : 'bg-white'}`} to={navOptions[i].name} onTouchStart={(e) => {
+        <Link className={`${iconStyle} ${touched ? 'bg-gray-400' : 'bg-white'} ${name === selected ? 'bg-gray-400' : 'bg-white'}`} to={name} onContextMenu={(e) => handleContextMenu(e)} onTouchStart={(e) => {
               handleTouchStart(e, i)
             }} onTouchEnd={(e) => {
-              handleTouchEnd(e, i)
+              handleTouchEnd(e, i, name)
             }}>
-            {renderIcon(navOption.name)}
+            {renderIcon(name)}
         </Link>
       )
     })
@@ -55,7 +56,17 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
     }
   }
 
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
+
   const handleTouchStart = (e, idx) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.cancelBubble = true;
+    e.returnValue = false;
     console.log(idx)
     const copyNavOptions = [...navOptions];
     navOptions[idx].touched = true;
@@ -63,11 +74,12 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
     setNavOptions(copyNavOptions);
   }
 
-  const handleTouchEnd = (e, idx) => {
+  const handleTouchEnd = (e, idx, name) => {
     const copyNavOptions = [...navOptions];
     navOptions[idx].touched = false;
 
     setNavOptions(copyNavOptions);
+    setSelected(name)
   }
 
   const handleLogout = async () => {
@@ -88,7 +100,7 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
   }
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-full ">
       <section className="block fixed inset-x-0 bottom-0 bg-white shadow border">
         <ul className="flex items-center justify-center">
           {mapNavOptions()}
@@ -99,4 +111,4 @@ const ClientView = ({ userInfo, getUserData, clearUserInfo, getUserWorkouts }) =
   )
 }
 
-export default ClientView;
+export default ClientNavBar;
