@@ -12,7 +12,9 @@ export const generateCalendar = (day = dayjs().date(), month = dayjs().month(), 
       day: date.date(),
       month: date.month(),
       year: date.year(),
-      dateString: date.toDate().toDateString()
+      toDate: date.toDate(),
+      dateString: date.toDate().toDateString(),
+      date: date
     })
   }
 

@@ -9,25 +9,43 @@ const ClientCalendar = () => {
   dayjs.extend(weekOfYear);
   dayjs.extend(dayOfYear);
   const [today, setToday] = useState(dayjs());
-  const [selectedDate, setSelectedDate] = useState(today.toDate().toDateString());
-  const dates = generateCalendar(today.date(), today.month(), today.year());
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [dates, setDates] = useState(generateCalendar(today.date(), today.month(), today.year()))
   const days = ["S", "M", "T", "W", "T", "F", "S"];
 
   const handlePreviousWeek = () => {
-    setToday(today.dayOfYear(today.dayOfYear() - 7))
-    setSelectedDate(today.dayOfYear(today.dayOfYear() - 7).toDate().toDateString())
+    const prevWeek = selectedDate.dayOfYear(selectedDate.dayOfYear() - 7);
+    const firstDayOfDates = dates[0];
+
+    if (firstDayOfDates.date.toDate() > prevWeek.toDate()) {
+      setSelectedDate(prevWeek)
+      setToday(prevWeek)
+      setDates(generateCalendar(prevWeek.date(), prevWeek.month(), prevWeek.year()));
+    } else {
+      setSelectedDate(prevWeek)
+      setToday(prevWeek)
+    }
   }
 
   const handleNextWeek = () => {
-    setToday(today.dayOfYear(today.dayOfYear() + 7))
-    setSelectedDate(today.dayOfYear(today.dayOfYear() + 7).toDate().toDateString())
+    const nextWeek = selectedDate.dayOfYear(selectedDate.dayOfYear() + 7);
+    const lastDayOfDates = dates[dates.length - 1];
+
+    if (lastDayOfDates.date.toDate() < nextWeek.toDate()) {
+      setSelectedDate(nextWeek)
+      setToday(nextWeek)
+      setDates(generateCalendar(nextWeek.date(), nextWeek.month(), nextWeek.year()));
+    } else {
+      setSelectedDate(nextWeek)
+      setToday(nextWeek)
+    }
   }
 
 
   return (
     <div className="grid-rows-8 my-3">
       <div className="flex justify-around gap-4 m-2 p-2 my-4">
-        <div>{selectedDate}</div>
+        <div>{selectedDate.toDate().toDateString()}</div>
         <div className="flex items-center gap-32 text-xl">
           <GrFormPrevious onTouchEnd={() => {handlePreviousWeek()}}/>
           <GrFormNext onTouchEnd={() => {handleNextWeek()}}/>
@@ -44,14 +62,20 @@ const ClientCalendar = () => {
         {dates.map((date, idx) => {
           return (
             <div key={idx} className={`flex items-center justify-center border-t-2 mb-2 p-2`} onTouchEnd={() => {
-              setSelectedDate(date.dateString)
+              setSelectedDate(date.date)
             }}>
-              <div className={`flex items-center justify-center w-full h-full rounded-full mb-2 ${selectedDate === date.dateString ? "bg-[#868fb3] text-white" : "bg-white"}`}>
+              <div className={`flex items-center justify-center w-full h-full rounded-full mb-2 ${selectedDate.toDate().toDateString() === date.dateString ? "bg-[#868fb3] text-white" : "bg-white"}`}>
                 <h1 className="flex items-center justify-center text-lg px-2">{date.day}</h1>
               </div>
             </div>
           )
         })}
+      </div>
+      {/* Workout shorthand goes below */}
+      <div>
+        <div>
+          No workout scheduled for {selectedDate.toDate().toDateString()}
+        </div>
       </div>
     </div>
   )
