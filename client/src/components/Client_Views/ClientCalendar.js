@@ -72,12 +72,16 @@ const ClientCalendar = () => {
 
   return (
     <div className="grid-rows-8 my-3">
-      <div className="flex justify-between gap-4 m-2 p-2 my-4">
+      <div className="flex items-center justify-between gap-4 m-2 p-2 my-4">
         <div>{selectedDate.toDate().toDateString()}</div>
         <div className="flex items-center gap-10">
-          <GrFormPrevious className={`rounded-full text-xl ${changeWeekTouched[0].touched ? "bg-[#868fb3] text-white" : "bg-white"}`} onTouchStart={() => {handleTouchStart(0)}} onTouchEnd={() => {handlePreviousWeek(0)}}/>
-          <div onTouchEnd={() => {handleSetToday()}}>Today</div>
-          <GrFormNext className={`rounded-full text-xl ${changeWeekTouched[1].touched ? "bg-[#868fb3] text-white" : "bg-white"}`} onTouchStart={() => {handleTouchStart(1)}} onTouchEnd={() => {handleNextWeek(1)}}/>
+          <div className="p-3" onTouchStart={() => {handleTouchStart(0)}} onTouchEnd={() => {handlePreviousWeek(0)}}>
+            <GrFormPrevious className={`rounded-full text-xl m-2 ${changeWeekTouched[0].touched ? "bg-[#868fb3] text-white" : "bg-white"}`}/>
+          </div>
+          <div className="" onTouchEnd={() => {handleSetToday()}}>Today</div>
+          <div className="p-3" onTouchStart={() => {handleTouchStart(1)}} onTouchEnd={() => {handleNextWeek(1)}}>
+            <GrFormNext className={`rounded-full text-xl m-2 ${changeWeekTouched[1].touched ? "bg-[#868fb3] text-white" : "bg-white"}`}/>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-7 mx-4">
