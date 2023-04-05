@@ -72,9 +72,9 @@ const ClientCalendar = () => {
 
   return (
     <div className="grid-rows-8 my-3">
-      <div className="flex items-center justify-between gap-4 m-2 p-2 my-4">
+      <div className="flex items-center justify-between m-2 p-2 my-4">
         <div>{selectedDate.toDate().toDateString()}</div>
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-8">
           <div className="p-3" onTouchStart={() => {handleTouchStart(0)}} onTouchEnd={() => {handlePreviousWeek(0)}}>
             <GrFormPrevious className={`rounded-full text-xl m-2 ${changeWeekTouched[0].touched ? "bg-[#868fb3] text-white" : "bg-white"}`}/>
           </div>
