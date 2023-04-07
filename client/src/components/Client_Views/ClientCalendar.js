@@ -154,8 +154,8 @@ const ClientCalendar = ({ clientWorkouts }) => {
   console.log(selectedDate.toDate());
 
   return (
-    <div className="grid-rows-8 my-3">
-      <div className="flex items-center justify-between m-2 p-2 my-4">
+    <div className="grid-rows-8">
+      <div className="flex items-center justify-between m-2 p-2">
         <div>{selectedDate.toDate().toDateString()}</div>
         <div className="flex items-center gap-8">
           <div
@@ -250,22 +250,26 @@ const ClientCalendar = ({ clientWorkouts }) => {
           workoutLookupTable[selectedDate.toDate().toDateString()].map(
             (workout, i) => {
               return (
-                <div key={i} className="flex flex-col gap-2">
+                <div key={i} className="flex flex-col gap-2 mx-3">
                   <div>Workout {i + 1}</div>
                   {workout.map((slot, j) => {
                     return <li key={j}>{slot.exercise}</li>;
                   })}
-                  <Link
-                    to={`/client/workouts/${selectedDate.format("MM-DD-YYYY")}`}
-                    state={{
-                      workout: workout,
-                      workoutIdx: i,
-                      dateString: selectedDate.toDate().toDateString(),
-                    }}
-                    className="flex items-center justify-center bg-blue-400/80 rounded-full p-2 m-2"
-                  >
-                    View workout for this date
-                  </Link>
+                  <div className="flex items-center justify-center">
+                    <Link
+                      to={`/client/workouts/${selectedDate.format(
+                        "MM-DD-YYYY"
+                      )}`}
+                      state={{
+                        workout: workout,
+                        workoutIdx: i,
+                        dateString: selectedDate.toDate().toDateString(),
+                      }}
+                      className="flex items-center justify-center w-[50%] font-semibold bg-blue-400/80 rounded-full p-2"
+                    >
+                      View workout
+                    </Link>
+                  </div>
                 </div>
               );
             }
