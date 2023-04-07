@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import dayOfYear from "dayjs/plugin/dayOfYear";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { BsDot } from "react-icons/bs";
+import { Link, Outlet } from "react-router-dom";
 
 const ClientCalendar = ({ clientWorkouts }) => {
   dayjs.extend(weekOfYear);
@@ -219,15 +221,22 @@ const ClientCalendar = ({ clientWorkouts }) => {
               }}
             >
               <div
-                className={`flex items-center justify-center w-full h-full rounded-full mb-2 ${
-                  selectedDate.toDate().toDateString() === date.dateString
-                    ? "bg-[#868fb3] text-white"
-                    : "bg-white"
-                }`}
+                className={`flex flex-col items-center justify-center w-full h-full mb-2`}
               >
-                <h1 className="flex items-center justify-center text-lg px-2">
+                <h1
+                  className={`flex items-center justify-center rounded-full text-lg px-1 ${
+                    selectedDate.toDate().toDateString() === date.dateString
+                      ? "bg-[#868fb3] text-white"
+                      : "bg-white"
+                  }`}
+                >
                   {date.day}
                 </h1>
+                {workoutLookupTable[date.dateString] ? (
+                  <BsDot className="text-3xl text-red-400" />
+                ) : (
+                  <BsDot className="text-3xl invisible" />
+                )}
               </div>
             </div>
           );
@@ -235,10 +244,37 @@ const ClientCalendar = ({ clientWorkouts }) => {
       </div>
       {/* Workout shorthand goes below */}
       <div>
-        {/* <div>
-          No workout scheduled for {selectedDate.toDate().toDateString()}
-        </div> */}
+        {workoutLookupTable[selectedDate.toDate().toDateString()] ? (
+          workoutLookupTable[selectedDate.toDate().toDateString()].map(
+            (workout, i) => {
+              return (
+                <div>
+                  <div>Workout {i + 1}</div>
+                  {workout.map((slot, j) => {
+                    return <li>{slot.exercise}</li>;
+                  })}
+                  <Link
+                    to={`/client/workouts/${selectedDate
+                      .toDate()
+                      .toDateString()}`}
+                    state={{
+                      workoutList: { workout },
+                      date: selectedDate.toDate().toDateString(),
+                    }}
+                  >
+                    Go to workout!
+                  </Link>
+                </div>
+              );
+            }
+          )
+        ) : (
+          <div>
+            No workout scheduled for {selectedDate.toDate().toDateString()}
+          </div>
+        )}
       </div>
+      <Outlet />
     </div>
   );
 };

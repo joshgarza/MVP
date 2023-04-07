@@ -5,7 +5,9 @@ import ClientDashboard from "./Client_Views/ClientDashboard";
 import ClientNavBar from "./Client_Views/ClientNavBar";
 import ClientProfile from "./Client_Views/ClientProfile";
 import ClientProgress from "./Client_Views/ClientProgress";
-import ClientWorkoutOverview from "./Client_Views/ClientWorkoutOverview";
+import ClientWorkouts from "./Client_Views/ClientWorkouts";
+import ClientWorkoutsDate from "./Client_Views/ClientWorkoutsDate";
+import ClientWorkoutView from "./Client_Views/ClientWorkoutView";
 import CoachDashboard from "./Coach_Views/CoachDashboard";
 import CoachView from "./Coach_Views/CoachView";
 import ForgotPassword from "./Landing_Page/ForgotPassword";
@@ -22,7 +24,9 @@ export {
   ClientNavBar,
   ClientProfile,
   ClientProgress,
-  ClientWorkoutOverview,
+  ClientWorkouts,
+  ClientWorkoutsDate,
+  ClientWorkoutView,
   CoachDashboard,
   CoachView,
   ForgotPassword,

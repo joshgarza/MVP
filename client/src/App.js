@@ -11,6 +11,9 @@ import {
   ClientNavBar,
   ClientProfile,
   ClientProgress,
+  ClientWorkouts,
+  ClientWorkoutsDate,
+  ClientWorkoutView,
   CoachDashboard,
   CoachView,
   ForgotPassword,
@@ -18,7 +21,6 @@ import {
   PrivateRoute,
   Signup,
   UpdateProfile,
-  ClientWorkoutOverview,
 } from "./components";
 import { io } from "socket.io-client";
 
@@ -189,13 +191,14 @@ const App = () => {
             <Route index element={<ClientDashboard />} />
             <Route path="dashboard" element={<ClientDashboard />} />
             <Route
-              path="workout-overview"
-              element={<ClientWorkoutOverview />}
-            />
-            <Route
               path="calendar"
               element={<ClientCalendar clientWorkouts={clientWorkouts} />}
             />
+            <Route path="workouts" element={<ClientWorkouts />}>
+              <Route path=":date" element={<ClientWorkoutsDate />}>
+                <Route path=":idx" element={<ClientWorkoutView />} />
+              </Route>
+            </Route>
             <Route path="progress" element={<ClientProgress />} />
             <Route path="chat" element={<ClientChat />} />
             <Route path="profile" element={<ClientProfile />} />
@@ -214,6 +217,5 @@ const App = () => {
     </>
   );
 };
-// https://app.truecoach.co/coach/clients/aaron-adelson/workouts/376672840?start_date=2023-04-05
 
 export default App;
