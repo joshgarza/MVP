@@ -23,12 +23,12 @@ CREATE TABLE IF NOT EXISTS clientAssignments(
   coach_id INT REFERENCES users (id)
 );
 
-
 CREATE TABLE IF NOT EXISTS workouts(
   id SERIAL PRIMARY KEY,
   client_id INT REFERENCES users (id),
   coach_id INT REFERENCES users (id),
   date VARCHAR(100) NOT NULL,
+  workout_order INT NOT NULL,
   exercise VARCHAR(100) NOT NULL,
   exercise_order INT NOT NULL,
   set INT NOT NULL,

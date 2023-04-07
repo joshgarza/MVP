@@ -1,83 +1,98 @@
-const { models } = require('../models');
+const { models } = require("../models");
 
 module.exports = {
   addClient: (req, res) => {
     models.addClient(req.body, (err, data) => {
       if (err) {
-        console.log('Error adding client', err)
-        res.status(404).end()
+        console.log("Error adding client", err);
+        res.status(404).end();
       }
-      console.log(data)
       res.status(201).end();
-    })
+    });
   },
   addWorkout: (req, res) => {
     const { clientId, date, workout } = req.body;
 
-    workout.forEach((slot, i) => {
-      const exercise = slot.exercise;
+    const query = {
+      clientId: clientId,
+      date: date,
+    };
 
-      slot.sets.forEach((set, j) => {
-        const { reps, rir, backoffPercent, weight, rpe } = set
+    let workout_order = 0;
 
-        const setData = {
-          clientId: clientId,
-          date: date,
-          exercise: exercise,
-          exerciseOrder: i,
-          set: j,
-          reps: reps === '' ? null : reps,
-          rir: rir === '' ? null : rir,
-          rpe: rpe === '' ? null : rpe,
-          backoffPercent: backoffPercent === '' ? null : backoffPercent,
-          weight: weight === '' ? null : weight,
-        }
+    models.getWorkoutOrder(query).then((result) => {
+      // Increment workout order on multiple workouts for a given date
+      result.rows?.forEach((row, i) => {
+        workout_order = Math.max(workout_order, row.workout_order + 1);
+      });
 
-        models.addWorkout(setData)
-          .then(result => {
-            console.log('successful addition')
-            res.status(201).end(JSON.stringify(workoutData));
-          })
-          .catch(error => {
-            console.log('error adding workout')
-            res.status(404).end()
-          })
-      })
-    })
+      workout.forEach((slot, i) => {
+        const exercise = slot.exercise;
+
+        slot.sets.forEach((set, j) => {
+          const { reps, rir, backoffPercent, weight, rpe } = set;
+
+          const setData = {
+            clientId: clientId,
+            date: date,
+            workout_order: workout_order,
+            exercise: exercise,
+            exerciseOrder: i,
+            set: j,
+            reps: reps === "" ? null : reps,
+            rir: rir === "" ? null : rir,
+            rpe: rpe === "" ? null : rpe,
+            backoffPercent: backoffPercent === "" ? null : backoffPercent,
+            weight: weight === "" ? null : weight,
+          };
+
+          models
+            .addWorkout(setData)
+            .then((result) => {
+              console.log("successful addition");
+              res.status(201).end();
+            })
+            .catch((error) => {
+              console.log("error adding workout", error);
+              res.status(404).end();
+            });
+        });
+      });
+    });
   },
   createUser: (req, res) => {
     let user = {
       name: req.body.params.name,
       email: req.body.params.email,
       id: req.body.params.firebaseId,
-      userType: req.body.params.userType
-    }
+      userType: req.body.params.userType,
+    };
     models.createUser(user, (err, data) => {
       if (err) {
-        console.log('Error creating user', err)
-        res.status(404).end()
+        console.log("Error creating user", err);
+        res.status(404).end();
       }
-    })
-    res.status(201).end()
+    });
+    res.status(201).end();
   },
   deleteWorkout: (req, res) => {
     models.deleteWorkout(req.body, (err, data) => {
       if (err) {
-        console.log('Error deleting workout:', err)
-        res.status(404).end()
-      }
-      res.status(204).end()
-    })
-  },
-  editWorkouts: (req, res) => {
-    console.log('incoming body', req.body.workout[0])
-    models.editWorkouts(req.body, (err, data) => {
-      if (err) {
-        console.log('Error editing workout:', err)
+        console.log("Error deleting workout:", err);
         res.status(404).end();
       }
-      res.status(201).end()
-    })
+      res.status(204).end();
+    });
+  },
+  editWorkouts: (req, res) => {
+    console.log("incoming body", req.body.workout[0]);
+    models.editWorkouts(req.body, (err, data) => {
+      if (err) {
+        console.log("Error editing workout:", err);
+        res.status(404).end();
+      }
+      res.status(201).end();
+    });
   },
   getAllClients: (req, res) => {
     const coachId = req.params.id;
@@ -102,32 +117,32 @@ module.exports = {
 
     models.getAllClients(coachId, (err, data) => {
       if (err) {
-        console.log('Error getting all clients', err)
+        console.log("Error getting all clients", err);
         res.status(404).end();
       }
-      res.status(200).send(data)
-    })
+      res.status(200).send(data);
+    });
   },
   getWorkouts: (req, res) => {
     models.getWorkouts(req.params.id, (err, data) => {
       if (err) {
-        console.log('Error getting workouts', err)
+        console.log("Error getting workouts", err);
         res.status(404).end();
       }
       res.status(200).send(data);
-    })
+    });
   },
   loginUser: (req, res) => {
     let user = {
       email: req.query.email,
-      id: req.query.firebaseId
-    }
+      id: req.query.firebaseId,
+    };
     models.getUser(user, (err, data) => {
       if (err) {
-        console.log('Error getting user info', err)
-        res.status(404).end()
+        console.log("Error getting user info", err);
+        res.status(404).end();
       }
-      res.status(200).send(data)
-    })
+      res.status(200).send(data);
+    });
   },
-}
+};

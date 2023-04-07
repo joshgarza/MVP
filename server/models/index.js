@@ -1,19 +1,22 @@
-const { pool } = require('../db/db.js');
+const { pool } = require("../db/db.js");
 
 const models = {
   addClient: async (query, callback) => {
     const { coachId, clientEmail } = query;
     try {
-      pool.query(
-        `SELECT id
+      pool
+        .query(
+          `SELECT id
         FROM users
         WHERE email='${clientEmail}'`
-      ).then(result => {
+        )
+        .then((result) => {
           if (result.rows.length > 0) {
             const clientId = result.rows[0].id;
 
-            pool.query(
-              `INSERT INTO clientAssignments(
+            pool
+              .query(
+                `INSERT INTO clientAssignments(
                 client_id,
                 coach_id
               )
@@ -21,26 +24,41 @@ const models = {
                 ${clientId},
                 ${coachId}
               )`
-            ).then(result => {
-              callback(null, result);
-            }).catch(error => {
-              callback(error, null);
-            })
+              )
+              .then((result) => {
+                callback(null, result);
+              })
+              .catch((error) => {
+                callback(error, null);
+              });
           } else {
-            callback('Error adding connection', null)
+            callback("Error adding connection", null);
           }
-        })
+        });
     } catch (error) {
       callback(error, null);
     }
   },
   addWorkout: async (query, callback) => {
-    const { clientId, date, exercise, exerciseOrder, set, reps, rir, rpe, backoffPercent, weight } = query;
+    const {
+      clientId,
+      date,
+      workout_order,
+      exercise,
+      exerciseOrder,
+      set,
+      reps,
+      rir,
+      rpe,
+      backoffPercent,
+      weight,
+    } = query;
 
     return pool.query(
       `INSERT INTO workouts(
         client_id,
         date,
+        workout_order,
         exercise,
         exercise_order,
         set,
@@ -53,6 +71,7 @@ const models = {
       VALUES (
         ${clientId},
         '${date}',
+        ${workout_order},
         '${exercise}',
         ${exerciseOrder},
         ${set},
@@ -62,12 +81,13 @@ const models = {
         ${backoffPercent},
         ${weight}
       )`
-    )
+    );
   },
   createUser: async (query, callback) => {
     try {
-      pool.query(
-        `INSERT INTO users(
+      pool
+        .query(
+          `INSERT INTO users(
           firebase_id,
           email,
           user_type,
@@ -79,9 +99,10 @@ const models = {
           '${query.userType}',
           '${query.name}'
         )`
-      ).then(result => {
-        callback(null, result);
-      })
+        )
+        .then((result) => {
+          callback(null, result);
+        });
     } catch (error) {
       callback(error, null);
     }
@@ -89,15 +110,19 @@ const models = {
   deleteWorkout: async (query, callback) => {
     const { clientId, date } = query;
     try {
-      pool.query(`
+      pool
+        .query(
+          `
         DELETE FROM workouts
         WHERE client_id=${clientId}
         AND date='${date}'
-      `).then(result => {
-        callback(null, result)
-      })
-    } catch(error) {
-      callback(error, null)
+      `
+        )
+        .then((result) => {
+          callback(null, result);
+        });
+    } catch (error) {
+      callback(error, null);
     }
   },
   editWorkouts: async (query, callback) => {
@@ -106,7 +131,7 @@ const models = {
     try {
       // console.log(workout)
       workout.forEach((slot, i) => {
-        const { exercise } = slot
+        const { exercise } = slot;
 
         slot.sets.forEach((set, j) => {
           const { id, reps, rir, rpe, backoffPercent, weight } = set;
@@ -114,20 +139,24 @@ const models = {
           const setData = {
             clientId: clientId,
             date: date,
-            exercise: exercise  === '' || undefined ? null : exercise,
+            exercise: exercise === "" || undefined ? null : exercise,
             exerciseOrder: i,
             set: j,
-            reps: reps === '' || undefined ? null : reps,
-            rir: rir === '' || undefined ? null : rir,
-            rpe: rpe === '' || undefined ? null : rpe,
-            backoffPercent: backoffPercent === '' || undefined ? null : backoffPercent,
-            weight: weight === '' || undefined ? null : weight,
-          }
+            reps: reps === "" || undefined ? null : reps,
+            rir: rir === "" || undefined ? null : rir,
+            rpe: rpe === "" || undefined ? null : rpe,
+            backoffPercent:
+              backoffPercent === "" || undefined ? null : backoffPercent,
+            weight: weight === "" || undefined ? null : weight,
+          };
 
-          pool.query(`SELECT * FROM workouts WHERE id=${id}`)
-            .then(result => {
-              console.log('it exists')
-              pool.query(`
+          pool
+            .query(`SELECT * FROM workouts WHERE id=${id}`)
+            .then((result) => {
+              console.log("it exists");
+              pool
+                .query(
+                  `
                 UPDATE workouts
                 SET
                 exercise='${setData.exercise}',
@@ -138,20 +167,22 @@ const models = {
                 weight=${setData.weight}
                 WHERE
                 id=${id}
-              `)
-                .then(result => {
-                  console.log('successful update')
+              `
+                )
+                .then((result) => {
+                  console.log("successful update");
                   // callback(null, result)
                 })
-                .catch(error => {
-                  console.log('error in updating row')
-                  callback(error, null)
-                })
+                .catch((error) => {
+                  console.log("error in updating row");
+                  callback(error, null);
+                });
             })
-            .catch(error => {
-              console.log('it doesnt exist')
-              pool.query(
-                `INSERT INTO workouts(
+            .catch((error) => {
+              console.log("it doesnt exist");
+              pool
+                .query(
+                  `INSERT INTO workouts(
                   client_id,
                   date,
                   exercise,
@@ -175,22 +206,20 @@ const models = {
                   ${setData.backoffPercent},
                   ${setData.weight}
                 )`
-              )
-                .then(result => {
-                  console.log('successful addition')
+                )
+                .then((result) => {
+                  console.log("successful addition");
                 })
-                .catch(error => {
-                  callback(error, null)
-                })
-            })
-        })
-      })
-      callback(null, true)
-    } catch(error) {
-      callback(error, null)
+                .catch((error) => {
+                  callback(error, null);
+                });
+            });
+        });
+      });
+      callback(null, true);
+    } catch (error) {
+      callback(error, null);
     }
-
-
   },
   getAllClients: async (query, callback) => {
     const coachId = query;
@@ -199,7 +228,7 @@ const models = {
       const clients = await pool.query(
         `SELECT * FROM clientassignments
         WHERE coach_id=${coachId}`
-      )
+      );
 
       if (clients.rows.length === 0) {
         callback(null, {});
@@ -208,18 +237,33 @@ const models = {
 
         for (let i = 0; i < clients.rows.length; i++) {
           const clientId = clients.rows[i].client_id;
-          const client = await pool.query(`SELECT * FROM users WHERE id=${clientId}`)
-          const { name } = client.rows[0]
+          const client = await pool.query(
+            `SELECT * FROM users WHERE id=${clientId}`
+          );
+          const { name } = client.rows[0];
 
           allClientsData[clientId] = {
             name: name,
             workouts: {},
           };
 
-          const workouts = await pool.query(`SELECT * FROM workouts WHERE client_id=${clientId}`)
+          const workouts = await pool.query(
+            `SELECT * FROM workouts WHERE client_id=${clientId}`
+          );
 
-          workouts.rows.forEach(entry => {
-            const { id, date, exercise, exercise_order, set, reps, rir, rpe, backoff_percent, weight } = entry;
+          workouts.rows.forEach((entry) => {
+            const {
+              id,
+              date,
+              exercise,
+              exercise_order,
+              set,
+              reps,
+              rir,
+              rpe,
+              backoff_percent,
+              weight,
+            } = entry;
 
             const setStructure = {
               id: id,
@@ -227,11 +271,11 @@ const models = {
               rir: rir,
               rpe: rpe,
               backoffPercent: backoff_percent,
-              weight: weight
-            }
+              weight: weight,
+            };
 
             // workout exists on that date
-            if (allClientsData[clientId].workouts[date]){
+            if (allClientsData[clientId].workouts[date]) {
               const currWorkout = allClientsData[clientId].workouts[date];
 
               if (currWorkout[exercise_order] !== undefined) {
@@ -240,27 +284,27 @@ const models = {
               } else {
                 currWorkout[exercise_order] = {
                   exercise: exercise,
-                  sets: []
-                }
+                  sets: [],
+                };
                 currWorkout[exercise_order].sets[set] = setStructure;
               }
             } else {
               // workout doesn't exist yet
               allClientsData[clientId].workouts[date] = [];
-              const currWorkout = allClientsData[clientId].workouts[date]
+              const currWorkout = allClientsData[clientId].workouts[date];
               currWorkout[exercise_order] = {
                 exercise: exercise,
-                sets: []
-              }
+                sets: [],
+              };
               const currWorkoutSets = currWorkout[exercise_order].sets;
               currWorkoutSets[set] = setStructure;
             }
-          })
+          });
         }
-        callback(null, allClientsData)
+        callback(null, allClientsData);
       }
     } catch (error) {
-      callback(error, {})
+      callback(error, {});
     }
   },
   getUser: async (query, callback) => {
@@ -268,7 +312,7 @@ const models = {
       const user = await pool.query(
         `SELECT * FROM users
         WHERE firebase_id='${query.id}'`
-      )
+      );
       if (user.rows.length === 0) {
         callback(null, {});
       } else {
@@ -278,21 +322,28 @@ const models = {
       callback(error, null);
     }
   },
+  getWorkoutOrder: async (query) => {
+    const { clientId, date } = query;
+    let workout_order = 0;
+    return pool.query(
+      `SELECT * FROM workouts WHERE client_id=${clientId} AND date='${date}'`
+    );
+  },
   getWorkouts: async (query, callback) => {
     try {
       const workouts = await pool.query(
         `SELECT * FROM workouts
         WHERE client_id=${query}`
-      )
+      );
       if (workouts.rows.length === 0) {
         callback(null, {});
       } else {
-        callback(null, workouts.rows)
+        callback(null, workouts.rows);
       }
     } catch (error) {
-      callback(error, null)
+      callback(error, null);
     }
   },
-}
+};
 
 module.exports.models = models;

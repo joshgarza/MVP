@@ -17,9 +17,9 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use("/api", router);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api", router);
 app.use(cors(corsOptions));
 
 const io = new Server(socket, {
