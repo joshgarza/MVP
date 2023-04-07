@@ -6,14 +6,35 @@ import axios from "axios";
 const ClientWorkoutView = ({ userId, workoustStarted, setWorkoutStarted }) => {
   const location = useLocation();
   const params = useParams();
-  const [screen, setScreen] = useState();
-  const [workout, setWorkout] = useState();
+  // const [screen, setScreen] = useState();
+  // const [workout, setWorkout] = useState();
+  const [startTime, setStartTime] = useState(new Date());
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
-    location.state !== undefined
-      ? setWorkout(location.state.workout)
-      : getWorkout();
+    let interval = setInterval(() => {
+      let currTime = new Date();
+      setElapsedTime((elapsedTime) => currTime - startTime);
+      console.log(elapsedTime);
+    }, 1000);
   }, []);
+
+  const formatElapsedTime = () => {
+    const diff = elapsedTime;
+    const SEC = 1000,
+      MIN = 60 * SEC,
+      HRS = 60 * MIN;
+
+    const hrs = Math.floor(diff / HRS);
+    const min = Math.floor((diff % HRS) / MIN).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+    });
+    const sec = Math.floor((diff % MIN) / SEC).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+    });
+
+    return `${hrs}:${min}:${sec}`;
+  };
 
   const getWorkout = () => {
     // GET one workout based on userId from props, date and workoutIdx (workout_order) from params
@@ -22,7 +43,7 @@ const ClientWorkoutView = ({ userId, workoustStarted, setWorkoutStarted }) => {
 
   return (
     <div>
-      <div>Workout Timer: 5</div>
+      <div>Workout Timer: {formatElapsedTime()}</div>
       <Link
         to="/client"
         className="bg-blue-400/80 rounded-full p-2"
