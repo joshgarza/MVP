@@ -10,11 +10,11 @@ const ClientWorkoutsDateView = ({
 }) => {
   const location = useLocation();
   const params = useParams();
-  const [workouts, setWorkouts] = useState(location.state.workout.workout);
+  const [workouts, setWorkouts] = useState(location.state.workout);
   const [workoutIdx, setWorkoutIdx] = useState(location.state.workoutIdx);
-  const date = dayjs(params.date);
+  const date = location.state.dateString;
 
-  console.log(dayjs(params.date));
+  console.log(location);
   return (
     <>
       {workoutStarted ? (
@@ -23,7 +23,7 @@ const ClientWorkoutsDateView = ({
         <>
           <div className="flex flex-col items-center justify-center m-2">
             <div>Here is your workout for</div>
-            <div>{date.format("dddd, MMMM D, YYYY")}</div>
+            <div>{date}</div>
           </div>
           <div className="flex flex-col items-start justify-center mt-5 m-2">
             Workout #{workoutIdx + 1}

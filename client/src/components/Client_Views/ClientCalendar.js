@@ -151,6 +151,8 @@ const ClientCalendar = ({ clientWorkouts }) => {
     return workoutCollection;
   };
 
+  console.log(selectedDate.toDate());
+
   return (
     <div className="grid-rows-8 my-3">
       <div className="flex items-center justify-between m-2 p-2 my-4">
@@ -256,9 +258,9 @@ const ClientCalendar = ({ clientWorkouts }) => {
                   <Link
                     to={`/client/workouts/${selectedDate.format("MM-DD-YYYY")}`}
                     state={{
-                      workout: { workout },
+                      workout: workout,
                       workoutIdx: i,
-                      date: selectedDate.toDate().toDateString(),
+                      dateString: selectedDate.toDate().toDateString(),
                     }}
                     className="flex items-center justify-center bg-blue-400/80 rounded-full p-2 m-2"
                   >
