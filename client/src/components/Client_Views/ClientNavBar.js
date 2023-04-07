@@ -33,28 +33,29 @@ const ClientNavBar = ({
     }
   }, []);
 
-  const iconStyle =
-    "w-full p-4 text-4xl flex items-center justify-center rounded-3xl";
+  const iconStyle = "w-full flex items-center justify-center p-3";
 
   const mapNavOptions = () => {
     return navOptions.map((navOption, i) => {
       const { name, touched } = navOption;
       return (
-        <Link
-          className={`${iconStyle} ${touched ? "bg-gray-400" : "bg-white"} ${
-            name === selected ? "bg-gray-400" : "bg-white"
-          }`}
-          to={name}
-          onContextMenu={(e) => handleContextMenu(e)}
-          onTouchStart={(e) => {
-            handleTouchStart(e, i);
-          }}
-          onTouchEnd={(e) => {
-            handleTouchEnd(e, i, name);
-          }}
-        >
-          {renderIcon(name)}
-        </Link>
+        <div className={iconStyle}>
+          <Link
+            className={`text-4xl rounded-full p-2 ${
+              touched ? "bg-gray-400 text-white" : "bg-white"
+            } ${name === selected ? "bg-gray-400 text-white" : "bg-white"}`}
+            to={name}
+            onContextMenu={(e) => handleContextMenu(e)}
+            onTouchStart={(e) => {
+              handleTouchStart(e, i);
+            }}
+            onTouchEnd={(e) => {
+              handleTouchEnd(e, i, name);
+            }}
+          >
+            {renderIcon(name)}
+          </Link>
+        </div>
       );
     });
   };
@@ -82,15 +83,11 @@ const ClientNavBar = ({
   };
 
   const handleTouchStart = (e, idx) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.cancelBubble = true;
-    e.returnValue = false;
-    console.log(idx);
     const copyNavOptions = [...navOptions];
     navOptions[idx].touched = true;
 
     setNavOptions(copyNavOptions);
+    setSelected("");
   };
 
   const handleTouchEnd = (e, idx, name) => {
@@ -117,8 +114,8 @@ const ClientNavBar = ({
   }
 
   return (
-    <div className="w-full h-full ">
-      <section className="block fixed inset-x-0 bottom-0 bg-white shadow border">
+    <div className="w-full h-full">
+      <section className="block fixed inset-x-0 bottom-0 bg-white shadow border ">
         <ul className="flex items-center justify-center">{mapNavOptions()}</ul>
       </section>
       <Outlet />

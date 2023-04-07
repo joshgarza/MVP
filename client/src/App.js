@@ -18,6 +18,7 @@ import {
   PrivateRoute,
   Signup,
   UpdateProfile,
+  ClientWorkoutOverview,
 } from "./components";
 import { io } from "socket.io-client";
 
@@ -60,6 +61,9 @@ const App = () => {
   useEffect(() => {
     if (userRole === "Coach") {
       populateClientLookupTable();
+    }
+    if (userRole === "Client") {
+      console.log("get client data", userInfo);
     }
   }, [userRole]);
 
@@ -180,6 +184,10 @@ const App = () => {
           >
             <Route index element={<ClientDashboard />} />
             <Route path="dashboard" element={<ClientDashboard />} />
+            <Route
+              path="workout-overview"
+              element={<ClientWorkoutOverview />}
+            />
             <Route path="calendar" element={<ClientCalendar />} />
             <Route path="progress" element={<ClientProgress />} />
             <Route path="chat" element={<ClientChat />} />
@@ -199,5 +207,6 @@ const App = () => {
     </>
   );
 };
+// https://app.truecoach.co/coach/clients/aaron-adelson/workouts/376672840?start_date=2023-04-05
 
 export default App;
