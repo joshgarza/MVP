@@ -258,7 +258,8 @@ const ClientCalendar = ({ clientWorkouts }) => {
                       .toDate()
                       .toDateString()}`}
                     state={{
-                      workoutList: { workout },
+                      workout: { workout },
+                      workoutIdx: i,
                       date: selectedDate.toDate().toDateString(),
                     }}
                   >

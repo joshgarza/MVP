@@ -12,7 +12,7 @@ import {
   ClientProfile,
   ClientProgress,
   ClientWorkouts,
-  ClientWorkoutsDate,
+  ClientWorkoutsDateView,
   ClientWorkoutView,
   CoachDashboard,
   CoachView,
@@ -195,8 +195,14 @@ const App = () => {
               element={<ClientCalendar clientWorkouts={clientWorkouts} />}
             />
             <Route path="workouts" element={<ClientWorkouts />}>
-              <Route path=":date" element={<ClientWorkoutsDate />}>
-                <Route path=":idx" element={<ClientWorkoutView />} />
+              <Route
+                path=":date"
+                element={<ClientWorkoutsDateView userId={userInfo?.id} />}
+              >
+                <Route
+                  path=":idx"
+                  element={<ClientWorkoutView userId={userInfo?.id} />}
+                />
               </Route>
             </Route>
             <Route path="progress" element={<ClientProgress />} />

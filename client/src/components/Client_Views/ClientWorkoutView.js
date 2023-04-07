@@ -1,13 +1,12 @@
 import React from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-const ClientWorkoutView = () => {
+// if no location.state data, perform a GET request for workouts matching userId, date, and workout_idx in params
+const ClientWorkoutView = ({ userId }) => {
   const location = useLocation();
   const params = useParams();
 
-  console.log("params in workout view", params);
-
-  return <div>client workout view</div>;
+  return <div>Workout timer:</div>;
 };
 
 export default ClientWorkoutView;
