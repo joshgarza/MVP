@@ -248,7 +248,7 @@ const ClientCalendar = ({ clientWorkouts }) => {
           workoutLookupTable[selectedDate.toDate().toDateString()].map(
             (workout, i) => {
               return (
-                <div>
+                <div className="flex flex-col gap-2">
                   <div>Workout {i + 1}</div>
                   {workout.map((slot, j) => {
                     return <li>{slot.exercise}</li>;
@@ -262,8 +262,9 @@ const ClientCalendar = ({ clientWorkouts }) => {
                       workoutIdx: i,
                       date: selectedDate.toDate().toDateString(),
                     }}
+                    className="bg-blue-400/80 rounded-full p-2 m-2"
                   >
-                    Go to workout!
+                    View workouts for this date
                   </Link>
                 </div>
               );

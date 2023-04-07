@@ -59,6 +59,7 @@ const App = () => {
   const [clientComments, setClientComments] = useState(initialComments);
   const [clientLookupTable, setClientLookupTable] = useState({});
   const [clientWorkouts, setClientWorkouts] = useState([]);
+  const [workoutStarted, setWorkoutStarted] = useState(false);
 
   useEffect(() => {
     if (userRole === "Coach") {
@@ -184,6 +185,7 @@ const App = () => {
                   getUserData={getUserData}
                   clearUserInfo={clearUserInfo}
                   getUserWorkouts={getUserWorkouts}
+                  workoutStarted={workoutStarted}
                 />
               </PrivateRoute>
             }
@@ -197,11 +199,23 @@ const App = () => {
             <Route path="workouts" element={<ClientWorkouts />}>
               <Route
                 path=":date"
-                element={<ClientWorkoutsDateView userId={userInfo?.id} />}
+                element={
+                  <ClientWorkoutsDateView
+                    userId={userInfo?.id}
+                    workoutStarted={workoutStarted}
+                    setWorkoutStarted={setWorkoutStarted}
+                  />
+                }
               >
                 <Route
                   path=":idx"
-                  element={<ClientWorkoutView userId={userInfo?.id} />}
+                  element={
+                    <ClientWorkoutView
+                      userId={userInfo?.id}
+                      workoutStarted={workoutStarted}
+                      setWorkoutStarted={setWorkoutStarted}
+                    />
+                  }
                 />
               </Route>
             </Route>
