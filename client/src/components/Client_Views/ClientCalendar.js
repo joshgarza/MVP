@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { generateCalendar } from "../../util/calendar.js";
 import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import dayOfYear from "dayjs/plugin/dayOfYear";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
-const ClientCalendar = () => {
+const ClientCalendar = ({ clientWorkouts }) => {
   dayjs.extend(weekOfYear);
   dayjs.extend(dayOfYear);
   const [today, setToday] = useState(dayjs());
@@ -17,6 +17,11 @@ const ClientCalendar = () => {
     { name: "prev", touched: false },
     { name: "next", touched: false },
   ]);
+  const [workoutLookupTable, setWorkoutLookupTable] = useState({});
+
+  useEffect(() => {
+    setWorkoutLookupTable(constructWorkouts(clientWorkouts));
+  }, []);
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -76,6 +81,72 @@ const ClientCalendar = () => {
     } else {
       setSelectedDate(today);
     }
+  };
+
+  const constructWorkouts = (workoutsList) => {
+    const workoutCollection = {};
+
+    workoutsList.forEach((set, i) => {
+      const {
+        date,
+        workout_order,
+        exercise_order,
+        reps,
+        rir,
+        rpe,
+        weight,
+        backoff_percent,
+      } = set;
+      if (workoutCollection[date]) {
+        // add to the date
+        if (
+          workoutCollection[date][workout_order][exercise_order] !== undefined
+        ) {
+          // add to exercise
+          workoutCollection[date][workout_order][exercise_order].sets[set.set] =
+            {
+              set: set.set,
+              reps: reps,
+              rir: rir,
+              rpe: rpe,
+              weight: weight,
+              backoff_percent: backoff_percent,
+            };
+        } else {
+          // create exercise in table
+          workoutCollection[date][workout_order][exercise_order] = {
+            exercise: set.exercise,
+            sets: [],
+          };
+          workoutCollection[date][workout_order][exercise_order].sets[set.set] =
+            {
+              set: set.set,
+              reps: reps,
+              rir: rir,
+              rpe: rpe,
+              weight: weight,
+              backoff_percent: backoff_percent,
+            };
+        }
+        // if (workoutCollection[date][workout_order][exercise_order])
+      } else {
+        workoutCollection[date] = [];
+        workoutCollection[date][workout_order] = [];
+        workoutCollection[date][workout_order][exercise_order] = {
+          exercise: set.exercise,
+          sets: [],
+        };
+        workoutCollection[date][workout_order][exercise_order].sets[set.set] = {
+          set: set.set,
+          reps: reps,
+          rir: rir,
+          rpe: rpe,
+          weight: weight,
+          backoff_percent: backoff_percent,
+        };
+      }
+    });
+    return workoutCollection;
   };
 
   return (

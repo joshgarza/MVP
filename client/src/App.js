@@ -56,13 +56,17 @@ const App = () => {
   const [userRole, setUserRole] = useState();
   const [clientComments, setClientComments] = useState(initialComments);
   const [clientLookupTable, setClientLookupTable] = useState({});
-  const [workout, setWorkout] = useState([]);
+  const [clientWorkouts, setClientWorkouts] = useState([]);
 
   useEffect(() => {
     if (userRole === "Coach") {
       populateClientLookupTable();
     }
     if (userRole === "Client") {
+      axios.get(`/api/workout/${userInfo.id}`).then((result) => {
+        console.log(result, "result from getWorkouts");
+        setClientWorkouts(result.data);
+      });
       console.log("get client data", userInfo);
     }
   }, [userRole]);
@@ -115,7 +119,7 @@ const App = () => {
       .get(`/api/workout/4`)
       .then((result) => {
         console.log(result);
-        setWorkout(result.data);
+        // setWorkout(result.data);
       })
       .catch((error) => console.log(error));
   };
@@ -188,7 +192,10 @@ const App = () => {
               path="workout-overview"
               element={<ClientWorkoutOverview />}
             />
-            <Route path="calendar" element={<ClientCalendar />} />
+            <Route
+              path="calendar"
+              element={<ClientCalendar clientWorkouts={clientWorkouts} />}
+            />
             <Route path="progress" element={<ClientProgress />} />
             <Route path="chat" element={<ClientChat />} />
             <Route path="profile" element={<ClientProfile />} />
