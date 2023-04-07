@@ -44,7 +44,7 @@ const ClientNavBar = ({
     return navOptions.map((navOption, i) => {
       const { name, touched } = navOption;
       return (
-        <div className={iconStyle}>
+        <div key={i} className={iconStyle}>
           <Link
             className={`text-4xl rounded-full p-2 ${
               touched ? "bg-gray-400 text-white" : "bg-white"

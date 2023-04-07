@@ -248,23 +248,21 @@ const ClientCalendar = ({ clientWorkouts }) => {
           workoutLookupTable[selectedDate.toDate().toDateString()].map(
             (workout, i) => {
               return (
-                <div className="flex flex-col gap-2">
+                <div key={i} className="flex flex-col gap-2">
                   <div>Workout {i + 1}</div>
                   {workout.map((slot, j) => {
-                    return <li>{slot.exercise}</li>;
+                    return <li key={j}>{slot.exercise}</li>;
                   })}
                   <Link
-                    to={`/client/workouts/${selectedDate
-                      .toDate()
-                      .toDateString()}`}
+                    to={`/client/workouts/${selectedDate.format("MM-DD-YYYY")}`}
                     state={{
                       workout: { workout },
                       workoutIdx: i,
                       date: selectedDate.toDate().toDateString(),
                     }}
-                    className="bg-blue-400/80 rounded-full p-2 m-2"
+                    className="flex items-center justify-center bg-blue-400/80 rounded-full p-2 m-2"
                   >
-                    View workouts for this date
+                    View workout for this date
                   </Link>
                 </div>
               );
