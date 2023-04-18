@@ -10,11 +10,11 @@ const ClientWorkoutsDateView = ({
 }) => {
   const location = useLocation();
   const params = useParams();
-  const [workouts, setWorkouts] = useState(location.state.workout);
-  const [workoutIdx, setWorkoutIdx] = useState(location.state.workoutIdx);
-  const date = location.state.dateString;
+  const [workouts, setWorkouts] = useState(location.state?.workout);
+  const [workoutIdx, setWorkoutIdx] = useState(location.state?.workoutIdx);
+  const date = location.state?.dateString;
 
-  console.log(location);
+  // console.log(location);
   return (
     <>
       {workoutStarted ? (

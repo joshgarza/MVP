@@ -7,6 +7,7 @@ import ClientProfile from "./Client_Views/ClientProfile";
 import ClientProgress from "./Client_Views/ClientProgress";
 import ClientWorkouts from "./Client_Views/ClientWorkouts";
 import ClientWorkoutsDateView from "./Client_Views/ClientWorkoutsDateView";
+import ClientWorkoutSummary from "./Client_Views/ClientWorkoutSummary";
 import ClientWorkoutView from "./Client_Views/ClientWorkoutView";
 import CoachDashboard from "./Coach_Views/CoachDashboard";
 import CoachView from "./Coach_Views/CoachView";
@@ -26,6 +27,7 @@ export {
   ClientProgress,
   ClientWorkouts,
   ClientWorkoutsDateView,
+  ClientWorkoutSummary,
   ClientWorkoutView,
   CoachDashboard,
   CoachView,

@@ -11,13 +11,14 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [startTime, setStartTime] = useState(new Date());
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  useEffect(() => {
-    // let interval = setInterval(() => {
-    //   let currTime = new Date();
-    //   setElapsedTime((elapsedTime) => currTime - startTime);
-    //   console.log(elapsedTime);
-    // }, 1000);
-  }, []);
+  useEffect(() => {}, []);
+
+  const timeInterval = () => {
+    let interval = setInterval(() => {
+      let currTime = new Date();
+      setElapsedTime((elapsedTime) => currTime - startTime);
+    }, 1000);
+  };
 
   const formatElapsedTime = () => {
     const diff = elapsedTime;
@@ -41,7 +42,12 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     // axios.get()
   };
 
+  const buttonStyle =
+    "flex items-center justify-center w-[60%] font-semibold bg-slate-300 rounded-full p-2 mx-2";
+
   const renderScreen = (exerciseIdx) => {
+    screen === workout.length && <div>Workout Summary</div>;
+
     const { exercise, sets } = workout[exerciseIdx];
 
     return (
@@ -60,79 +66,32 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
             });
           })}
         </div>
-        {screen === 0 ? (
-          <div
-            className="bg-blue-400/80 rounded-full"
-            onClick={() => setScreen(screen + 1)}
-          >
-            Next screen
-          </div>
-        ) : screen !== workout.length - 1 ? (
-          <>
-            <div
-              className="bg-blue-400/80 rounded-full"
-              onClick={() => setScreen(screen - 1)}
-            >
-              Previous screen
-            </div>
-            <div
-              className="bg-blue-400/80 rounded-full"
-              onClick={() => setScreen(screen + 1)}
-            >
-              Next screen
-            </div>
-          </>
-        ) : (
-          <>
-            <div
-              className="bg-blue-400/80 rounded-full"
-              onClick={() => setScreen(screen - 1)}
-            >
-              Previous screen
-            </div>
-            <Link
-              to="/client"
-              className="flex items-center justify-center absolute bottom-0 inset-x-0 m-8 bg-blue-400/80 rounded-full p-2"
-              onClick={() => setWorkoutStarted(false)}
-            >
-              End Workout
-            </Link>
-          </>
-        )}
-        {/* {screen < workout.length - 1 && screen !== 0 ? (
-          <>
-            <div
-              className="bg-blue-400/80 rounded-full"
-              onClick={() => setScreen(screen - 1)}
-            >
-              Previous screen
-            </div>
-            <div
-              className="bg-blue-400/80 rounded-full"
-              onClick={() => setScreen(screen + 1)}
-            >
-              Next screen
-            </div>
-          </>
-        ) : (
-          <>
-            <div
-              className="bg-blue-400/80 rounded-full"
-              onClick={() => setScreen(screen - 1)}
-            >
-              Previous screen
-            </div>
-            <Link
-              to="/client"
-              className="flex items-center justify-center absolute bottom-0 inset-x-0 m-8 bg-blue-400/80 rounded-full p-2"
-              onClick={() => setWorkoutStarted(false)}
-            >
-              End Workout
-            </Link>
-          </>
-        )}*/}
+        <div
+          className={`${buttonStyle} ${
+            screen === workout.length - 1 && "hidden"
+          }`}
+          onClick={() => setScreen(screen + 1)}
+        >
+          Next screen
+        </div>
+        <div
+          className={`${buttonStyle} ${screen === 0 && "hidden"}`}
+          onClick={() => setScreen(screen - 1)}
+        >
+          Previous screen
+        </div>
+        <div
+          className={`${buttonStyle}`}
+          onClick={() => setScreen(workout.length)}
+        >
+          End Workout
+        </div>
       </div>
     );
+  };
+
+  const renderSummary = () => {
+    return <div>Workout summary</div>;
   };
 
   const removeNullProps = (set) => {
@@ -145,13 +104,16 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     return availableProps;
   };
 
-  return <>{renderScreen(screen)}</>;
+  return (
+    <div>
+      <div className="relative h-full">
+        <div className="flex items-center justify-center p-4">
+          Workout Timer: {formatElapsedTime()}
+        </div>
+      </div>
+      {screen === workout.length ? renderSummary() : renderScreen(screen)}
+    </div>
+  );
 };
 
 export default ClientWorkoutView;
-
-// <div className="relative h-full">
-//   <div className="flex items-center justify-center p-4">
-//     Workout Timer: {formatElapsedTime()}
-//   </div>
-// </div>
