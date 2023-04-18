@@ -9,28 +9,51 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [workout, setWorkout] = useState(location.state.workout);
   const [screen, setScreen] = useState(0);
   const [startTime, setStartTime] = useState(new Date());
+  const [isActive, setIsActive] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [storedTime, setStoredTime] = useState(0);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    let interval = null;
+    if (isActive && isPaused === false) {
+      interval = setInterval(() => {
+        let currTime = new Date();
+        setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isActive, isPaused]);
 
-  const timeInterval = () => {
-    let interval = setInterval(() => {
-      let currTime = new Date();
-      setElapsedTime((elapsedTime) => currTime - startTime);
-    }, 1000);
+  const handleStart = () => {
+    setIsActive(true);
+    setIsPaused(false);
+  };
+
+  const handlePauseResume = () => {
+    setStoredTime(elapsedTime);
+    setIsPaused(!isPaused);
+  };
+
+  const handleReset = () => {
+    setIsActive(false);
+    setElapsedTime(0);
   };
 
   const formatElapsedTime = () => {
-    const diff = elapsedTime;
     const SEC = 1000,
       MIN = 60 * SEC,
       HRS = 60 * MIN;
 
-    const hrs = Math.floor(diff / HRS);
-    const min = Math.floor((diff % HRS) / MIN).toLocaleString("en-US", {
+    const hrs = Math.floor(elapsedTime / HRS);
+    const min = Math.floor((elapsedTime % HRS) / MIN).toLocaleString("en-US", {
       minimumIntegerDigits: 2,
     });
-    const sec = Math.floor((diff % MIN) / SEC).toLocaleString("en-US", {
+    const sec = Math.floor((elapsedTime % MIN) / SEC).toLocaleString("en-US", {
       minimumIntegerDigits: 2,
     });
 
@@ -46,8 +69,6 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     "flex items-center justify-center w-[60%] font-semibold bg-slate-300 rounded-full p-2 mx-2";
 
   const renderScreen = (exerciseIdx) => {
-    screen === workout.length && <div>Workout Summary</div>;
-
     const { exercise, sets } = workout[exerciseIdx];
 
     return (
@@ -70,19 +91,26 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
           className={`${buttonStyle} ${
             screen === workout.length - 1 && "hidden"
           }`}
-          onClick={() => setScreen(screen + 1)}
+          onClick={() => {
+            setScreen(screen + 1);
+          }}
         >
           Next screen
         </div>
         <div
           className={`${buttonStyle} ${screen === 0 && "hidden"}`}
-          onClick={() => setScreen(screen - 1)}
+          onClick={() => {
+            setScreen(screen - 1);
+          }}
         >
           Previous screen
         </div>
         <div
           className={`${buttonStyle}`}
-          onClick={() => setScreen(workout.length)}
+          onClick={() => {
+            handlePauseResume();
+            setScreen(workout.length);
+          }}
         >
           End Workout
         </div>
@@ -91,7 +119,27 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   };
 
   const renderSummary = () => {
-    return <div>Workout summary</div>;
+    return (
+      <>
+        <div
+          className={`${buttonStyle} ${screen === 0 && "hidden"}`}
+          onClick={() => {
+            handlePauseResume();
+            setStartTime(new Date());
+            setScreen(screen - 1);
+          }}
+        >
+          Previous screen
+        </div>
+        <Link
+          to="/client"
+          className="flex items-center justify-center w-[60%] font-semibold bg-slate-300 rounded-full p-2 mx-2"
+          onClick={() => setWorkoutStarted(false)}
+        >
+          Back Home
+        </Link>
+      </>
+    );
   };
 
   const removeNullProps = (set) => {
