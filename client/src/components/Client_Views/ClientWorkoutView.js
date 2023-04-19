@@ -7,6 +7,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const location = useLocation();
   const params = useParams();
   const [workout, setWorkout] = useState(location.state.workout);
+  const [workoutResult, setWorkoutResult] = useState(workout);
   const [screen, setScreen] = useState(0);
   const [startTime, setStartTime] = useState(new Date());
   const [isActive, setIsActive] = useState(true);
@@ -14,20 +15,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [storedTime, setStoredTime] = useState(0);
 
-  useEffect(() => {
-    let interval = null;
-    if (isActive && isPaused === false) {
-      interval = setInterval(() => {
-        let currTime = new Date();
-        setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isActive, isPaused]);
+  // useEffect(() => {
+  //   let interval = null;
+  //   if (isActive && isPaused === false) {
+  //     interval = setInterval(() => {
+  //       let currTime = new Date();
+  //       setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
+  //     }, 1000);
+  //   } else {
+  //     clearInterval(interval);
+  //   }
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [isActive, isPaused]);
 
   const handleStart = () => {
     setIsActive(true);
@@ -68,6 +69,16 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const buttonStyle =
     "flex items-center justify-center w-[60%] font-semibold bg-slate-300 rounded-full p-2 mx-2";
 
+  const updateResult = (e, exerciseIdx, set) => {
+    const { name, value } = e.target;
+
+    const copyWorkoutResult = [...workout];
+    // copyWorkoutResult[exerciseIdx][set][name] = value;
+    copyWorkoutResult[exerciseIdx].sets[set][name] = value;
+
+    // console.log(copyWorkoutResult);
+    setWorkoutResult(copyWorkoutResult);
+  };
   const renderScreen = (exerciseIdx) => {
     const { exercise, sets } = workout[exerciseIdx];
 
@@ -80,13 +91,34 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
 
             return Object.keys(availableProps).map((property, j) => {
               return (
-                <div key={j}>
-                  {property}: {availableProps[property]}
-                </div>
+                <>
+                  <div key={j}>
+                    {property}:{" "}
+                    {property === "set" ? (
+                      availableProps.set + 1
+                    ) : (
+                      <input
+                        className="border"
+                        type="number"
+                        name={property}
+                        value={availableProps[property]}
+                        onChange={(e) => updateResult(e, exerciseIdx, i)}
+                      ></input>
+                    )}
+                  </div>
+                </>
               );
             });
           })}
         </div>
+        {renderWorkoutButtons()}
+      </div>
+    );
+  };
+
+  const renderWorkoutButtons = () => {
+    return (
+      <>
         <div
           className={`${buttonStyle} ${
             screen === workout.length - 1 && "hidden"
@@ -114,7 +146,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
         >
           End Workout
         </div>
-      </div>
+      </>
     );
   };
 
@@ -129,7 +161,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
             setScreen(screen - 1);
           }}
         >
-          Previous screen
+          Resume Workout
         </div>
         <Link
           to="/client"
@@ -148,6 +180,10 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     Object.keys(set).forEach((key) => {
       return set[key] !== null && (availableProps[key] = set[key]);
     });
+
+    if (!availableProps.weight) {
+      availableProps.weight = "";
+    }
 
     return availableProps;
   };
