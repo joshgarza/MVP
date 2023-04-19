@@ -151,8 +151,6 @@ const ClientCalendar = ({ clientWorkouts }) => {
     return workoutCollection;
   };
 
-  console.log(selectedDate.toDate());
-
   return (
     <div className="grid-rows-8">
       <div className="flex items-center justify-between m-2 p-2">

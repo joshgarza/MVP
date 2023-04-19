@@ -15,20 +15,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [storedTime, setStoredTime] = useState(0);
 
-  useEffect(() => {
-    let interval = null;
-    if (isActive && isPaused === false) {
-      interval = setInterval(() => {
-        let currTime = new Date();
-        setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isActive, isPaused]);
+  // useEffect(() => {
+  //   let interval = null;
+  //   if (isActive && isPaused === false) {
+  //     interval = setInterval(() => {
+  //       let currTime = new Date();
+  //       setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
+  //     }, 1000);
+  //   } else {
+  //     clearInterval(interval);
+  //   }
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [isActive, isPaused]);
 
   const handleStart = () => {
     setIsActive(true);
@@ -79,38 +79,81 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     // POST RESULTS
   };
   const renderScreen = (exerciseIdx) => {
-    const { exercise, sets } = workout[exerciseIdx];
-
     return (
       <div>
-        Exercise: {exercise}
-        <div>
-          {sets.map((set, i) => {
-            const availableProps = removeNullProps(set);
-
-            return Object.keys(availableProps).map((property, j) => {
-              return (
-                <>
-                  <div key={j}>
-                    {property}:{" "}
-                    {property === "set" ? (
-                      availableProps.set + 1
-                    ) : (
-                      <input
-                        className="border"
-                        type="number"
-                        name={property}
-                        value={availableProps[property]}
-                        onChange={(e) => updateResult(e, exerciseIdx, i)}
-                      ></input>
-                    )}
-                  </div>
-                </>
-              );
-            });
-          })}
-        </div>
+        {renderWorkoutTable(exerciseIdx)}
         {renderWorkoutButtons()}
+      </div>
+    );
+  };
+
+  const renderWorkoutTable = (exerciseIdx) => {
+    const { exercise, sets } = workout[exerciseIdx];
+    const availableProps = new Set();
+
+    sets.forEach((set) => {
+      Object.keys(set).forEach((prop) => {
+        set[prop] !== null && availableProps.add(prop);
+      });
+    });
+    availableProps.add("weight");
+
+    return (
+      <div className="mx-2 px-2">
+        <div className="flex items-center justify-center font-bold text-lg">
+          {exercise}
+        </div>
+        <table className="table-fixed w-full">
+          <thead>
+            <tr>
+              {/* for each property in a set, render the property name */}
+              {[...availableProps].map((prop, i) => {
+                return (
+                  <th key={i} className="border-b text-left font-bold">
+                    {prop}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody className="w-[60%]">
+            {/* for each set, render a tr, for each property in a set, render a td within the tr */}
+            {sets.map((set, i) => {
+              const currSetProps = removeNullProps(set);
+              return (
+                <tr key={i}>
+                  {Object.keys(currSetProps).map((prop, j) => {
+                    if (availableProps.has(prop)) {
+                      return prop === "set" ? (
+                        <td
+                          key={j}
+                          className="border-b border-slate-100 text-slate-500"
+                        >
+                          {set[prop] + 1}
+                        </td>
+                      ) : (
+                        <td
+                          key={j}
+                          className="border-b border-slate-100 text-slate-500"
+                        >
+                          <input
+                            className="w-full"
+                            size="1"
+                            type="number"
+                            name={prop}
+                            value={currSetProps[prop]}
+                            onChange={(e) => updateResult(e, exerciseIdx, i)}
+                          ></input>
+                        </td>
+                      );
+                    }
+                    return null;
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     );
   };
@@ -125,7 +168,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
               setScreen(screen - 1);
             }}
           >
-            Previous screen
+            Previous exercise
           </div>
           <div
             className={`${buttonStyle} ${
@@ -135,7 +178,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
               setScreen(screen + 1);
             }}
           >
-            Save & Continue
+            Next exercise
           </div>
         </div>
         <div className="flex items-center justify-center">
@@ -168,24 +211,22 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
       <>
         {workoutResult.map((slot, i) => {
           return (
-            <div>
+            <div key={i}>
               <div>{slot.exercise}</div>
               <div className="border">
                 {slot.sets.map((set, j) => {
                   const availableProps = removeNullProps(set);
 
                   return (
-                    <div className="border flex justify-evenly">
-                      {Object.keys(availableProps).map((property, j) => {
+                    <div key={j} className="border flex justify-evenly">
+                      {Object.keys(availableProps).map((property, k) => {
                         return (
-                          <>
-                            <div className="font-semibold">
-                              {property}:{" "}
-                              {property === "set"
-                                ? availableProps.set + 1
-                                : availableProps[property]}
-                            </div>
-                          </>
+                          <div key={k} className="font-semibold">
+                            {property}:{" "}
+                            {property === "set"
+                              ? availableProps.set + 1
+                              : availableProps[property]}
+                          </div>
                         );
                       })}
                     </div>
@@ -238,7 +279,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div className="relative h-full">
         <div className="flex items-center justify-center p-4">
           Workout Timer: {formatElapsedTime()}

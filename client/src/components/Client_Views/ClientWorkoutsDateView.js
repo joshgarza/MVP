@@ -30,13 +30,11 @@ const ClientWorkoutsDateView = ({
               Workout #{workoutIdx + 1}
               {workouts.map((slot, i) => {
                 return (
-                  <div className="mx-2 p-2">
-                    <li key={i} className="p-2">
-                      {slot.exercise}
-                    </li>
+                  <div key={i} className="mx-2 p-2">
+                    <li className="p-2">{slot.exercise}</li>
                     {slot.sets.map((set, j) => {
                       return (
-                        <div className="mx-2 my-1">
+                        <div key={j} className="mx-2 my-1">
                           <span>{set.reps} reps </span>
                           <span>@ {set.rir} RIR</span>
                         </div>
