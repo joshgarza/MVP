@@ -15,20 +15,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [storedTime, setStoredTime] = useState(0);
 
-  // useEffect(() => {
-  //   let interval = null;
-  //   if (isActive && isPaused === false) {
-  //     interval = setInterval(() => {
-  //       let currTime = new Date();
-  //       setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
-  //     }, 1000);
-  //   } else {
-  //     clearInterval(interval);
-  //   }
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [isActive, isPaused]);
+  useEffect(() => {
+    let interval = null;
+    if (isActive && isPaused === false) {
+      interval = setInterval(() => {
+        let currTime = new Date();
+        setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isActive, isPaused]);
 
   const handleStart = () => {
     setIsActive(true);
@@ -73,11 +73,10 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     const { name, value } = e.target;
 
     const copyWorkoutResult = [...workout];
-    // copyWorkoutResult[exerciseIdx][set][name] = value;
     copyWorkoutResult[exerciseIdx].sets[set][name] = value;
-
-    // console.log(copyWorkoutResult);
     setWorkoutResult(copyWorkoutResult);
+
+    // POST RESULTS
   };
   const renderScreen = (exerciseIdx) => {
     const { exercise, sets } = workout[exerciseIdx];
@@ -118,41 +117,91 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
 
   const renderWorkoutButtons = () => {
     return (
-      <>
-        <div
-          className={`${buttonStyle} ${
-            screen === workout.length - 1 && "hidden"
-          }`}
-          onClick={() => {
-            setScreen(screen + 1);
-          }}
-        >
-          Next screen
+      <div className="my-4">
+        <div className="flex my-4">
+          <div
+            className={`${buttonStyle} ${screen === 0 && "invisible"}`}
+            onClick={() => {
+              setScreen(screen - 1);
+            }}
+          >
+            Previous screen
+          </div>
+          <div
+            className={`${buttonStyle} ${
+              screen === workout.length - 1 && "invisible"
+            }`}
+            onClick={() => {
+              setScreen(screen + 1);
+            }}
+          >
+            Save & Continue
+          </div>
         </div>
-        <div
-          className={`${buttonStyle} ${screen === 0 && "hidden"}`}
-          onClick={() => {
-            setScreen(screen - 1);
-          }}
-        >
-          Previous screen
+        <div className="flex items-center justify-center">
+          <div
+            className={`${buttonStyle}`}
+            onClick={() => {
+              handlePauseResume();
+              setScreen(workout.length);
+            }}
+          >
+            End Workout
+          </div>
         </div>
-        <div
-          className={`${buttonStyle}`}
-          onClick={() => {
-            handlePauseResume();
-            setScreen(workout.length);
-          }}
-        >
-          End Workout
-        </div>
-      </>
+      </div>
     );
   };
 
   const renderSummary = () => {
     return (
       <>
+        <div className="flex items-center justify-center">Workout Summary</div>
+        {renderResults()}
+        {renderSummaryButtons()}
+      </>
+    );
+  };
+
+  const renderResults = () => {
+    return (
+      <>
+        {workoutResult.map((slot, i) => {
+          return (
+            <div>
+              <div>{slot.exercise}</div>
+              <div className="border">
+                {slot.sets.map((set, j) => {
+                  const availableProps = removeNullProps(set);
+
+                  return (
+                    <div className="border flex justify-evenly">
+                      {Object.keys(availableProps).map((property, j) => {
+                        return (
+                          <>
+                            <div className="font-semibold">
+                              {property}:{" "}
+                              {property === "set"
+                                ? availableProps.set + 1
+                                : availableProps[property]}
+                            </div>
+                          </>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
+  const renderSummaryButtons = () => {
+    return (
+      <div className="flex my-4">
         <div
           className={`${buttonStyle} ${screen === 0 && "hidden"}`}
           onClick={() => {
@@ -168,9 +217,9 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
           className="flex items-center justify-center w-[60%] font-semibold bg-slate-300 rounded-full p-2 mx-2"
           onClick={() => setWorkoutStarted(false)}
         >
-          Back Home
+          Submit Workout
         </Link>
-      </>
+      </div>
     );
   };
 
