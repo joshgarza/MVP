@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 import axios from "axios";
 
@@ -76,8 +76,30 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     copyWorkoutResult[exerciseIdx].sets[set][name] = value;
     setWorkoutResult(copyWorkoutResult);
 
-    // POST RESULTS
+    // POST RESULTS debounce
   };
+
+  const debounce = (func, timeout = 1000) => {
+    console.log("debouncing");
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
+    };
+  };
+
+  const saveInput = () => {
+    console.log("saving input");
+  };
+  const processChange = useCallback(
+    debounce(() => {
+      saveInput();
+    }),
+    []
+  );
+
   const renderScreen = (exerciseIdx) => {
     return (
       <div>
@@ -142,7 +164,10 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
                             type="number"
                             name={prop}
                             value={currSetProps[prop]}
-                            onChange={(e) => updateResult(e, exerciseIdx, i)}
+                            onChange={(e) => {
+                              processChange();
+                              updateResult(e, exerciseIdx, i);
+                            }}
                           ></input>
                         </td>
                       );
@@ -210,33 +235,75 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     return (
       <>
         {workoutResult.map((slot, i) => {
-          return (
-            <div key={i}>
-              <div>{slot.exercise}</div>
-              <div className="border">
-                {slot.sets.map((set, j) => {
-                  const availableProps = removeNullProps(set);
-
-                  return (
-                    <div key={j} className="border flex justify-evenly">
-                      {Object.keys(availableProps).map((property, k) => {
-                        return (
-                          <div key={k} className="font-semibold">
-                            {property}:{" "}
-                            {property === "set"
-                              ? availableProps.set + 1
-                              : availableProps[property]}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
+          return renderExerciseTable(slot);
         })}
       </>
+    );
+  };
+
+  const renderExerciseTable = (slot) => {
+    const { exercise, sets } = slot;
+
+    const availableProps = new Set();
+
+    sets.forEach((set) => {
+      Object.keys(set).forEach((prop) => {
+        set[prop] !== null && availableProps.add(prop);
+      });
+    });
+
+    availableProps.add("weight");
+
+    return (
+      <div className="mx-2 px-2">
+        <div className="flex items-center justify-center font-bold text-lg">
+          {exercise}
+        </div>
+        <table className="table-fixed w-full">
+          <thead>
+            <tr>
+              {/* for each property in a set, render the property name */}
+              {[...availableProps].map((prop, i) => {
+                return (
+                  <th key={i} className="border-b text-left font-bold">
+                    {prop}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody className="w-[60%]">
+            {/* for each set, render a tr, for each property in a set, render a td within the tr */}
+            {sets.map((set, i) => {
+              const currSetProps = removeNullProps(set);
+              return (
+                <tr key={i}>
+                  {Object.keys(currSetProps).map((prop, j) => {
+                    if (availableProps.has(prop)) {
+                      return prop === "set" ? (
+                        <td
+                          key={j}
+                          className="border-b border-slate-100 text-slate-500"
+                        >
+                          {set[prop] + 1}
+                        </td>
+                      ) : (
+                        <td
+                          key={j}
+                          className="border-b border-slate-100 text-slate-500"
+                        >
+                          {currSetProps[prop]}
+                        </td>
+                      );
+                    }
+                    return null;
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     );
   };
 
