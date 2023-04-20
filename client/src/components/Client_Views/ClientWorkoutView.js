@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
-import axios from "axios";
+import { apiRequests } from "../../util/apiRequests.js";
+import dayjs from "dayjs";
 
 // if no location.state data, perform a GET request for workouts matching userId, date, and workout_idx in params
 const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
@@ -15,20 +16,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [storedTime, setStoredTime] = useState(0);
 
-  // useEffect(() => {
-  //   let interval = null;
-  //   if (isActive && isPaused === false) {
-  //     interval = setInterval(() => {
-  //       let currTime = new Date();
-  //       setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
-  //     }, 1000);
-  //   } else {
-  //     clearInterval(interval);
-  //   }
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [isActive, isPaused]);
+  useEffect(() => {
+    let interval = null;
+    if (isActive && isPaused === false) {
+      interval = setInterval(() => {
+        let currTime = new Date();
+        setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isActive, isPaused]);
 
   const handleStart = () => {
     setIsActive(true);
@@ -80,7 +81,6 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   };
 
   const debounce = (func, timeout = 1000) => {
-    console.log("debouncing");
     let timer;
     return (...args) => {
       clearTimeout(timer);
@@ -91,7 +91,14 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   };
 
   const saveInput = () => {
-    console.log("saving input");
+    apiRequests
+      .postWorkoutResult(
+        userId,
+        dayjs(params.date).toDate().toDateString(),
+        params.idx,
+        workoutResult
+      )
+      .then((result) => console.log(result));
   };
   const processChange = useCallback(
     debounce(() => {
