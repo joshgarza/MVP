@@ -16,20 +16,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [storedTime, setStoredTime] = useState(0);
 
-  useEffect(() => {
-    let interval = null;
-    if (isActive && isPaused === false) {
-      interval = setInterval(() => {
-        let currTime = new Date();
-        setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isActive, isPaused]);
+  // useEffect(() => {
+  //   let interval = null;
+  //   if (isActive && isPaused === false) {
+  //     interval = setInterval(() => {
+  //       let currTime = new Date();
+  //       setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
+  //     }, 1000);
+  //   } else {
+  //     clearInterval(interval);
+  //   }
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [isActive, isPaused]);
 
   const handleStart = () => {
     setIsActive(true);
@@ -132,7 +132,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
               {[...availableProps].map((prop, i) => {
                 return (
                   <th key={i} className="border-b text-left font-bold">
-                    {prop}
+                    {prop === "backoff_percent" ? "backoff %" : prop}
                   </th>
                 );
               })}
@@ -141,10 +141,9 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
           <tbody className="w-[60%]">
             {/* for each set, render a tr, for each property in a set, render a td within the tr */}
             {sets.map((set, i) => {
-              const currSetProps = removeNullProps(set);
               return (
                 <tr key={i}>
-                  {Object.keys(currSetProps).map((prop, j) => {
+                  {[...availableProps].map((prop, j) => {
                     if (availableProps.has(prop)) {
                       return prop === "set" ? (
                         <td
@@ -163,7 +162,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
                             size="1"
                             type="number"
                             name={prop}
-                            value={currSetProps[prop]}
+                            value={set[prop] || ""}
                             onChange={(e) => {
                               updateResult(e, exerciseIdx, i);
                             }}
