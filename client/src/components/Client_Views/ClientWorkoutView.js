@@ -131,20 +131,8 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
               {/* for each property in a set, render the property name */}
               {[...availableProps].map((prop, i) => {
                 return (
-                  <th
-                    key={i}
-                    className={`border-b text-left font-bold ${
-                      prop === "backoff_percent" ? "px-0" : "px-2"
-                    }`}
-                  >
-                    {prop === "backoff_percent" ? (
-                      <div className="flex">
-                        <span>backoff </span>
-                        <span>%</span>
-                      </div>
-                    ) : (
-                      prop
-                    )}
+                  <th key={i} className="border-b text-left font-bold">
+                    {prop === "backoff_percent" ? "backoff %" : prop}
                   </th>
                 );
               })}
@@ -152,7 +140,6 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
           </thead>
           <tbody className="w-[60%]">
             {/* for each set, render a tr, for each property in a set, render a td within the tr */}
-
             {sets.map((set, i) => {
               return (
                 <tr key={i}>
