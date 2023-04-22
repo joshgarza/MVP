@@ -141,6 +141,15 @@ module.exports = {
       res.status(200).send(data);
     });
   },
+  getWorkoutResults: (req, res) => {
+    models.getWorkoutResults(req.params.id, (err, data) => {
+      if (err) {
+        console.log("Error getting workouts", err);
+        res.status(404).end();
+      }
+      res.status(200).send(data);
+    });
+  },
   loginUser: (req, res) => {
     let user = {
       email: req.query.email,
@@ -153,6 +162,33 @@ module.exports = {
       }
       res.status(200).send(data);
     });
+  },
+  updateWorkoutResult: (req, res) => {
+    const { id, reps, rir, rpe, weight, backoff_percent } = req.body;
+    const exerciseSet = {
+      id: id,
+      reps:
+        reps === "" || reps === null || reps === NaN ? null : parseInt(reps),
+      rir: rir === "" || rir === null || rir === NaN ? null : parseInt(rir),
+      rpe: rpe === "" || rpe === null || rpe === NaN ? null : parseInt(rpe),
+      backoff_percent:
+        backoff_percent === "" ||
+        backoff_percent === null ||
+        backoff_percent === NaN
+          ? null
+          : parseInt(backoff_percent),
+      weight:
+        weight === "" || weight === null || weight === NaN
+          ? null
+          : parseInt(weight),
+    };
+
+    console.log(exerciseSet);
+
+    models
+      .updateWorkoutResult(exerciseSet)
+      .then((result) => res.status(201).end())
+      .catch((error) => res.status(404).end());
   },
   // postWorkoutResult: (req, res) => {
   //   models

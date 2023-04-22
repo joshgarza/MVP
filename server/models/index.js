@@ -344,6 +344,21 @@ const models = {
       callback(error, null);
     }
   },
+  getWorkoutResults: async (query, callback) => {
+    try {
+      const workoutResults = await pool.query(
+        `SELECT * FROM workoutresults
+        WHERE client_id=${query}`
+      );
+      if (workoutResults.rows.length === 0) {
+        callback(null, {});
+      } else {
+        callback(null, workoutResults.rows);
+      }
+    } catch (error) {
+      callback(error, null);
+    }
+  },
   postWorkoutResult: async (workout) => {
     const {
       clientId,
@@ -387,6 +402,22 @@ const models = {
         ${weight}
       )`
     );
+  },
+  updateWorkoutResult: async (exerciseSet) => {
+    const { id, reps, rir, rpe, weight, backoff_percent } = exerciseSet;
+    console.log("in model,", backoff_percent);
+
+    pool.query(`
+    UPDATE workoutresults
+    SET
+    reps = ${reps},
+    rir = ${rir},
+    rpe = ${rpe},
+    backoff_percent = ${backoff_percent},
+    weight = ${weight}
+    WHERE id = ${id}
+    `);
+    return true;
   },
 };
 
