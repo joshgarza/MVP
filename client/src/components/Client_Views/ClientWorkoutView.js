@@ -16,20 +16,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [storedTime, setStoredTime] = useState(0);
 
-  // useEffect(() => {
-  //   let interval = null;
-  //   if (isActive && isPaused === false) {
-  //     interval = setInterval(() => {
-  //       let currTime = new Date();
-  //       setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
-  //     }, 1000);
-  //   } else {
-  //     clearInterval(interval);
-  //   }
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [isActive, isPaused]);
+  useEffect(() => {
+    let interval = null;
+    if (isActive && isPaused === false) {
+      interval = setInterval(() => {
+        let currTime = new Date();
+        setElapsedTime((elapsedTime) => currTime - startTime + storedTime);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isActive, isPaused]);
 
   const handleStart = () => {
     setIsActive(true);
@@ -131,8 +131,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
               {/* for each property in a set, render the property name */}
               {[...availableProps].map((prop, i) => {
                 return (
-                  <th key={i} className="border-b text-left font-bold">
-                    {prop === "backoff_percent" ? "backoff %" : prop}
+                  <th
+                    key={i}
+                    className={`border-b text-left font-bold ${
+                      prop === "backoff_percent" ? "px-0" : "px-2"
+                    }`}
+                  >
+                    {prop === "backoff_percent" ? (
+                      <div className="flex items-start">
+                        <span>backoff</span>
+                        <span>%</span>
+                      </div>
+                    ) : (
+                      prop
+                    )}
                   </th>
                 );
               })}
@@ -251,6 +263,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     });
 
     availableProps.add("weight");
+    availableProps.delete("id");
 
     return (
       <div className="mx-2 px-2">
@@ -263,8 +276,20 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
               {/* for each property in a set, render the property name */}
               {[...availableProps].map((prop, i) => {
                 return (
-                  <th key={i} className="border-b text-left font-bold">
-                    {prop}
+                  <th
+                    key={i}
+                    className={`border-b text-left font-bold ${
+                      prop === "backoff_percent" ? "" : "px-2"
+                    }`}
+                  >
+                    {prop === "backoff_percent" ? (
+                      <div className="">
+                        <span>backoff</span>
+                        <span>%</span>
+                      </div>
+                    ) : (
+                      prop
+                    )}
                   </th>
                 );
               })}
