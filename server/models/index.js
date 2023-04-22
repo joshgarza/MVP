@@ -344,6 +344,56 @@ const models = {
       callback(error, null);
     }
   },
+  postWorkoutResult: async (workout) => {
+    const {
+      clientId,
+      date,
+      workout_order,
+      exercise,
+      exerciseOrder,
+      set,
+      reps,
+      rir,
+      rpe,
+      backoffPercent,
+      weight,
+    } = workout;
+
+    return pool.query(
+      `INSERT INTO workoutresults(
+        client_id,
+        date,
+        workout_order,
+        exercise,
+        exercise_order,
+        set,
+        reps,
+        rir,
+        rpe,
+        backoff_percent,
+        weight
+      )
+      VALUES (
+        ${clientId},
+        '${date}',
+        ${workout_order},
+        '${exercise}',
+        ${exerciseOrder},
+        ${set},
+        ${reps},
+        ${rir},
+        ${rpe},
+        ${backoffPercent},
+        ${weight}
+      )`
+    );
+  },
 };
 
 module.exports.models = models;
+
+// when we add a workout, also add a workoutresult with exact same values
+// client makes a GET for both the assignment and result;
+// use the assignment for shorthand views
+// use the result to populate all fields; make sure to send set id along with every set
+// when updating, look up set id and make a direct update

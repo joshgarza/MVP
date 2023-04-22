@@ -10,6 +10,5 @@ router.delete("/workout", controllers.deleteWorkout);
 router.get("/getAllClients/:id", controllers.getAllClients);
 router.post("/workout", controllers.addWorkout);
 router.post("/addClient", controllers.addClient);
-router.post("/postWorkoutResult", controllers.postWorkoutResult);
 
 module.exports = router;

@@ -49,8 +49,17 @@ module.exports = {
           models
             .addWorkout(setData)
             .then((result) => {
-              console.log("successful addition");
-              res.status(201).end();
+              console.log("successful addition workout assignment");
+              models
+                .postWorkoutResult(setData)
+                .then((result) => {
+                  console.log("successful addition workout result");
+                  res.status(201).end();
+                })
+                .catch((error) => {
+                  console.log("error adding workout", error);
+                  res.status(404).end();
+                });
             })
             .catch((error) => {
               console.log("error adding workout", error);
@@ -145,8 +154,30 @@ module.exports = {
       res.status(200).send(data);
     });
   },
-  postWorkoutResult: (req, res) => {
-    console.log(req.body);
-    res.status(201).end();
-  },
+  // postWorkoutResult: (req, res) => {
+  //   models
+  //     .postWorkoutResult(req.body)
+  //     .then((result) => {
+  //       console.log("success", result);
+  //       res.status(201).end();
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error adding workout result", error);
+  //       res.status(404).end();
+  //     });
+  // },
 };
+
+// [{
+//   clientId: clientId,
+//   date: date,
+//   workoutIdx: workoutIdx,
+//   exercise: exercise,
+//   exercise_order: exercise_order,
+//   set: set,
+//   reps: reps,
+//   rir: rir,
+//   rpe: rpe,
+//   backoff_percent: backoff_percent,
+//   weight: weight
+// }]

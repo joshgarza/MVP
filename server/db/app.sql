@@ -38,3 +38,18 @@ CREATE TABLE IF NOT EXISTS workouts(
   backoff_percent INT,
   weight INT
 );
+CREATE TABLE IF NOT EXISTS workoutResults(
+  id SERIAL PRIMARY KEY,
+  client_id INT REFERENCES users (id),
+  coach_id INT REFERENCES users (id),
+  date VARCHAR(100) NOT NULL,
+  workout_order INT NOT NULL,
+  exercise VARCHAR(100) NOT NULL,
+  exercise_order INT NOT NULL,
+  set INT NOT NULL,
+  reps INT,
+  rir INT,
+  rpe INT,
+  backoff_percent INT,
+  weight INT
+);
