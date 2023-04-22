@@ -6,8 +6,9 @@ import dayOfYear from "dayjs/plugin/dayOfYear";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { BsDot } from "react-icons/bs";
 import { Link, Outlet } from "react-router-dom";
+import axios from "axios";
 
-const ClientCalendar = ({ clientWorkouts }) => {
+const ClientCalendar = ({ clientWorkouts, userInfo }) => {
   dayjs.extend(weekOfYear);
   dayjs.extend(dayOfYear);
   const [today, setToday] = useState(dayjs());
@@ -19,10 +20,18 @@ const ClientCalendar = ({ clientWorkouts }) => {
     { name: "prev", touched: false },
     { name: "next", touched: false },
   ]);
+  const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutLookupTable, setWorkoutLookupTable] = useState({});
+  const [workoutResultLookupTable, setWorkoutResultLookupTable] = useState({});
 
   useEffect(() => {
-    setWorkoutLookupTable(constructWorkouts(clientWorkouts));
+    axios.get(`/api/workoutResults/${userInfo.id}`).then((result) => {
+      console.log(result, "result from getWorkoutResults");
+      setClientWorkoutResults(result.data);
+      setWorkoutResultLookupTable(constructWorkouts(result.data));
+      setWorkoutLookupTable(constructWorkouts(clientWorkouts));
+    });
+    console.log(clientWorkoutResults, "in cal");
   }, []);
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
@@ -90,6 +99,7 @@ const ClientCalendar = ({ clientWorkouts }) => {
 
     workoutsList.forEach((set, i) => {
       const {
+        id,
         date,
         workout_order,
         exercise_order,
@@ -107,6 +117,7 @@ const ClientCalendar = ({ clientWorkouts }) => {
           // add to exercise
           workoutCollection[date][workout_order][exercise_order].sets[set.set] =
             {
+              id: id,
               set: set.set,
               reps: reps,
               rir: rir,
@@ -122,6 +133,7 @@ const ClientCalendar = ({ clientWorkouts }) => {
           };
           workoutCollection[date][workout_order][exercise_order].sets[set.set] =
             {
+              id: id,
               set: set.set,
               reps: reps,
               rir: rir,
@@ -139,6 +151,7 @@ const ClientCalendar = ({ clientWorkouts }) => {
           sets: [],
         };
         workoutCollection[date][workout_order][exercise_order].sets[set.set] = {
+          id: id,
           set: set.set,
           reps: reps,
           rir: rir,
@@ -244,8 +257,8 @@ const ClientCalendar = ({ clientWorkouts }) => {
       </div>
       {/* Workout shorthand goes below */}
       <div>
-        {workoutLookupTable[selectedDate.toDate().toDateString()] ? (
-          workoutLookupTable[selectedDate.toDate().toDateString()].map(
+        {workoutResultLookupTable[selectedDate.toDate().toDateString()] ? (
+          workoutResultLookupTable[selectedDate.toDate().toDateString()].map(
             (workout, i) => {
               return (
                 <div key={i} className="flex flex-col gap-2 mx-3">

@@ -77,7 +77,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     copyWorkoutResult[exerciseIdx].sets[set][name] = value;
     setWorkoutResult(copyWorkoutResult);
 
-    // POST RESULTS debounce
+    processChange(copyWorkoutResult[exerciseIdx].sets[set]);
   };
 
   const debounce = (func, timeout = 1000) => {
@@ -90,22 +90,14 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     };
   };
 
-  const saveInput = () => {
+  const saveInput = (set) => {
+    console.log(set);
     apiRequests
-      .postWorkoutResult(
-        userId,
-        dayjs(params.date).toDate().toDateString(),
-        params.idx,
-        workoutResult
-      )
-      .then((result) => console.log(result));
+      .updateWorkoutResult(set)
+      .then((result) => console.log(result))
+      .catch((error) => console.log(error));
   };
-  const processChange = useCallback(
-    debounce(() => {
-      saveInput();
-    }),
-    []
-  );
+  const processChange = useCallback(debounce(saveInput), []);
 
   const renderScreen = (exerciseIdx) => {
     return (
@@ -126,6 +118,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
       });
     });
     availableProps.add("weight");
+    availableProps.delete("id");
 
     return (
       <div className="mx-2 px-2">
@@ -172,7 +165,6 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
                             name={prop}
                             value={currSetProps[prop]}
                             onChange={(e) => {
-                              processChange();
                               updateResult(e, exerciseIdx, i);
                             }}
                           ></input>

@@ -9,13 +9,16 @@ export const apiRequests = {
     return axios.post("/api/addClient", data);
   },
   getWorkouts: (clientId, date) => {},
-  postWorkoutResult: (clientId, date, workoutIdx, workoutResult) => {
-    const data = {
-      clientId: clientId,
-      date: date,
-      workoutIdx: workoutIdx,
-      workoutResult: workoutResult,
-    };
-    return axios.post("/api/postWorkoutResult", data);
+  updateWorkoutResult: (set) => {
+    return axios.put("/api/updateWorkoutResult", set);
   },
+  // postWorkoutResult: (clientId, date, workoutIdx, workoutResult) => {
+  //   const data = {
+  //     clientId: clientId,
+  //     date: date,
+  //     workoutIdx: workoutIdx,
+  //     workoutResult: workoutResult,
+  //   };
+  //   return axios.post("/api/postWorkoutResult", data);
+  // },
 };

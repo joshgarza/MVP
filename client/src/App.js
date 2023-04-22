@@ -60,6 +60,7 @@ const App = () => {
   const [clientComments, setClientComments] = useState(initialComments);
   const [clientLookupTable, setClientLookupTable] = useState({});
   const [clientWorkouts, setClientWorkouts] = useState([]);
+  const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutStarted, setWorkoutStarted] = useState(false);
 
   useEffect(() => {
@@ -71,6 +72,10 @@ const App = () => {
         console.log(result, "result from getWorkouts");
         setClientWorkouts(result.data);
       });
+      // axios.get(`/api/workoutResults/${userInfo.id}`).then((result) => {
+      //   console.log(result, "result from getWorkoutResults");
+      //   setClientWorkoutResults(result.data);
+      // });
       console.log("get client data", userInfo);
     }
   }, [userRole]);
@@ -195,7 +200,13 @@ const App = () => {
             <Route path="dashboard" element={<ClientDashboard />} />
             <Route
               path="calendar"
-              element={<ClientCalendar clientWorkouts={clientWorkouts} />}
+              element={
+                <ClientCalendar
+                  clientWorkouts={clientWorkouts}
+                  userInfo={userInfo}
+                  // clientWorkoutResults={clientWorkoutResults}
+                />
+              }
             />
             <Route path="workouts" element={<ClientWorkouts />}>
               <Route
