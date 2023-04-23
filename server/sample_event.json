@@ -1,0 +1,9 @@
+{
+  "httpMethod": "GET",
+  "path": "/api/test",
+  "queryStringParameters": null,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": null
+}

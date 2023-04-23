@@ -1,6 +1,9 @@
 const { models } = require("../models");
 
 module.exports = {
+  test: (req, res) => {
+    res.status(200).end();
+  },
   addClient: (req, res) => {
     models.addClient(req.body, (err, data) => {
       if (err) {

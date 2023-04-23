@@ -1,6 +1,7 @@
 const controllers = require("./controllers");
 const router = require("express").Router();
 
+router.get("/test", controllers.test);
 router.get("/login/:id", controllers.loginUser);
 router.post("/signup/:id", controllers.createUser);
 // update endpoint to be workouts plural
