@@ -23,14 +23,17 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
   const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutLookupTable, setWorkoutLookupTable] = useState({});
   const [workoutResultLookupTable, setWorkoutResultLookupTable] = useState({});
+  const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    axios.get(`/api/workoutResults/${userInfo.id}`).then((result) => {
-      console.log(result, "result from getWorkoutResults");
-      setClientWorkoutResults(result.data);
-      setWorkoutResultLookupTable(constructWorkouts(result.data));
-      setWorkoutLookupTable(constructWorkouts(clientWorkouts));
-    });
+    axios
+      .get(`${apiBaseURL}/api/workoutResults/${userInfo.id}`)
+      .then((result) => {
+        console.log(result, "result from getWorkoutResults");
+        setClientWorkoutResults(result.data);
+        setWorkoutResultLookupTable(constructWorkouts(result.data));
+        setWorkoutLookupTable(constructWorkouts(clientWorkouts));
+      });
     console.log(clientWorkoutResults, "in cal");
   }, []);
 

@@ -10,6 +10,7 @@ const WorkoutBuilder = ({
 }) => {
   const [workout, setWorkout] = useState([]);
   const [edit, setEdit] = useState(false);
+  const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     if (clientLookupTable[clientId].workouts[date] !== undefined) {
@@ -211,7 +212,7 @@ const WorkoutBuilder = ({
       workout: sanitizeInputs(workout),
     };
     axios
-      .post("/api/workout", data)
+      .post(`${apiBaseURL}/api/workout`, data)
       .then((result) => {
         console.log(result);
         populateClientLookupTable();
@@ -240,7 +241,7 @@ const WorkoutBuilder = ({
       });
 
       axios
-        .put("/api/workout", data)
+        .put(`${apiBaseURL}/api/workout`, data)
         .then((result) => {
           console.log(result);
           populateClientLookupTable();
@@ -260,7 +261,7 @@ const WorkoutBuilder = ({
     };
 
     axios
-      .delete("/api/workout", { data: data })
+      .delete(`${apiBaseURL}/api/workout`, { data: data })
       .then((result) => {
         console.log(result);
         populateClientLookupTable();

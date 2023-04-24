@@ -23,13 +23,13 @@ import {
   Signup,
   UpdateProfile,
 } from "./components";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5001");
+// const socket = io("http://localhost:5001");
 
-socket.on("connect", () => {
-  console.log(socket.id);
-});
+// socket.on("connect", () => {
+//   console.log(socket.id);
+// });
 
 const baseDate = new Date(2022, 0, 1, 0, 0, 15);
 const currDate = new Date(2022, 0, 10, 0, 0, 15);
@@ -62,13 +62,14 @@ const App = () => {
   const [clientWorkouts, setClientWorkouts] = useState([]);
   const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutStarted, setWorkoutStarted] = useState(false);
+  const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     if (userRole === "Coach") {
       populateClientLookupTable();
     }
     if (userRole === "Client") {
-      axios.get(`/api/workout/${userInfo.id}`).then((result) => {
+      axios.get(`${apiBaseURL}/api/workout/${userInfo.id}`).then((result) => {
         console.log(result, "result from getWorkouts");
         setClientWorkouts(result.data);
       });
@@ -81,9 +82,13 @@ const App = () => {
   }, [userRole]);
 
   const getUserData = async (user) => {
-    let userData = await axios.get(`/api/login/${user.firebaseId}`, {
-      params: user,
-    });
+    let userData = await axios.get(
+      `${apiBaseURL}/api/login/${user.firebaseId}`,
+      {
+        params: user,
+      }
+    );
+    console.log("user data", userData);
     if (userData) {
       setUserInfo(userData.data[0]);
       setUserRole(userData.data[0].user_type);
@@ -92,13 +97,19 @@ const App = () => {
   };
 
   const createNewUser = async (user) => {
-    let userDataPost = await axios.post(`/api/signup/${user.firebaseId}`, {
-      params: user,
-    });
-    if (userDataPost) {
-      let userData = await axios.get(`/api/login/${user.firebaseId}`, {
+    let userDataPost = await axios.post(
+      `${apiBaseURL}/api/signup/${user.firebaseId}`,
+      {
         params: user,
-      });
+      }
+    );
+    if (userDataPost) {
+      let userData = await axios.get(
+        `${apiBaseURL}/api/login/${user.firebaseId}`,
+        {
+          params: user,
+        }
+      );
       setUserInfo(userData.data[0]);
       setUserRole(userData.data[0].user_type);
       return userData.data[0].user_type;
@@ -113,7 +124,7 @@ const App = () => {
   const populateClientLookupTable = () => {
     const data = userInfo.id;
     axios
-      .get(`/api/getAllClients/${data}`)
+      .get(`${apiBaseURL}/api/getAllClients/${data}`)
       .then((result) => {
         setClientLookupTable(result.data);
       })
@@ -125,7 +136,7 @@ const App = () => {
   // TODO: resolve bug when getting user info that doesn't have workouts
   const getUserWorkouts = () => {
     axios
-      .get(`/api/workout/4`)
+      .get(`${apiBaseURL}/api/workout/4`)
       .then((result) => {
         console.log(result);
         // setWorkout(result.data);
