@@ -82,6 +82,7 @@ const App = () => {
   }, [userRole]);
 
   const getUserData = async (user) => {
+    console.log("in getUserDate in app");
     let userData = await axios.get(
       `${apiBaseURL}/api/login/${user.firebaseId}`,
       {
