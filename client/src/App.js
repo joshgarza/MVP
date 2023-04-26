@@ -101,7 +101,7 @@ const App = () => {
     if (userData) {
       setUserInfo(userData.data[0]);
       setUserRole(userData.data[0].user_type);
-      setInitializing(false);
+      // setInitializing(false);
       return userData.data[0].user_type;
     }
   };
@@ -283,6 +283,7 @@ const App = () => {
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
                 initializing={initializing}
+                setInitializing={setInitializing}
               />
             }
           />

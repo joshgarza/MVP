@@ -21,7 +21,7 @@ const Login = ({
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("is logged in", lastRoute);
+      setInitializing(false);
       navigate(lastRoute);
     }
   }, [isLoggedIn]);
@@ -37,13 +37,11 @@ const Login = ({
       );
       if (user) {
         const userRole = await getUserData(user);
-        console.log("user role", userRole);
         if (userRole) {
-          console.log("logging in as", userRole);
           if (userRole === "Client") {
-            navigate("/client");
+            navigate("/client/dashboard");
           } else if (userRole === "Coach") {
-            navigate("/coach");
+            navigate("/coach/dashboard");
           } else {
             console.log("not loading");
           }
