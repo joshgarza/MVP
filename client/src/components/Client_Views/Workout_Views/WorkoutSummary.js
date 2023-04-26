@@ -11,7 +11,7 @@ const WorkoutSummary = ({ workoutResult }) => {
             key={i}
             exercise={slot.exercise}
             sets={slot.sets}
-            readOnly={true}
+            readOnly={false}
           />
         );
       })}

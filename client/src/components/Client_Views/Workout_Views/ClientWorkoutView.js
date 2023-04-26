@@ -6,6 +6,7 @@ import WorkoutSummary from "./WorkoutSummary";
 import WorkoutButtons from "./WorkoutButtons";
 import SummaryButtons from "./SummaryButtons";
 import useTimer from "../../../util/useTimer";
+import { useSwipeable } from "react-swipeable";
 
 // if no location.state data, perform a GET request for workouts matching userId, date, and workout_idx in params
 const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
@@ -46,9 +47,26 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
 
   const processChange = useCallback(debounce(saveInput), []);
 
+  const handleSwipeLeft = () => {
+    if (screen < workout.length - 1) {
+      setScreen(screen + 1);
+    }
+  };
+
+  const handleSwipeRight = () => {
+    if (screen > 0) {
+      setScreen(screen - 1);
+    }
+  };
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleSwipeLeft(),
+    onSwipedRight: () => handleSwipeRight(),
+  });
+
   return (
-    <div className="w-full">
-      <div className="relative h-full">
+    <div {...handlers} className="w-full h-[80%] relative">
+      <div className="relative">
         <div className="flex items-center justify-center p-4">
           Workout Timer: {formatElapsedTime()}
         </div>

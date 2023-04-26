@@ -1,14 +1,13 @@
 import React from "react";
 
 const ExerciseTable = ({ exercise, sets, screen, readOnly, updateResult }) => {
-  const availableProps = new Set();
+  const exerciseSetDescriptors = new Set();
   sets.forEach((set) => {
     Object.keys(set).forEach((prop) => {
-      set[prop] !== null && availableProps.add(prop);
+      set[prop] !== null && prop !== "id" && exerciseSetDescriptors.add(prop);
     });
   });
-  availableProps.add("weight");
-  availableProps.delete("id");
+  exerciseSetDescriptors.add("weight");
 
   return (
     <div className="flex flex-col items-center mb-4">
@@ -16,7 +15,7 @@ const ExerciseTable = ({ exercise, sets, screen, readOnly, updateResult }) => {
       <table className="table-fixed w-full">
         <thead>
           <tr>
-            {[...availableProps].map((prop, i) => (
+            {[...exerciseSetDescriptors].map((prop, i) => (
               <th key={i} className="border px-4 py-2">
                 {prop}
               </th>
@@ -26,10 +25,16 @@ const ExerciseTable = ({ exercise, sets, screen, readOnly, updateResult }) => {
         <tbody>
           {sets.map((set, i) => (
             <tr key={i}>
-              {[...availableProps].map((prop, j) => (
+              {[...exerciseSetDescriptors].map((prop, j) => (
                 <td key={j} className="border px-4 py-2">
                   {readOnly ? (
-                    set[prop]
+                    prop === "set" ? (
+                      set[prop] + 1
+                    ) : (
+                      set[prop]
+                    )
+                  ) : prop === "set" ? (
+                    set[prop] + 1
                   ) : (
                     <input
                       className="w-full"
