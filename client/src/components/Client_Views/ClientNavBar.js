@@ -43,7 +43,6 @@ const ClientNavBar = ({
 
   const mapNavOptions = () => {
     return navOptions.map((navOption, i) => {
-      // const { name } = navOption;
       return (
         <div key={i} className={iconStyle}>
           <NavLink
@@ -75,12 +74,6 @@ const ClientNavBar = ({
       case "profile":
         return <AiOutlineProfile />;
     }
-  };
-
-  const handleContextMenu = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
   };
 
   const handleLogout = async () => {

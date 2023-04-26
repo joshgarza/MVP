@@ -76,6 +76,8 @@ const App = () => {
         firebaseId: currentUser.uid,
       };
       getUserData(user);
+    } else {
+      setInitializing(false);
     }
     if (userRole === "Coach") {
       populateClientLookupTable();
@@ -99,6 +101,7 @@ const App = () => {
     if (userData) {
       setUserInfo(userData.data[0]);
       setUserRole(userData.data[0].user_type);
+      setInitializing(false);
       return userData.data[0].user_type;
     }
   };
@@ -267,6 +270,7 @@ const App = () => {
                 getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
+                setInitializing={setInitializing}
                 initializing={initializing}
               />
             }

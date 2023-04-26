@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
-import { apiRequests } from "../../util/apiRequests.js";
+import { apiRequests } from "../../../util/apiRequests.js";
 import dayjs from "dayjs";
 
 // if no location.state data, perform a GET request for workouts matching userId, date, and workout_idx in params

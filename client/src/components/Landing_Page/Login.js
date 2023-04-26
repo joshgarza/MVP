@@ -4,7 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { generateCalendar } from "../../util/calendar.js";
 import { useLastRoute } from "../../contexts/LastRouteContext";
 
-const Login = ({ getUserData, isLoggedIn, userRole, initializing }) => {
+const Login = ({
+  getUserData,
+  isLoggedIn,
+  userRole,
+  initializing,
+  setInitializing,
+}) => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login, currentUser } = useAuth();
@@ -15,7 +21,7 @@ const Login = ({ getUserData, isLoggedIn, userRole, initializing }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("is logged in");
+      console.log("is logged in", lastRoute);
       navigate(lastRoute);
     }
   }, [isLoggedIn]);
