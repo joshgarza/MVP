@@ -163,6 +163,7 @@ module.exports = {
         console.log("Error getting user info", err);
         res.status(404).end();
       }
+      console.log(data);
       res.status(200).send(data);
     });
   },
