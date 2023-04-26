@@ -14,7 +14,6 @@ import {
   ClientProgress,
   ClientWorkouts,
   ClientWorkoutsDateView,
-  ClientWorkoutSummary,
   ClientWorkoutView,
   CoachDashboard,
   CoachView,
@@ -250,9 +249,7 @@ const App = () => {
                       setWorkoutStarted={setWorkoutStarted}
                     />
                   }
-                >
-                  <Route path="summary" element={<ClientWorkoutSummary />} />
-                </Route>
+                ></Route>
               </Route>
             </Route>
             <Route path="progress" element={<ClientProgress />} />
