@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { formatDistance } from "date-fns";
 import { useAuth } from "./contexts/AuthContext";
@@ -57,6 +58,7 @@ const App = () => {
   const { currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState();
   const [userRole, setUserRole] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientComments, setClientComments] = useState(initialComments);
   const [clientLookupTable, setClientLookupTable] = useState({});
   const [clientWorkouts, setClientWorkouts] = useState([]);
@@ -65,31 +67,32 @@ const App = () => {
   const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
+    if (currentUser) {
+      let user = {
+        email: currentUser.email,
+        firebaseId: currentUser.uid,
+      };
+      getUserData(user);
+    }
     if (userRole === "Coach") {
       populateClientLookupTable();
+      setIsLoggedIn(true);
     }
     if (userRole === "Client") {
       axios.get(`${apiBaseURL}/api/workout/${userInfo.id}`).then((result) => {
-        console.log(result, "result from getWorkouts");
         setClientWorkouts(result.data);
+        setIsLoggedIn(true);
       });
-      // axios.get(`/api/workoutResults/${userInfo.id}`).then((result) => {
-      //   console.log(result, "result from getWorkoutResults");
-      //   setClientWorkoutResults(result.data);
-      // });
-      console.log("get client data", userInfo);
     }
   }, [userRole]);
 
   const getUserData = async (user) => {
-    console.log("in getUserDate in app");
     let userData = await axios.get(
       `${apiBaseURL}/api/login/${user.firebaseId}`,
       {
         params: user,
       }
     );
-    console.log("user data", userData);
     if (userData) {
       setUserInfo(userData.data[0]);
       setUserRole(userData.data[0].user_type);
@@ -254,7 +257,16 @@ const App = () => {
             element={<Signup createNewUser={createNewUser} />}
           />
           <Route path="/" element={<Login getUserData={getUserData} />} />
-          <Route path="/login" element={<Login getUserData={getUserData} />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                getUserData={getUserData}
+                isLoggedIn={isLoggedIn}
+                userRole={userRole}
+              />
+            }
+          />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           {/* TODO: replace element with NoMatch element that renders a workable page with a Go Home button */}
           <Route path="*" element={<p>There's nothing here: 404!</p>} />

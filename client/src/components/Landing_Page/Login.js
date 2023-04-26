@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { generateCalendar } from "../../util/calendar.js";
 
-const Login = ({ getUserData }) => {
+const Login = ({ getUserData, isLoggedIn, userRole }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login, currentUser } = useAuth();
@@ -11,8 +11,20 @@ const Login = ({ getUserData }) => {
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      console.log("is logged in");
+      if (userRole === "Client") {
+        navigate("/client");
+      } else if (userRole === "Coach") {
+        navigate("/coach");
+      } else {
+        console.log("not loading");
+      }
+    }
+  }, [isLoggedIn]);
+
   const onSubmit = async (event) => {
-    console.log("trying to submit");
     event.preventDefault();
     try {
       setError("");
@@ -21,7 +33,6 @@ const Login = ({ getUserData }) => {
         emailRef.current.value,
         passwordRef.current.value
       );
-      console.log("user object", user);
       if (user) {
         const userRole = await getUserData(user);
         console.log("user role", userRole);
