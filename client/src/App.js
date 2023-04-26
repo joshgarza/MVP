@@ -256,7 +256,16 @@ const App = () => {
             path="/signup"
             element={<Signup createNewUser={createNewUser} />}
           />
-          <Route path="/" element={<Login getUserData={getUserData} />} />
+          <Route
+            path="/"
+            element={
+              <Login
+                getUserData={getUserData}
+                isLoggedIn={isLoggedIn}
+                userRole={userRole}
+              />
+            }
+          />
           <Route
             path="/login"
             element={
