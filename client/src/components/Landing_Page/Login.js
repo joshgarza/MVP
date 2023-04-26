@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { generateCalendar } from "../../util/calendar.js";
+import { useLastRoute } from "../../contexts/LastRouteContext";
 
 const Login = ({ getUserData, isLoggedIn, userRole }) => {
   const emailRef = useRef();
@@ -10,17 +11,12 @@ const Login = ({ getUserData, isLoggedIn, userRole }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
+  const { lastRoute } = useLastRoute();
 
   useEffect(() => {
     if (isLoggedIn) {
       console.log("is logged in");
-      if (userRole === "Client") {
-        navigate("/client");
-      } else if (userRole === "Coach") {
-        navigate("/coach");
-      } else {
-        console.log("not loading");
-      }
+      navigate(lastRoute);
     }
   }, [isLoggedIn]);
 

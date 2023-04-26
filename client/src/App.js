@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { formatDistance } from "date-fns";
 import { useAuth } from "./contexts/AuthContext";
@@ -20,6 +20,7 @@ import {
   CoachView,
   ForgotPassword,
   Login,
+  NavigationHandler,
   PrivateRoute,
   Signup,
   UpdateProfile,
@@ -64,6 +65,7 @@ const App = () => {
   const [clientWorkouts, setClientWorkouts] = useState([]);
   const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutStarted, setWorkoutStarted] = useState(false);
+
   const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -151,6 +153,7 @@ const App = () => {
   return (
     <>
       <Router>
+        <NavigationHandler />
         <Routes>
           <Route
             path="coach"

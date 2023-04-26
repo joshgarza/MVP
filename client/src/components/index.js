@@ -13,6 +13,7 @@ import CoachDashboard from "./Coach_Views/CoachDashboard";
 import CoachView from "./Coach_Views/CoachView";
 import ForgotPassword from "./Landing_Page/ForgotPassword";
 import Login from "./Landing_Page/Login";
+import NavigationHandler from "./NavigationHandler";
 import PrivateRoute from "./PrivateRoute";
 import Signup from "./Landing_Page/Signup";
 import UpdateProfile from "./UpdateProfile";
@@ -33,6 +34,7 @@ export {
   CoachView,
   ForgotPassword,
   Login,
+  NavigationHandler,
   PrivateRoute,
   Signup,
   UpdateProfile,
