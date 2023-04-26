@@ -344,7 +344,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
           Resume Workout
         </div>
         <Link
-          to="/client"
+          to="/client/dashboard"
           className="flex items-center justify-center w-[60%] font-semibold bg-slate-300 rounded-full p-2 mx-2"
           onClick={() => setWorkoutStarted(false)}
         >

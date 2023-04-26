@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, Outlet } from "react-router-dom";
+import {
+  NavLink,
+  Link,
+  useNavigate,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   AiOutlineHome,
@@ -19,13 +25,12 @@ const ClientNavBar = ({
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState("");
-  const [selected, setSelected] = useState("dashboard");
   const [navOptions, setNavOptions] = useState([
-    { name: "dashboard", touched: false },
-    { name: "calendar", touched: false },
-    { name: "progress", touched: false },
-    { name: "chat", touched: false },
-    { name: "profile", touched: false },
+    "dashboard",
+    "calendar",
+    "progress",
+    "chat",
+    "profile",
   ]);
 
   useEffect(() => {
@@ -34,32 +39,23 @@ const ClientNavBar = ({
     }
   }, []);
 
-  useEffect(() => {
-    workoutStarted && setSelected("dashboard");
-  }, [workoutStarted]);
-
   const iconStyle = "w-full flex items-center justify-center p-3";
 
   const mapNavOptions = () => {
     return navOptions.map((navOption, i) => {
-      const { name, touched } = navOption;
+      // const { name } = navOption;
       return (
         <div key={i} className={iconStyle}>
-          <Link
-            className={`text-4xl rounded-full p-2 ${
-              touched ? "bg-gray-400 text-white" : "bg-white"
-            } ${name === selected ? "bg-gray-400 text-white" : "bg-white"}`}
-            to={name}
-            onContextMenu={(e) => handleContextMenu(e)}
-            onTouchStart={(e) => {
-              handleTouchStart(e, i);
-            }}
-            onTouchEnd={(e) => {
-              handleTouchEnd(e, i, name);
-            }}
+          <NavLink
+            className={({ isActive }) =>
+              `text-4xl rounded-full p-2 ${
+                isActive ? "bg-gray-400 text-white" : "bg-white"
+              }`
+            }
+            to={navOption}
           >
-            {renderIcon(name)}
-          </Link>
+            {renderIcon(navOption)}
+          </NavLink>
         </div>
       );
     });
@@ -85,22 +81,6 @@ const ClientNavBar = ({
     e.preventDefault();
     e.stopPropagation();
     return false;
-  };
-
-  const handleTouchStart = (e, idx) => {
-    const copyNavOptions = [...navOptions];
-    navOptions[idx].touched = true;
-
-    setNavOptions(copyNavOptions);
-    setSelected("");
-  };
-
-  const handleTouchEnd = (e, idx, name) => {
-    const copyNavOptions = [...navOptions];
-    navOptions[idx].touched = false;
-
-    setNavOptions(copyNavOptions);
-    setSelected(name);
   };
 
   const handleLogout = async () => {

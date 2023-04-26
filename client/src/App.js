@@ -65,6 +65,7 @@ const App = () => {
   const [clientWorkouts, setClientWorkouts] = useState([]);
   const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutStarted, setWorkoutStarted] = useState(false);
+  const [initializing, setInitializing] = useState(true);
 
   const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -266,6 +267,7 @@ const App = () => {
                 getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
+                initializing={initializing}
               />
             }
           />
@@ -276,6 +278,7 @@ const App = () => {
                 getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
+                initializing={initializing}
               />
             }
           />
