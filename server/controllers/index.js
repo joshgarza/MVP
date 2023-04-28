@@ -135,6 +135,25 @@ module.exports = {
       res.status(200).send(data);
     });
   },
+  getSingleWorkout: (req, res) => {
+    console.log(req.query, "checking single workout");
+    models
+      .getSingleWorkout(req.query)
+      .then((result) => {
+        console.log(result.rows);
+        res.status(200).send(result.rows);
+      })
+      .catch((error) => {
+        console.log("error getting workout", error);
+        res.status(404).send(error);
+      });
+  },
+  getWorkoutByDate: (req, res) => {
+    models
+      .getWorkoutByDate(req.query)
+      .then((result) => res.status(200).send(result.rows))
+      .catch((error) => res.status(404).end());
+  },
   getWorkouts: (req, res) => {
     models.getWorkouts(req.params.id, (err, data) => {
       if (err) {
@@ -194,30 +213,4 @@ module.exports = {
       .then((result) => res.status(201).end())
       .catch((error) => res.status(404).end());
   },
-  // postWorkoutResult: (req, res) => {
-  //   models
-  //     .postWorkoutResult(req.body)
-  //     .then((result) => {
-  //       console.log("success", result);
-  //       res.status(201).end();
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error adding workout result", error);
-  //       res.status(404).end();
-  //     });
-  // },
 };
-
-// [{
-//   clientId: clientId,
-//   date: date,
-//   workoutIdx: workoutIdx,
-//   exercise: exercise,
-//   exercise_order: exercise_order,
-//   set: set,
-//   reps: reps,
-//   rir: rir,
-//   rpe: rpe,
-//   backoff_percent: backoff_percent,
-//   weight: weight
-// }]

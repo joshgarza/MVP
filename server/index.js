@@ -32,12 +32,6 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const originalSend = res.send;
   res.send = function (body) {
-    // const modifiedResponse = {
-    //   statusCode: res.statusCode,
-    //   headers: res.getHeaders(),
-    //   isBase64Encoded: false,
-    //   body: body instanceof Buffer ? body.toString() : body,
-    // };
     originalSend.call(res, JSON.stringify(body));
   };
   next();
@@ -45,8 +39,15 @@ app.use((req, res, next) => {
 
 app.use("/api", router);
 
-const server = awsServerlessExpress.createServer(app);
-
-exports.handler = (event, context) => {
-  awsServerlessExpress.proxy(server, event, context);
-};
+if (process.env.AWS_EXECUTION_ENV) {
+  const server = awsServerlessExpress.createServer(app);
+  exports.handler = (event, context) => {
+    awsServerlessExpress.proxy(server, event, context);
+  };
+} else {
+  // Start local server for development
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Server running locally on port ${PORT}`);
+  });
+}

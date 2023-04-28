@@ -307,6 +307,22 @@ const models = {
       callback(error, {});
     }
   },
+  getSingleWorkout: async (query) => {
+    const { clientId, date, workoutIdx } = query;
+    console.log(clientId, date, workoutIdx);
+    try {
+      return pool.query(`
+        SELECT * FROM workoutresults
+        WHERE client_id=${clientId}
+        AND
+        date='${date}'
+        AND
+        workout_order=${workoutIdx}
+      `);
+    } catch (error) {
+      return error;
+    }
+  },
   getUser: async (query, callback) => {
     try {
       const user = await pool.query(
@@ -320,6 +336,19 @@ const models = {
       }
     } catch (error) {
       callback(error, null);
+    }
+  },
+  getWorkoutByDate: async (query) => {
+    const { clientId, date } = query;
+    try {
+      return pool.query(`
+        SELECT * FROM workoutresults
+        WHERE client_id=${clientId}
+        AND
+        date='${date}'
+      `);
+    } catch (error) {
+      return error;
     }
   },
   getWorkoutOrder: async (query) => {
