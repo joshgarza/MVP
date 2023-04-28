@@ -98,6 +98,7 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
   };
 
   const constructWorkouts = (workoutsList) => {
+    console.log("in construct workout in calendar", workoutsList);
     const workoutCollection = {};
 
     workoutsList.forEach((set, i) => {

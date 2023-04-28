@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { apiRequests } from "../../../util/apiRequests.js";
 import Exercise from "./Exercise";
@@ -16,6 +16,16 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   const [workoutResult, setWorkoutResult] = useState(workout);
   const [screen, setScreen] = useState(0);
   const { formatElapsedTime, handleStart, handlePauseResume } = useTimer(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!location.state) {
+      console.log("no state info");
+    } else {
+      console.log("location", location.state);
+      setIsLoading(false);
+    }
+  }, []);
 
   const updateResult = (e, exerciseIdx, set) => {
     const { name, value } = e.target;
@@ -66,35 +76,41 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
 
   return (
     <div {...handlers} className="w-full h-[80%] relative">
-      <div className="relative">
-        <div className="flex items-center justify-center p-4">
-          Workout Timer: {formatElapsedTime()}
-        </div>
-      </div>
-      {screen === workout.length ? (
-        <>
-          <WorkoutSummary workoutResult={workoutResult} />
-          <SummaryButtons
-            screen={screen}
-            setScreen={setScreen}
-            handlePauseResume={handlePauseResume}
-            setStartTime={handleStart}
-            setWorkoutStarted={setWorkoutStarted}
-          />
-        </>
+      {isLoading ? (
+        <div>Loading...</div>
       ) : (
         <>
-          <Exercise
-            workout={workout}
-            screen={screen}
-            updateResult={updateResult}
-          />
-          <WorkoutButtons
-            screen={screen}
-            setScreen={setScreen}
-            workoutLength={workout.length}
-            handlePauseResume={handlePauseResume}
-          />
+          <div className="relative">
+            <div className="flex items-center justify-center p-4">
+              Workout Timer: {formatElapsedTime()}
+            </div>
+          </div>
+          {screen === workout.length ? (
+            <>
+              <WorkoutSummary workoutResult={workoutResult} />
+              <SummaryButtons
+                screen={screen}
+                setScreen={setScreen}
+                handlePauseResume={handlePauseResume}
+                setStartTime={handleStart}
+                setWorkoutStarted={setWorkoutStarted}
+              />
+            </>
+          ) : (
+            <>
+              <Exercise
+                workout={workout}
+                screen={screen}
+                updateResult={updateResult}
+              />
+              <WorkoutButtons
+                screen={screen}
+                setScreen={setScreen}
+                workoutLength={workout.length}
+                handlePauseResume={handlePauseResume}
+              />
+            </>
+          )}
         </>
       )}
     </div>
