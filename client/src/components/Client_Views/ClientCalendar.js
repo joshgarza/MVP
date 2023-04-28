@@ -29,12 +29,10 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
     axios
       .get(`${apiBaseURL}/api/workoutResults/${userInfo.id}`)
       .then((result) => {
-        console.log(result, "result from getWorkoutResults");
         setClientWorkoutResults(result.data);
         setWorkoutResultLookupTable(constructWorkouts(result.data));
         setWorkoutLookupTable(constructWorkouts(clientWorkouts));
       });
-    console.log(clientWorkoutResults, "in cal");
   }, []);
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
@@ -98,7 +96,6 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
   };
 
   const constructWorkouts = (workoutsList) => {
-    console.log("in construct workout in calendar", workoutsList);
     const workoutCollection = {};
 
     workoutsList.forEach((set, i) => {

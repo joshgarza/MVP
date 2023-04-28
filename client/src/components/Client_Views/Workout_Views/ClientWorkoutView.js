@@ -22,7 +22,6 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     if (!location.state) {
       console.log("no state info");
     } else {
-      console.log("location", location.state);
       setIsLoading(false);
     }
   }, []);
@@ -48,7 +47,6 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
   };
 
   const saveInput = (set) => {
-    console.log(set);
     apiRequests
       .updateWorkoutResult(set)
       .then((result) => console.log(result))

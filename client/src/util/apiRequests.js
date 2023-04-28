@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
-// const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
-const apiBaseURL = "http://localhost:3001";
+const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
+// const apiBaseURL = "http://localhost:3001";
 export const apiRequests = {
   addClient: (coachId, clientEmail) => {
     const data = {

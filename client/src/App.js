@@ -147,7 +147,7 @@ const App = () => {
     axios
       .get(`${apiBaseURL}/api/workout/4`)
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         // setWorkout(result.data);
       })
       .catch((error) => console.log(error));
