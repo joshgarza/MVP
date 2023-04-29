@@ -76,20 +76,9 @@ const ClientNavBar = ({
     }
   };
 
-  const handleLogout = async () => {
-    setError("");
-    try {
-      await logout();
-      navigate("/login");
-      clearUserInfo();
-    } catch (err) {
-      setError(err);
-    }
-  };
-
-  if (!currentUser) {
-    return navigate("/login");
-  }
+  // if (!currentUser) {
+  //   return navigate("/login");
+  // }
 
   return (
     <>

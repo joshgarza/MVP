@@ -24,7 +24,12 @@ const Login = ({
   useEffect(() => {
     if (isLoggedIn) {
       setInitializing(false);
-      navigate(lastRoute);
+      console.log(lastRoute);
+      if (lastRoute === "/") {
+        navigate("/client");
+      } else {
+        navigate(lastRoute);
+      }
     }
   }, [isLoggedIn]);
 

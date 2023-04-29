@@ -88,7 +88,7 @@ const App = () => {
         setIsLoggedIn(true);
       });
     }
-  }, [userRole]);
+  }, [userRole, currentUser]);
 
   const getUserData = async (user) => {
     let userData = await axios.get(
@@ -126,9 +126,9 @@ const App = () => {
   };
 
   const clearUserInfo = () => {
-    setIsLoggedIn(false);
     setUserInfo(null);
     setUserRole("");
+    setIsLoggedIn(false);
   };
 
   const populateClientLookupTable = () => {

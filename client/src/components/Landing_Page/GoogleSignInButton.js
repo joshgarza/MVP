@@ -11,6 +11,7 @@ const GoogleSignInButton = ({ getUserData, userRole }) => {
   const handleClick = async () => {
     try {
       let googleStatus = await signInWithGoogle();
+      console.log("google status", googleStatus);
       if (googleStatus.userExists === false) {
         navigate("/signup", { state: true });
       } else {

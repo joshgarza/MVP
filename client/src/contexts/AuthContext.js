@@ -8,6 +8,8 @@ import {
   updateEmail,
   updatePassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 import { apiRequests } from "../util/apiRequests";
 
@@ -68,25 +70,54 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      let response = {
-        email: user.email,
-        firebaseId: user.uid,
-      };
-      return apiRequests
-        .checkGoogleUser(user.email, user.uid)
-        .then((result) => {
-          if (Object.keys(result.data).length > 0) {
-            return { user: response, userExists: true };
-          } else {
-            return { user: response, userExists: false };
-          }
-        })
-        .catch((error) => console.log("error in api request", error));
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      let result;
+      if (isMobile) {
+        await signInWithRedirect(auth, googleProvider);
+      } else {
+        result = await signInWithPopup(auth, googleProvider);
+        return checkGoogleUser(result);
+      }
     } catch (error) {
       console.error("Error signing in with Google:", error);
       throw error;
+    }
+  };
+
+  const checkGoogleUser = (result) => {
+    const user = result.user;
+    let response = {
+      email: user.email,
+      firebaseId: user.uid,
+    };
+    return apiRequests
+      .checkGoogleUser(user.email, user.uid)
+      .then((result) => {
+        if (Object.keys(result.data).length > 0) {
+          return { user: response, userExists: true };
+        } else {
+          return { user: response, userExists: false };
+        }
+      })
+      .catch((error) => console.log("error in api request", error));
+  };
+
+  // let handleRedirectPromise = null;
+
+  const handleRedirectResult = async () => {
+    try {
+      const result = await getRedirectResult(auth);
+      if (result && result.user) {
+        const googleStatus = checkGoogleUser(result);
+        googleStatus.then((result) => {
+          setCurrentUser(result.user);
+        });
+      }
+    } catch (error) {
+      console.error("Error getting redirect result:", error);
     }
   };
 
@@ -95,6 +126,8 @@ export const AuthProvider = ({ children }) => {
       setCurrentUser(user);
       setLoading(false);
     });
+
+    handleRedirectResult();
 
     return unsubscribe;
   }, []);
@@ -109,6 +142,7 @@ export const AuthProvider = ({ children }) => {
     updateUserPassword,
     signInWithGoogle,
   };
+  console.log(currentUser);
 
   return (
     <AuthContext.Provider value={value}>
