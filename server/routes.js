@@ -16,4 +16,6 @@ router.get("/getAllClients/:id", controllers.getAllClients);
 router.post("/workout", controllers.addWorkout);
 router.post("/addClient", controllers.addClient);
 
+router.get("/user/check", controllers.checkGoogleUser);
+
 module.exports = router;

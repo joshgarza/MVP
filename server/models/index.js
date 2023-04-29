@@ -324,6 +324,7 @@ const models = {
     }
   },
   getUser: async (query, callback) => {
+    console.log(query);
     try {
       const user = await pool.query(
         `SELECT * FROM users

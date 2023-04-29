@@ -72,6 +72,20 @@ module.exports = {
       });
     });
   },
+  checkGoogleUser: (req, res) => {
+    console.log("receiving request", req.query);
+    let query = {
+      id: req.query.firebaseId,
+    };
+    models.getUser(query, (err, data) => {
+      if (err) {
+        console.log("Error getting user info", err);
+        res.status(404).end();
+      }
+      console.log(data);
+      res.status(200).send(data);
+    });
+  },
   createUser: (req, res) => {
     let user = {
       name: req.body.params.name,
