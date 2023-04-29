@@ -75,9 +75,6 @@ const App = () => {
         firebaseId: currentUser.uid,
       };
       getUserData(user);
-      setInitializing(false);
-    } else {
-      setInitializing(false);
     }
     if (userRole === "Coach") {
       populateClientLookupTable();
@@ -106,7 +103,7 @@ const App = () => {
     }
   };
 
-  const createNewUser = async (user) => {
+  const createNewUser = async (user, userType) => {
     let userDataPost = await axios.post(
       `${apiBaseURL}/api/signup/${user.firebaseId}`,
       {
@@ -121,12 +118,13 @@ const App = () => {
         }
       );
       setUserInfo(userData.data[0]);
-      setUserRole(userData.data[0].user_type);
+      setUserRole(userType);
       return userData.data[0].user_type;
     }
   };
 
   const clearUserInfo = () => {
+    setIsLoggedIn(false);
     setUserInfo(null);
     setUserRole("");
   };
@@ -218,8 +216,14 @@ const App = () => {
               </PrivateRoute>
             }
           >
-            <Route index element={<ClientDashboard />} />
-            <Route path="dashboard" element={<ClientDashboard />} />
+            <Route
+              index
+              element={<ClientDashboard clearUserInfo={clearUserInfo} />}
+            />
+            <Route
+              path="dashboard"
+              element={<ClientDashboard clearUserInfo={clearUserInfo} />}
+            />
             <Route
               path="calendar"
               element={

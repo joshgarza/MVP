@@ -56,11 +56,17 @@ const Login = ({
   };
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
+    <div className="w-screen h-screen flex flex-col relative justify-evenly items-center">
       {initializing ? (
         <div>Loading...</div>
       ) : (
         <>
+          <div className="w-[30%] absolute top-10">
+            <img
+              className=""
+              src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
+            />
+          </div>
           <form
             className="w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             onSubmit={onSubmit}
@@ -111,16 +117,10 @@ const Login = ({
                 Sign up
               </Link>
             </div>
-            <div>
-              <GoogleSignInButton createNewUser={createNewUser} />
-            </div>
             {error && console.log("error", { error })}
           </form>
-          <div className="mx-[5rem]">
-            <img
-              className="h-[10rem]"
-              src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
-            />
+          <div>
+            <GoogleSignInButton getUserData={getUserData} userRole={userRole} />
           </div>
         </>
       )}

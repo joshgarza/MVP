@@ -1,49 +1,66 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Signup = ({ createNewUser }) => {
   const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const { signup } = useAuth();
+  const { signup, currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
   const [userType, setUserType] = useState("Client");
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isGoogleSignup, setIsGoogleSignup] = useState(false);
+
+  useEffect(() => {
+    if (location.state) {
+      setIsGoogleSignup(true);
+    }
+  }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords do not match");
+    let user;
+    if (!isGoogleSignup) {
+      if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+        return setError("Passwords do not match");
+      }
+      try {
+        setError("");
+        setLoading(true);
+        user = await signup(
+          nameRef.current.value,
+          emailRef.current.value,
+          passwordRef.current.value,
+          userType
+        );
+      } catch (err) {
+        setError(err);
+      }
+      setLoading(false);
     }
-    try {
-      setError("");
-      setLoading(true);
-      let user = await signup(
-        nameRef.current.value,
-        emailRef.current.value,
-        passwordRef.current.value,
-        userType
-      );
-      if (user) {
-        const newUserCreation = await createNewUser(user);
-        if (newUserCreation) {
-          console.log("signed up as", userType);
-          if (userType === "Client") {
-            navigate("/client");
-          } else if (userType === "Coach") {
-            navigate("/coach");
-          } else {
-            console.log("ERROR signing up");
-          }
+    user = {
+      name: nameRef.current.value,
+      email: currentUser.email,
+      userType: userType,
+      firebaseId: currentUser.uid,
+    };
+    if (user) {
+      const newUserCreation = await createNewUser(user, userType);
+      if (newUserCreation) {
+        console.log("signed up as", userType);
+        if (userType === "Client") {
+          navigate("/client");
+        } else if (userType === "Coach") {
+          navigate("/coach");
+        } else {
+          console.log("ERROR signing up");
         }
       }
-    } catch (err) {
-      setError(err);
     }
-    setLoading(false);
   };
 
   const handleChange = (event) => {
@@ -51,12 +68,26 @@ const Signup = ({ createNewUser }) => {
   };
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
+    <div className="w-screen h-screen flex flex-col relative items-center justify-center">
+      <div className="w-[30%] absolute top-10">
+        <img
+          className=""
+          src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
+        />
+      </div>
+      {isGoogleSignup ? (
+        <div className="p-8">
+          Thanks for signing up! We just need the following information to
+          finish setting up your account.
+        </div>
+      ) : (
+        <></>
+      )}
+
       <form
         className="w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         onSubmit={onSubmit}
       >
-        {/* <h2 className="text-lg">SignUp</h2> */}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
             User type
@@ -85,42 +116,49 @@ const Signup = ({ createNewUser }) => {
             placeholder="full name"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Email:
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="email"
-            ref={emailRef}
-            required
-            placeholder="email"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Password:
-          </label>
-          <input
-            className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            type="password"
-            ref={passwordRef}
-            required
-            placeholder="password"
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Password Confirmation:
-          </label>
-          <input
-            className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            type="password"
-            ref={passwordConfirmRef}
-            required
-            placeholder="confirm password"
-          />
-        </div>
+        {isGoogleSignup ? (
+          <div></div>
+        ) : (
+          <>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Email:
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="email"
+                ref={emailRef}
+                required
+                placeholder="email"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Password:
+              </label>
+              <input
+                className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                type="password"
+                ref={passwordRef}
+                required
+                placeholder="password"
+              />
+            </div>
+            <div className="mb-6">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Password Confirmation:
+              </label>
+              <input
+                className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                type="password"
+                ref={passwordConfirmRef}
+                required
+                placeholder="confirm password"
+              />
+            </div>
+          </>
+        )}
         <div className="mb-6">
           <button
             className="bg-[#394D79] hover:bg-[#293757] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -140,12 +178,6 @@ const Signup = ({ createNewUser }) => {
           </Link>
         </div>
       </form>
-      <div className="mx-[5rem]">
-        <img
-          className="h-[10rem]"
-          src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
-        />
-      </div>
       {error && console.log("error", { error })}
     </div>
   );

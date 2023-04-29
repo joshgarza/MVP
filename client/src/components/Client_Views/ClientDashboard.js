@@ -1,21 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { AiFillPlusCircle, AiOutlineArrowRight } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 // State needed:
 // - next workout (pass to Link state and set to: /workouts/:workout_id)
 // - all tasks (Link to: /tasks -> /tasks/:task_id)
-const ClientDashboard = () => {
+const ClientDashboard = ({ clearUserInfo }) => {
+  const { logout } = useAuth();
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const textStyle = "text-lg text-white";
   const cardTitleStyle = "text-base text-gray-200";
   const cardStyle =
     "row-span-2 bg-[#007e8f]/80 border rounded-3xl w-full my-[.125rem] p-2";
 
+  const handleLogout = async () => {
+    setError("");
+    try {
+      await logout();
+      navigate("/login");
+      clearUserInfo();
+    } catch (err) {
+      setError(err);
+    }
+  };
+
   return (
     <div className="h-[86%] w-full grid grid-rows-9 my-3 text">
       <div className="">
         <div className="font-medium text-sm text-blue-500">TODAY, APR 03</div>
-        <div className="font-medium text-3xl">Hello, Josh!</div>
+        <div className="flex justify-between">
+          <div className="font-medium text-3xl">Hello, Josh!</div>
+          <div className="p-4" onClick={handleLogout}>
+            Log Out
+          </div>
+        </div>
       </div>
       <div className={`${cardStyle} flex flex-col relative`}>
         <div className={cardTitleStyle}>Next Workout:</div>

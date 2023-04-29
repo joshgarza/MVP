@@ -74,18 +74,13 @@ export const AuthProvider = ({ children }) => {
         email: user.email,
         firebaseId: user.uid,
       };
-      console.log(response, "response in signin auth context");
       return apiRequests
         .checkGoogleUser(user.email, user.uid)
         .then((result) => {
-          console.log("result", result);
           if (Object.keys(result.data).length > 0) {
-            setCurrentUser(response);
-            return response;
+            return { user: response, userExists: true };
           } else {
-            console.log("empty response");
-            setCurrentUser(response);
-            return false;
+            return { user: response, userExists: false };
           }
         })
         .catch((error) => console.log("error in api request", error));
