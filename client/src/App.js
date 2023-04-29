@@ -75,6 +75,7 @@ const App = () => {
         firebaseId: currentUser.uid,
       };
       getUserData(user);
+      setInitializing(false);
     } else {
       setInitializing(false);
     }
@@ -97,7 +98,7 @@ const App = () => {
         params: user,
       }
     );
-    if (userData) {
+    if (Object.keys(userData.data).length > 0) {
       setUserInfo(userData.data[0]);
       setUserRole(userData.data[0].user_type);
       // setInitializing(false);
@@ -281,6 +282,7 @@ const App = () => {
                 userRole={userRole}
                 initializing={initializing}
                 setInitializing={setInitializing}
+                createNewUser={createNewUser}
               />
             }
           />

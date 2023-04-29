@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { auth } from "../firebase";
+import { auth, googleProvider } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,7 +7,9 @@ import {
   sendPasswordResetEmail,
   updateEmail,
   updatePassword,
+  signInWithPopup,
 } from "firebase/auth";
+import { apiRequests } from "../util/apiRequests";
 
 const AuthContext = React.createContext();
 
@@ -64,6 +66,35 @@ export const AuthProvider = ({ children }) => {
     return updatePassword(currentUser, password);
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      let response = {
+        email: user.email,
+        firebaseId: user.uid,
+      };
+      console.log(response, "response in signin auth context");
+      return apiRequests
+        .checkGoogleUser(user.email, user.uid)
+        .then((result) => {
+          console.log("result", result);
+          if (Object.keys(result.data).length > 0) {
+            setCurrentUser(response);
+            return response;
+          } else {
+            console.log("empty response");
+            setCurrentUser(response);
+            return false;
+          }
+        })
+        .catch((error) => console.log("error in api request", error));
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
@@ -81,6 +112,7 @@ export const AuthProvider = ({ children }) => {
     resetPassword,
     updateUserEmail,
     updateUserPassword,
+    signInWithGoogle,
   };
 
   return (

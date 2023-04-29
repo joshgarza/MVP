@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
-const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
-// const apiBaseURL = "http://localhost:3001";
+// const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
+const apiBaseURL = "http://localhost:3001";
 export const apiRequests = {
   addClient: (coachId, clientEmail) => {
     const data = {
@@ -9,6 +9,13 @@ export const apiRequests = {
       clientEmail: clientEmail,
     };
     return axios.post(`${apiBaseURL}/api/addClient`, { data });
+  },
+  checkGoogleUser: (email, firebaseId) => {
+    const data = {
+      email,
+      firebaseId,
+    };
+    return axios.get(`${apiBaseURL}/api/user/check`, { params: data });
   },
   getWorkout: (clientId, date, workoutIdx) => {
     const data = {
@@ -29,13 +36,4 @@ export const apiRequests = {
   updateWorkoutResult: (set) => {
     return axios.put(`${apiBaseURL}/api/updateWorkoutResult`, set);
   },
-  // postWorkoutResult: (clientId, date, workoutIdx, workoutResult) => {
-  //   const data = {
-  //     clientId: clientId,
-  //     date: date,
-  //     workoutIdx: workoutIdx,
-  //     workoutResult: workoutResult,
-  //   };
-  //   return axios.post("/api/postWorkoutResult", data);
-  // },
 };

@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { generateCalendar } from "../../util/calendar.js";
 import { useLastRoute } from "../../contexts/LastRouteContext";
+import { GoogleSignInButton } from "../../components";
 
 const Login = ({
   getUserData,
@@ -10,10 +11,11 @@ const Login = ({
   userRole,
   initializing,
   setInitializing,
+  createNewUser,
 }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, currentUser } = useAuth();
+  const { login, currentUser, logout } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
@@ -108,6 +110,9 @@ const Login = ({
               >
                 Sign up
               </Link>
+            </div>
+            <div>
+              <GoogleSignInButton createNewUser={createNewUser} />
             </div>
             {error && console.log("error", { error })}
           </form>
