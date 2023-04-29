@@ -19,8 +19,8 @@ const ClientDashboard = ({ clearUserInfo }) => {
     setError("");
     try {
       await logout();
-      navigate("/login");
       clearUserInfo();
+      navigate("/login");
     } catch (err) {
       setError(err);
     }

@@ -75,6 +75,8 @@ const App = () => {
         firebaseId: currentUser.uid,
       };
       getUserData(user);
+    } else {
+      setInitializing(false);
     }
     if (userRole === "Coach") {
       populateClientLookupTable();

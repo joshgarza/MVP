@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { apiRequests } from "../../util/apiRequests";
+import { FcGoogle } from "react-icons/fc";
 
 const GoogleSignInButton = ({ getUserData, userRole }) => {
   const { signInWithGoogle, currentUser } = useAuth();
@@ -14,14 +15,14 @@ const GoogleSignInButton = ({ getUserData, userRole }) => {
         navigate("/signup", { state: true });
       } else {
         const userType = await getUserData(googleStatus.user);
-        navigate(`/${userType.toLowerCase()}`);
+        navigate(`/${userType.toLowerCase()}/dashboard`);
       }
     } catch (error) {
       console.error("Error signing in with Google:", error);
     }
   };
 
-  return <button onClick={handleClick}>Sign in with Google</button>;
+  return <FcGoogle onClick={handleClick} />;
 };
 
 export default GoogleSignInButton;
