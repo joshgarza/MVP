@@ -79,6 +79,7 @@ export const AuthProvider = ({ children }) => {
         await signInWithRedirect(auth, googleProvider);
       } else {
         result = await signInWithPopup(auth, googleProvider);
+        console.log("through popup");
         return checkGoogleUser(result);
       }
     } catch (error) {
@@ -89,6 +90,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkGoogleUser = (result) => {
     const user = result.user;
+    console.log(user, "user");
     let response = {
       email: user.email,
       firebaseId: user.uid,
@@ -105,24 +107,28 @@ export const AuthProvider = ({ children }) => {
       .catch((error) => console.log("error in api request", error));
   };
 
-  // let handleRedirectPromise = null;
-
   const handleRedirectResult = async () => {
     try {
-      const result = await getRedirectResult(auth);
-      if (result && result.user) {
-        const googleStatus = checkGoogleUser(result);
-        googleStatus.then((result) => {
-          setCurrentUser(result.user);
-        });
-      }
+      getRedirectResult(auth).then((result) => {
+        console.log(result, "result");
+        if (result) {
+          const googleStatus = checkGoogleUser(result);
+          googleStatus.then((checkResult) => {
+            setCurrentUser(checkResult.user);
+          });
+        } else {
+          console.log("No result or user found");
+        }
+      });
     } catch (error) {
+      alert("errorrrrr");
       console.error("Error getting redirect result:", error);
     }
   };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log("user", user);
       setCurrentUser(user);
       setLoading(false);
     });
