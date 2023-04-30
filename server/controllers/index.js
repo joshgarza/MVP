@@ -5,7 +5,7 @@ module.exports = {
     res.status(200).end();
   },
   addClient: (req, res) => {
-    models.addClient(req.body, (err, data) => {
+    models.addClient(req.body.data, (err, data) => {
       if (err) {
         console.log("Error adding client", err);
         res.status(404).end();
