@@ -11,6 +11,8 @@ app.use((req, res, next) => {
   const allowedOrigins = [
     "http://coaching-app-frontend.s3-website-us-west-2.amazonaws.com",
     "http://192.168.1.133:3000",
+    "https://strengthtrainer.app",
+    "https://www.strengthtrainer.app",
   ];
 
   const origin = req.headers.origin;
