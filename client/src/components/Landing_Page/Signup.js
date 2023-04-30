@@ -18,6 +18,7 @@ const Signup = ({ createNewUser }) => {
   useEffect(() => {
     if (location.state) {
       setIsGoogleSignup(true);
+      console.log(currentUser);
     }
   }, []);
 
@@ -46,7 +47,7 @@ const Signup = ({ createNewUser }) => {
       name: nameRef.current.value,
       email: currentUser.email,
       userType: userType,
-      firebaseId: currentUser.uid,
+      firebaseId: currentUser.firebaseId,
     };
     if (user) {
       const newUserCreation = await createNewUser(user, userType);

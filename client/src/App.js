@@ -70,11 +70,7 @@ const App = () => {
 
   useEffect(() => {
     if (currentUser) {
-      let user = {
-        email: currentUser.email,
-        firebaseId: currentUser.uid,
-      };
-      getUserData(user);
+      getUserData(currentUser);
     } else {
       setInitializing(false);
     }
@@ -88,21 +84,23 @@ const App = () => {
         setIsLoggedIn(true);
       });
     }
-  }, [userRole, currentUser]);
+  }, [currentUser]);
 
   const getUserData = async (user) => {
-    let userData = await axios.get(
-      `${apiBaseURL}/api/login/${user.firebaseId}`,
-      {
+    return axios
+      .get(`${apiBaseURL}/api/login/${user.firebaseId}`, {
         params: user,
-      }
-    );
-    if (Object.keys(userData.data).length > 0) {
-      setUserInfo(userData.data[0]);
-      setUserRole(userData.data[0].user_type);
-      // setInitializing(false);
-      return userData.data[0].user_type;
-    }
+      })
+      .then((result) => {
+        if (Object.keys(result.data).length > 0) {
+          setUserInfo(result.data[0]);
+          setUserRole(result.data[0].user_type);
+        } else {
+          console.log(result, "no data found");
+          setUserInfo(false);
+        }
+      })
+      .catch((error) => console.log("Error fetching user data."));
   };
 
   const createNewUser = async (user, userType) => {
@@ -220,11 +218,23 @@ const App = () => {
           >
             <Route
               index
-              element={<ClientDashboard clearUserInfo={clearUserInfo} />}
+              element={
+                <ClientDashboard
+                  clearUserInfo={clearUserInfo}
+                  userInfo={userInfo}
+                  clientWorkouts={clientWorkouts}
+                />
+              }
             />
             <Route
               path="dashboard"
-              element={<ClientDashboard clearUserInfo={clearUserInfo} />}
+              element={
+                <ClientDashboard
+                  clearUserInfo={clearUserInfo}
+                  userInfo={userInfo}
+                  clientWorkouts={clientWorkouts}
+                />
+              }
             />
             <Route
               path="calendar"
@@ -274,6 +284,7 @@ const App = () => {
                 getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
+                userInfo={userInfo}
                 setInitializing={setInitializing}
                 initializing={initializing}
               />
@@ -286,6 +297,7 @@ const App = () => {
                 getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
+                userInfo={userInfo}
                 initializing={initializing}
                 setInitializing={setInitializing}
                 createNewUser={createNewUser}

@@ -90,7 +90,6 @@ export const AuthProvider = ({ children }) => {
 
   const checkGoogleUser = (result) => {
     const user = result.user;
-    console.log(user, "user");
     let response = {
       email: user.email,
       firebaseId: user.uid,
@@ -110,14 +109,13 @@ export const AuthProvider = ({ children }) => {
   const handleRedirectResult = async () => {
     try {
       getRedirectResult(auth).then((result) => {
-        console.log(result, "result");
         if (result) {
           const googleStatus = checkGoogleUser(result);
           googleStatus.then((checkResult) => {
             setCurrentUser(checkResult.user);
           });
         } else {
-          console.log("No result or user found");
+          console.log("No result or user found", result);
         }
       });
     } catch (error) {
@@ -128,8 +126,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log("user", user);
-      setCurrentUser(user);
+      let response = {
+        email: user.email,
+        firebaseId: user.uid,
+      };
+      setCurrentUser(response);
       setLoading(false);
     });
 
@@ -148,7 +149,6 @@ export const AuthProvider = ({ children }) => {
     updateUserPassword,
     signInWithGoogle,
   };
-  console.log(currentUser);
 
   return (
     <AuthContext.Provider value={value}>

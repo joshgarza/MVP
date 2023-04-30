@@ -8,6 +8,7 @@ import { GoogleSignInButton } from "../../components";
 const Login = ({
   getUserData,
   isLoggedIn,
+  userInfo,
   userRole,
   initializing,
   setInitializing,
@@ -24,14 +25,19 @@ const Login = ({
   useEffect(() => {
     if (isLoggedIn) {
       setInitializing(false);
-      console.log(lastRoute);
       if (lastRoute === "/") {
-        navigate("/client");
+        console.log(userInfo, "in login");
+        navigate(`/${userInfo.user_type}/dashboard`);
       } else {
         navigate(lastRoute);
       }
+    } else {
+      setInitializing(false);
+      if (userInfo === false) {
+        navigate("/signup", { state: true });
+      }
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, userInfo]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
