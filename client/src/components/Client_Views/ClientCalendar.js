@@ -238,7 +238,7 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
                 className={`flex flex-col items-center justify-center w-full h-full mb-2`}
               >
                 <h1
-                  className={`flex items-center justify-center rounded-full text-lg px-1 ${
+                  className={`flex items-center justify-center rounded-full text-lg px-2 ${
                     selectedDate.toDate().toDateString() === date.dateString
                       ? "bg-[#868fb3] text-white"
                       : "bg-white"
