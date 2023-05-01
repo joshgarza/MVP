@@ -36,7 +36,7 @@ const ClientWorkoutView = ({ userId, workoutStarted, setWorkoutStarted }) => {
     processChange(copyWorkoutResult[exerciseIdx].sets[set]);
   };
 
-  const debounce = (func, timeout = 1000) => {
+  const debounce = (func, timeout = 300) => {
     let timer;
     return (...args) => {
       clearTimeout(timer);

@@ -85,8 +85,8 @@ const ClientNavBar = ({
       {workoutStarted ? (
         <Outlet />
       ) : (
-        <div className="w-full h-full">
-          <section className="block fixed inset-x-0 bottom-0 bg-white shadow border ">
+        <div className="w-full h-full relative">
+          <section className="block absolute inset-x-0 bottom-0 bg-white shadow border ">
             <ul className="flex items-center justify-center">
               {mapNavOptions()}
             </ul>

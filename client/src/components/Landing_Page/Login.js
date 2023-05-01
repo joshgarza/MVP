@@ -16,14 +16,14 @@ const Login = ({
 }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, currentUser, logout } = useAuth();
+  const { login, currentUser, logout, loading, setLoading } = useAuth();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState("");
   const navigate = useNavigate();
   const { lastRoute } = useLastRoute();
 
   useEffect(() => {
     if (isLoggedIn) {
+      console.log("is logged in");
       setInitializing(false);
       if (lastRoute === "/") {
         console.log(userInfo, "in login");
@@ -32,6 +32,7 @@ const Login = ({
         navigate(lastRoute);
       }
     } else {
+      console.log("is not logged in");
       setInitializing(false);
       if (userInfo === false) {
         navigate("/signup", { state: true });
@@ -68,21 +69,23 @@ const Login = ({
 
   return (
     <div className="w-screen h-screen flex flex-col relative justify-evenly items-center">
-      {initializing ? (
+      {initializing || loading ? (
         <div>Loading...</div>
       ) : (
-        <>
-          <div className="w-[30%] absolute top-10">
+        <div className="flex flex-col items-center justify-evenly w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <div className="text-2xl">Sign in with</div>
+          <div className="flex items-center gap-2 shadow-md rounded px-4 py-2 m-2">
+            <GoogleSignInButton getUserData={getUserData} userRole={userRole} />
+            <div>Google</div>
+          </div>
+          <div className="w-28 absolute top-10">
             <img
               className=""
+              alt="cat barbell lifting icon"
               src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
             />
           </div>
-          <form
-            className="w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-            onSubmit={onSubmit}
-          >
-            {/* <h2 className="w-48 text-3xl font-bold underline">Log in</h2> */}
+          <form className="" onSubmit={onSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Email:
@@ -107,7 +110,7 @@ const Login = ({
             </div>
             <div className="mb-6 flex items-center justify-between">
               <button
-                className="bg-[#394D79] hover:bg-[#293757] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-[#394D79] hover:bg-[#293757] text-white font-bold py-2 px-4 rounded mx-2 focus:outline-none focus:shadow-outline"
                 disabled={loading}
                 type="submit"
               >
@@ -130,10 +133,7 @@ const Login = ({
             </div>
             {error && console.log("error", { error })}
           </form>
-          <div>
-            <GoogleSignInButton getUserData={getUserData} userRole={userRole} />
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

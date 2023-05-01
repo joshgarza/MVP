@@ -127,8 +127,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       let response = {
-        email: user.email,
-        firebaseId: user.uid,
+        email: user?.email,
+        firebaseId: user?.uid,
       };
       setCurrentUser(response);
       setLoading(false);
@@ -148,6 +148,8 @@ export const AuthProvider = ({ children }) => {
     updateUserEmail,
     updateUserPassword,
     signInWithGoogle,
+    loading,
+    setLoading,
   };
 
   return (
