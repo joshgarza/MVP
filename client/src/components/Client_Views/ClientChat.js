@@ -11,7 +11,7 @@ const ClientChat = () => {
   const messageIconStyle = "text-2xl text-blue-400";
 
   return (
-    <div className="block h-[88%]">
+    <div className="block h-[88%] m-2 p-2">
       <div className="flex items-center justify-center font-medium bg-gray-200/80 p-2">
         Coach Josh Garza
       </div>

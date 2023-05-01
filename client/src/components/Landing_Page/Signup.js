@@ -75,7 +75,6 @@ const Signup = ({ createNewUser, getUserData, userRole }) => {
         <div className="text-2xl">Sign up with</div>
         <div className="flex items-center gap-2 shadow-md rounded px-4 py-2 m-2">
           <GoogleSignInButton getUserData={getUserData} userRole={userRole} />
-          <div>Google</div>
         </div>
         <div className="w-28 absolute top-6">
           <img

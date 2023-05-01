@@ -23,7 +23,15 @@ const GoogleSignInButton = ({ getUserData, userRole }) => {
     }
   };
 
-  return <FcGoogle onClick={handleClick} />;
+  return (
+    <div
+      onClick={handleClick}
+      className="flex items-center justify-between w-20"
+    >
+      <FcGoogle />
+      <div>Google</div>
+    </div>
+  );
 };
 
 export default GoogleSignInButton;

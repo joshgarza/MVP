@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import dayjs from "dayjs";
 import { workoutLookupTable } from "../../util/workoutLookupTable";
+import { BsArrowReturnRight } from "react-icons/bs";
 
 // State needed:
 // - next workout (pass to Link state and set to: /workouts/:workout_id)
@@ -59,16 +60,14 @@ const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
           break;
         }
       }
-      console.log(nextWorkout, nextWorkoutDate);
       return (
-        <div className="text-xl text-white flex flex-col items-center justify-center">
-          <div>{nextWorkoutDate}</div>
+        <div className="text-xl text-white flex flex-col items-center justify-evenly gap-4">
+          <div className="underline">{nextWorkoutDate}</div>
           <div className="flex flex-col">
             {nextWorkout.map((slot) => (
               <div>{slot.exercise}</div>
             ))}
           </div>
-          <div>go to next workout</div>
         </div>
       );
     }
@@ -77,19 +76,27 @@ const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
   return (
     <div className="h-[86%] w-full grid grid-rows-9 text m-2 p-2">
       <div className="">
-        <div className="font-medium text-sm text-blue-500">
-          {dayjs().toDate().toDateString()}
-        </div>
-        <div className="flex justify-between">
-          <div className="font-medium text-3xl">Hello, {firstName()}!</div>
-          <div className="p-4" onClick={handleLogout}>
+        <div className="flex justify-between items-center">
+          <div className="font-medium text-sm text-blue-500">
+            {dayjs().toDate().toDateString()}
+          </div>
+          <div
+            className="shadow-md rounded bg-slate-700/60 text-white m-4 px-2 py-1"
+            onClick={handleLogout}
+          >
             Log Out
           </div>
         </div>
+        <div className="flex justify-between items-center">
+          <div className="font-medium text-3xl">Hello, {firstName()}!</div>
+        </div>
       </div>
-      <div className="flex flex-col items-center justify-start border rounded-3xl bg-slate-300 mx-8 p-8">
-        <div className="text-white text-3xl">Next Workout:</div>
+      <div className="flex flex-col items-center justify-start gap-2 shadow-lg rounded-3xl bg-slate-500/40 mx-8 p-8 relative">
+        <div className="text-white text-3xl p-3 mb-3">Next Workout:</div>
         {renderNextWorkout()}
+        <div className="absolute bottom-4 right-4 text-white text-3xl">
+          <BsArrowReturnRight />
+        </div>
       </div>
       <div className="relative">
         <div className="absolute bottom-0 right-2 text-5xl text-blue-400">

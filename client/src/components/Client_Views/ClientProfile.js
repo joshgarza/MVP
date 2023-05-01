@@ -6,7 +6,7 @@ const ClientProfile = () => {
   const photoStyle = "border";
 
   return (
-    <div className="flex flex-col items-center justify-start h-[92%] mt-4 mx-2">
+    <div className="flex flex-col items-center justify-start h-[92%] m-2 p-2">
       <div className="absolute top-0 right-0 m-2 p-2 text-3xl">
         <FiSettings />
       </div>

@@ -61,7 +61,7 @@ const ClientProgress = () => {
   };
 
   return (
-    <>
+    <div className="h-[86%] w-full m-2 p-2">
       <select
         className="mt-4 ml-2"
         onChange={(e) => selectLift(e.target.value)}
@@ -87,7 +87,7 @@ const ClientProgress = () => {
           />
         </AreaChart>
       </ResponsiveContainer>
-    </>
+    </div>
   );
 };
 
