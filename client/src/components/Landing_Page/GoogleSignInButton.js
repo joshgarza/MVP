@@ -16,6 +16,7 @@ const GoogleSignInButton = ({ getUserData, userRole }) => {
         navigate("/signup", { state: true });
       } else {
         const userType = await getUserData(googleStatus.user);
+        console.log(userType);
         navigate(`/${userType.toLowerCase()}/dashboard`);
       }
     } catch (error) {

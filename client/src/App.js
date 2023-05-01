@@ -55,7 +55,7 @@ const initialComments = [
 
 // move relevant functions that are unique to either coach or client to their respective dashboards or abstract everything to a common file we can pull from
 const App = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, setLoading } = useAuth();
   const [userInfo, setUserInfo] = useState();
   const [userRole, setUserRole] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -69,22 +69,28 @@ const App = () => {
   const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    if (currentUser) {
-      getUserData(currentUser);
-    } else {
-      setInitializing(false);
-    }
     if (userRole === "Coach") {
+      setLoading(true);
       populateClientLookupTable();
       setIsLoggedIn(true);
+      setLoading(false);
     }
     if (userRole === "Client") {
+      setLoading(true);
       axios.get(`${apiBaseURL}/api/workout/${userInfo.id}`).then((result) => {
         setClientWorkouts(result.data);
         setIsLoggedIn(true);
       });
     }
-  }, [currentUser]);
+    if (currentUser) {
+      setLoading(true);
+      getUserData(currentUser);
+      console.log(userRole);
+      setLoading(false);
+    } else {
+      setInitializing(false);
+    }
+  }, [currentUser, userRole]);
 
   const getUserData = async (user) => {
     return axios
@@ -93,8 +99,10 @@ const App = () => {
       })
       .then((result) => {
         if (Object.keys(result.data).length > 0) {
+          console.log(result, "in getuserdata");
           setUserInfo(result.data[0]);
           setUserRole(result.data[0].user_type);
+          return result.data[0];
         } else {
           console.log(result, "no data found");
           setUserInfo(false);

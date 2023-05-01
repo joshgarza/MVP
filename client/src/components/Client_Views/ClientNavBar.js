@@ -28,9 +28,9 @@ const ClientNavBar = ({
   const [navOptions, setNavOptions] = useState([
     "dashboard",
     "calendar",
-    "progress",
-    "chat",
-    "profile",
+    // "progress",
+    // "chat",
+    // "profile",
   ]);
 
   useEffect(() => {

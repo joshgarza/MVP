@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiFillPlusCircle, AiOutlineArrowRight } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -10,11 +10,19 @@ import { BsArrowReturnRight } from "react-icons/bs";
 // - next workout (pass to Link state and set to: /workouts/:workout_id)
 // - all tasks (Link to: /tasks -> /tasks/:task_id)
 const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
-  const { logout } = useAuth();
+  const { logout, loading, setLoading } = useAuth();
   const [error, setError] = useState("");
+  const [nextWorkout, setNextWorkout] = useState([]);
+  const [nextWorkoutDate, setNextWorkoutDate] = useState();
   const navigate = useNavigate();
   const textStyle = "text-lg text-white";
+  useEffect(() => {
+    console.log("in dash");
+    findNextWorkout();
+    console.log(nextWorkoutDate === undefined, "next date");
+  }, []);
 
+  console.log(clientWorkouts, "client workouts");
   const handleLogout = async () => {
     setError("");
     try {
@@ -36,6 +44,21 @@ const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
       return null;
     }
   };
+  const findNextWorkout = () => {
+    const { workoutLookup, workoutDates } = workoutLookupTable(clientWorkouts);
+    const today = dayjs().toDate().toDateString();
+    // let nextWorkout = {};
+    // let nextWorkoutDate;
+
+    for (const date of workoutDates) {
+      console.log(dayjs(date), dayjs(today));
+      if (dayjs(date) >= dayjs(today)) {
+        setNextWorkout(workoutLookup[date][0]);
+        setNextWorkoutDate(date);
+        break;
+      }
+    }
+  };
 
   const renderNextWorkout = () => {
     // console.log(clientWorkouts);
@@ -46,20 +69,20 @@ const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
         </div>
       );
     } else {
-      const { workoutLookup, workoutDates } =
-        workoutLookupTable(clientWorkouts);
-      const today = dayjs().toDate().toDateString();
-      let nextWorkout = {};
-      let nextWorkoutDate;
+      // const { workoutLookup, workoutDates } =
+      //   workoutLookupTable(clientWorkouts);
+      // const today = dayjs().toDate().toDateString();
+      // // let nextWorkout = {};
+      // // let nextWorkoutDate;
 
-      for (const date of workoutDates) {
-        console.log(dayjs(date), dayjs(today));
-        if (dayjs(date) >= dayjs(today)) {
-          nextWorkout = workoutLookup[date][0];
-          nextWorkoutDate = date;
-          break;
-        }
-      }
+      // for (const date of workoutDates) {
+      //   console.log(dayjs(date), dayjs(today));
+      //   if (dayjs(date) >= dayjs(today)) {
+      //     setNextWorkout(workoutLookup[date][0]);
+      //     setNextWorkoutDate(date);
+      //     break;
+      //   }
+      // }
       return (
         <div className="text-xl text-white flex flex-col items-center justify-evenly gap-4">
           <div className="underline">{nextWorkoutDate}</div>
@@ -73,7 +96,11 @@ const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
     }
   };
 
-  return (
+  return loading ||
+    nextWorkoutDate === undefined ||
+    nextWorkout.length === 0 ? (
+    <div>Loading...</div>
+  ) : (
     <div className="h-[86%] w-full grid grid-rows-9 text m-2 p-2">
       <div className="">
         <div className="flex justify-between items-center">
@@ -95,11 +122,23 @@ const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
         <div className="text-white text-3xl p-3 mb-3">Next Workout:</div>
         {renderNextWorkout()}
         <div className="absolute bottom-4 right-4 text-white text-3xl">
-          <BsArrowReturnRight />
+          <Link
+            to={`/client/workouts/${dayjs(nextWorkoutDate).format(
+              "MM-DD-YYYY"
+            )}`}
+            state={{
+              workout: nextWorkout,
+              workoutIdx: 0,
+              dateString: dayjs(nextWorkoutDate).toDate().toDateString(),
+            }}
+            className=""
+          >
+            <BsArrowReturnRight />
+          </Link>
         </div>
       </div>
       <div className="relative">
-        <div className="absolute bottom-0 right-2 text-5xl text-blue-400">
+        <div className="hidden absolute bottom-0 right-2 text-5xl text-blue-400">
           <AiFillPlusCircle />
         </div>
       </div>

@@ -22,13 +22,17 @@ const Login = ({
   const { lastRoute } = useLastRoute();
 
   useEffect(() => {
+    console.log("logged in", isLoggedIn);
     if (isLoggedIn) {
+      setLoading(true);
       console.log("is logged in");
       setInitializing(false);
       if (lastRoute === "/") {
         console.log(userInfo, "in login");
         navigate(`/${userInfo.user_type}/dashboard`);
       } else {
+        console.log("navving");
+        setLoading(false);
         navigate(lastRoute);
       }
     } else {
@@ -69,7 +73,7 @@ const Login = ({
 
   return (
     <div className="w-screen h-screen flex flex-col relative justify-evenly items-center">
-      {initializing || loading ? (
+      {initializing ? (
         <div>Loading...</div>
       ) : (
         <div className="flex flex-col items-center justify-evenly w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">

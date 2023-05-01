@@ -119,7 +119,7 @@ const ClientWorkoutsDateView = ({
               <div>{date}</div>
             </div>
             <div className="flex flex-col items-start justify-center mt-5 mx-2">
-              Workout #{workoutIdx + 1}
+              Workout #1
               {workouts &&
                 workouts.map((slot, i) => {
                   return (
