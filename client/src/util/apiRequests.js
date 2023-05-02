@@ -16,6 +16,13 @@ export const apiRequests = {
     };
     return axios.post(`${apiBaseURL}/api/addClient`, { data });
   },
+  createUser: (userObject) => {
+    console.log(userObject);
+    // const {name, email, userType, firebaseId} = userObject;
+    return axios.post(`${apiBaseURL}/api/signup/${userObject.firebaseId}`, {
+      params: userObject,
+    });
+  },
   getUser: (email, firebaseId) => {
     const data = {
       email,

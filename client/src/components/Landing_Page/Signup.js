@@ -3,37 +3,38 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { GoogleSignInButton } from "../../components";
 
-const Signup = ({ createNewUser, getUserData, userRole }) => {
+const Signup = ({ createNewUser, getUserData }) => {
   const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const { signup, currentUser, loading, setLoading } = useAuth();
+  const { signup, googleSignup, logout, loading, setLoading, userObject } =
+    useAuth();
   const [error, setError] = useState("");
   // const [loading, setLoading] = useState("");
   const [userType, setUserType] = useState("Client");
   const navigate = useNavigate();
   const location = useLocation();
-  const [isGoogleSignup, setIsGoogleSignup] = useState(false);
+  // const [isGoogleSignup, setIsGoogleSignup] = useState(false);
 
-  // useEffect(() => {
-  //   if (location.state) {
-  //     setIsGoogleSignup(true);
-  //     console.log(currentUser);
-  //   }
-  // }, []);
+  useEffect(() => {
+    console.log(userObject, "in signup component");
+  }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    let user;
-    if (!isGoogleSignup) {
+    if (userObject.needsSignup) {
+      setLoading(true);
+      console.log("do signup stuff for google signin");
+      await googleSignup(nameRef.current.value, userType);
+    } else {
       if (passwordRef.current.value !== passwordConfirmRef.current.value) {
         return setError("Passwords do not match");
       }
       try {
         setError("");
         setLoading(true);
-        user = await signup(
+        await signup(
           nameRef.current.value,
           emailRef.current.value,
           passwordRef.current.value,
@@ -42,27 +43,8 @@ const Signup = ({ createNewUser, getUserData, userRole }) => {
       } catch (err) {
         setError(err);
       }
-      setLoading(false);
     }
-    user = {
-      name: nameRef.current.value,
-      email: currentUser.email,
-      userType: userType,
-      firebaseId: currentUser.firebaseId,
-    };
-    if (user) {
-      const newUserCreation = await createNewUser(user, userType);
-      if (newUserCreation) {
-        console.log("signed up as", userType);
-        if (userType === "Client") {
-          navigate("/client");
-        } else if (userType === "Coach") {
-          navigate("/coach");
-        } else {
-          console.log("ERROR signing up");
-        }
-      }
-    }
+    setLoading(false);
   };
 
   const handleChange = (event) => {
@@ -74,7 +56,7 @@ const Signup = ({ createNewUser, getUserData, userRole }) => {
       <div className="flex flex-col items-center justify-evenly w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 my-4">
         <div className="text-2xl">Sign up with</div>
         <div className="flex items-center gap-2 shadow-md rounded px-4 py-2 m-2">
-          <GoogleSignInButton getUserData={getUserData} userRole={userRole} />
+          <GoogleSignInButton getUserData={getUserData} />
         </div>
         <div className="w-28 absolute top-6">
           <img
@@ -83,7 +65,7 @@ const Signup = ({ createNewUser, getUserData, userRole }) => {
             src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
           />
         </div>
-        {isGoogleSignup ? (
+        {userObject.needsSignup ? (
           <div className="p-8">
             Thanks for signing up! We just need the following information to
             finish setting up your account.
@@ -121,7 +103,7 @@ const Signup = ({ createNewUser, getUserData, userRole }) => {
               placeholder="full name"
             />
           </div>
-          {isGoogleSignup ? (
+          {userObject.needsSignup ? (
             <div></div>
           ) : (
             <>
@@ -177,6 +159,7 @@ const Signup = ({ createNewUser, getUserData, userRole }) => {
             Already have an account?{" "}
             <Link
               className="font-bold text-sm text-blue-500 hover:text-blue-800"
+              onClick={() => logout()}
               to="/login"
             >
               Log in

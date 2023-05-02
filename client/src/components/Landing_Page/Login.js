@@ -14,53 +14,16 @@ const Login = ({ getUserData, createNewUser }) => {
   const { lastRoute } = useLastRoute();
 
   useEffect(() => {
-    console.log(userObject);
+    console.log(userObject, "in login component");
+    userObject.needsSignup && navigate("/signup");
   }, [userObject]);
-
-  // useEffect(() => {
-  //   console.log("logged in", isLoggedIn);
-  //   if (isLoggedIn) {
-  //     setLoading(true);
-  //     console.log("is logged in");
-  //     setInitializing(false);
-  //     if (lastRoute === "/") {
-  //       console.log(userInfo, "in login");
-  //       navigate(`/${userInfo.user_type}/dashboard`);
-  //     } else {
-  //       console.log("navving");
-  //       setLoading(false);
-  //       navigate(lastRoute);
-  //     }
-  //   } else {
-  //     console.log("is not logged in");
-  //     setInitializing(false);
-  //     if (userInfo === false) {
-  //       navigate("/signup", { state: true });
-  //     }
-  //   }
-  // }, [isLoggedIn, userInfo]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
       setError("");
       setLoading(true);
-      const user = await login(
-        emailRef.current.value,
-        passwordRef.current.value
-      );
-      // if (user) {
-      //   const userRole = await getUserData(user);
-      //   if (userRole) {
-      //     if (userRole === "Client") {
-      //       navigate("/client/dashboard");
-      //     } else if (userRole === "Coach") {
-      //       navigate("/coach/dashboard");
-      //     } else {
-      //       console.log("not loading");
-      //     }
-      //   }
-      // }
+      await login(emailRef.current.value, passwordRef.current.value);
     } catch (err) {
       setError(err);
     }

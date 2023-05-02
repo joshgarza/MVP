@@ -28,58 +28,77 @@ export const AuthProvider = ({ children }) => {
     firebase_id: null,
     user_type: null,
     signInMethod: null,
+    needsSignup: false,
     isLoggedIn: false,
   });
   const [loading, setLoading] = useState(true);
 
   const signup = async (name, email, password, userType) => {
-    let user = await createUserWithEmailAndPassword(auth, email, password);
-    let currUser = user.user;
-    // let response = {
-    //   name: 'josh',
-    //   email: 'josh@sf-iron.com',
-    //   firebaseId: 'fajsio4j11321ijld',
-    //   userType: 'client',
-    // };
-    let response = {
+    await createUserWithEmailAndPassword(auth, email, password);
+    let user = {
       name: name,
-      email: currUser.email,
-      firebaseId: currUser.uid,
+      email: email,
+      firebaseId: auth.currentUser.uid,
       userType: userType,
     };
+    return apiRequests
+      .createUser(user)
+      .then((result) => {
+        const { uid } = auth.currentUser;
+        // set userObject
+        return apiRequests.getUser(email, uid).then((res) => {
+          const data = {
+            ...res.data[0],
+            signInMethod: "email",
+            needsSignup: false,
+          };
+          return handleUserObjectChange(data);
+        });
+      })
+      .catch((error) => console.log(error));
+  };
 
-    if (currUser) {
-      setCurrentUser(response);
-      return response;
-    }
+  const googleSignup = async (name, userType) => {
+    let user = {
+      name: name,
+      email: auth.currentUser.email,
+      firebaseId: auth.currentUser.uid,
+      userType: userType,
+    };
+    return apiRequests
+      .createUser(user)
+      .then((result) => {
+        const { uid } = auth.currentUser;
+        // set userObject
+        return apiRequests.getUser(user.email, uid).then((res) => {
+          const data = {
+            ...res.data[0],
+            signInMethod: "google",
+            needsSignup: false,
+          };
+          return handleUserObjectChange(data);
+        });
+      })
+      .catch((error) => console.log(error));
   };
 
   const login = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       const { uid } = auth.currentUser;
-      apiRequests.getUser(email, uid).then((res) => {
+      return apiRequests.getUser(email, uid).then((res) => {
         const data = {
           ...res.data[0],
           signInMethod: "email",
         };
-        handleUserObjectChange(data);
+        return handleUserObjectChange(data);
       });
     } catch (error) {
       // catches invalid login attempt through firebase
+      // set error state
       console.log(error);
+      return error;
     }
-
-    // console.log(user, "in login in auth");
-    // let currUser = user.user;
-    // let response = {
-    //   email: currUser.email,
-    //   firebaseId: currUser.uid,
-    // };
-    // if (currUser) {
-    //   setCurrentUser(response);
-    //   return response;
-    // }
   };
 
   const logout = () => {
@@ -90,6 +109,7 @@ export const AuthProvider = ({ children }) => {
       firebase_id: null,
       user_type: null,
       signInMethod: null,
+      needsSignup: false,
       isLoggedIn: false,
     });
     return signOut(auth);
@@ -119,12 +139,23 @@ export const AuthProvider = ({ children }) => {
         await signInWithPopup(auth, googleProvider);
         const { email, uid } = auth.currentUser;
         apiRequests.getUser(email, uid).then((res) => {
-          const data = {
-            ...res.data[0],
-            signInMethod: "google popup",
-          };
-          handleUserObjectChange(data);
+          if (res.data[0]) {
+            const data = {
+              ...res.data[0],
+              signInMethod: "google popup",
+            };
+            handleUserObjectChange(data);
+          } else {
+            const data = {
+              email: email,
+              firebase_id: uid,
+              signInMethod: "google popup",
+              needsSignup: true,
+            };
+            handleUserObjectChange(data);
+          }
         });
+        console.log(userObject, "in auth checking non user google popup");
       }
     } catch (error) {
       console.error("Error signing in with Google:", error);
@@ -138,12 +169,23 @@ export const AuthProvider = ({ children }) => {
         if (result) {
           const { email, uid } = auth.currentUser;
           apiRequests.getUser(email, uid).then((res) => {
-            const data = {
-              ...res.data[0],
-              signInMethod: "google redirect",
-            };
-            handleUserObjectChange(data);
+            if (res.data[0]) {
+              const data = {
+                ...res.data[0],
+                signInMethod: "google redirect",
+              };
+              handleUserObjectChange(data);
+            } else {
+              const data = {
+                email: email,
+                firebase_id: uid,
+                signInMethod: "google redirect",
+                needsSignup: true,
+              };
+              handleUserObjectChange(data);
+            }
           });
+          console.log(userObject, "in auth checking non user google redirect");
         } else {
           console.log("No result or user found", result);
         }
@@ -209,16 +251,17 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     currentUser,
-    signup,
+    googleSignup,
+    loading,
     login,
     logout,
     resetPassword,
+    setLoading,
+    signInWithGoogle,
+    signup,
     updateUserEmail,
     updateUserPassword,
-    signInWithGoogle,
     userObject,
-    loading,
-    setLoading,
   };
 
   return (
