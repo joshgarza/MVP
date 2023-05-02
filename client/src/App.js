@@ -93,12 +93,13 @@ const App = () => {
   //   }
   // }, [currentUser, userRole]);
 
-  const clearUserInfo = () => {
-    setUserInfo(null);
-    setUserRole("");
-    setIsLoggedIn(false);
-  };
+  // const clearUserInfo = () => {
+  //   setUserInfo(null);
+  //   setUserRole("");
+  //   setIsLoggedIn(false);
+  // };
 
+  // Move this to coach dashboard and add loading screen while populating
   const populateClientLookupTable = () => {
     const data = userInfo.id;
     axios
@@ -120,7 +121,7 @@ const App = () => {
             path="coach"
             element={
               <PrivateRoute isAllowed={!!currentUser && userRole === "Coach"}>
-                <CoachView userInfo={userInfo} clearUserInfo={clearUserInfo} />
+                <CoachView userInfo={userInfo} />
               </PrivateRoute>
             }
           >
@@ -163,7 +164,6 @@ const App = () => {
               <PrivateRoute isAllowed={!!currentUser && userRole === "Client"}>
                 <ClientNavBar
                   userInfo={userInfo}
-                  clearUserInfo={clearUserInfo}
                   workoutStarted={workoutStarted}
                 />
               </PrivateRoute>
@@ -173,7 +173,6 @@ const App = () => {
               index
               element={
                 <ClientDashboard
-                  clearUserInfo={clearUserInfo}
                   userInfo={userInfo}
                   clientWorkouts={clientWorkouts}
                 />
@@ -183,7 +182,6 @@ const App = () => {
               path="dashboard"
               element={
                 <ClientDashboard
-                  clearUserInfo={clearUserInfo}
                   userInfo={userInfo}
                   clientWorkouts={clientWorkouts}
                 />

@@ -9,7 +9,7 @@ import { BsArrowReturnRight } from "react-icons/bs";
 // State needed:
 // - next workout (pass to Link state and set to: /workouts/:workout_id)
 // - all tasks (Link to: /tasks -> /tasks/:task_id)
-const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
+const ClientDashboard = ({ userInfo, clientWorkouts }) => {
   const { logout, loading, setLoading } = useAuth();
   const [error, setError] = useState("");
   const [nextWorkout, setNextWorkout] = useState([]);
@@ -27,7 +27,7 @@ const ClientDashboard = ({ clearUserInfo, userInfo, clientWorkouts }) => {
     setError("");
     try {
       await logout();
-      clearUserInfo();
+      // clearUserInfo();
       navigate("/login");
     } catch (err) {
       setError(err);
