@@ -1,13 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
   const emailRef = useRef();
-  const { resetPassword } = useAuth();
+  const { resetPassword, userObject } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    // when userObject.isLoggedIn -> navigate to appropriate dashboard
+  }, [userObject]);
 
   const onSubmit = async (event) => {
     event.preventDefault();

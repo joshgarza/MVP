@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { GoogleSignInButton } from "../../components";
 
-const Signup = ({ createNewUser, getUserData }) => {
+const Signup = () => {
   const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -11,21 +11,19 @@ const Signup = ({ createNewUser, getUserData }) => {
   const { signup, googleSignup, logout, loading, setLoading, userObject } =
     useAuth();
   const [error, setError] = useState("");
-  // const [loading, setLoading] = useState("");
   const [userType, setUserType] = useState("Client");
   const navigate = useNavigate();
   const location = useLocation();
-  // const [isGoogleSignup, setIsGoogleSignup] = useState(false);
 
   useEffect(() => {
+    // when userObject.isLoggedIn -> navigate to appropriate dashboard
     console.log(userObject, "in signup component");
-  }, []);
+  }, [userObject]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     if (userObject.needsSignup) {
       setLoading(true);
-      console.log("do signup stuff for google signin");
       await googleSignup(nameRef.current.value, userType);
     } else {
       if (passwordRef.current.value !== passwordConfirmRef.current.value) {
@@ -56,7 +54,7 @@ const Signup = ({ createNewUser, getUserData }) => {
       <div className="flex flex-col items-center justify-evenly w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 my-4">
         <div className="text-2xl">Sign up with</div>
         <div className="flex items-center gap-2 shadow-md rounded px-4 py-2 m-2">
-          <GoogleSignInButton getUserData={getUserData} />
+          <GoogleSignInButton />
         </div>
         <div className="w-28 absolute top-6">
           <img
@@ -104,7 +102,7 @@ const Signup = ({ createNewUser, getUserData }) => {
             />
           </div>
           {userObject.needsSignup ? (
-            <div></div>
+            <></>
           ) : (
             <>
               <div className="mb-4">

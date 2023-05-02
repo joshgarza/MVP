@@ -93,45 +93,6 @@ const App = () => {
   //   }
   // }, [currentUser, userRole]);
 
-  const getUserData = async (user) => {
-    return axios
-      .get(`${apiBaseURL}/api/login/${user.firebaseId}`, {
-        params: user,
-      })
-      .then((result) => {
-        if (Object.keys(result.data).length > 0) {
-          console.log(result, "in getuserdata");
-          setUserInfo(result.data[0]);
-          setUserRole(result.data[0].user_type);
-          return result.data[0];
-        } else {
-          console.log(result, "no data found");
-          setUserInfo(false);
-        }
-      })
-      .catch((error) => console.log("Error fetching user data."));
-  };
-
-  const createNewUser = async (user, userType) => {
-    let userDataPost = await axios.post(
-      `${apiBaseURL}/api/signup/${user.firebaseId}`,
-      {
-        params: user,
-      }
-    );
-    if (userDataPost) {
-      let userData = await axios.get(
-        `${apiBaseURL}/api/login/${user.firebaseId}`,
-        {
-          params: user,
-        }
-      );
-      setUserInfo(userData.data[0]);
-      setUserRole(userType);
-      return userData.data[0].user_type;
-    }
-  };
-
   const clearUserInfo = () => {
     setUserInfo(null);
     setUserRole("");
@@ -150,17 +111,6 @@ const App = () => {
       });
   };
 
-  // TODO: resolve bug when getting user info that doesn't have workouts
-  // const getUserWorkouts = () => {
-  //   axios
-  //     .get(`${apiBaseURL}/api/workout/4`)
-  //     .then((result) => {
-  //       // console.log(result);
-  //       // setWorkout(result.data);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
-
   return (
     <>
       <Router>
@@ -170,11 +120,7 @@ const App = () => {
             path="coach"
             element={
               <PrivateRoute isAllowed={!!currentUser && userRole === "Coach"}>
-                <CoachView
-                  userInfo={userInfo}
-                  getUserData={getUserData}
-                  clearUserInfo={clearUserInfo}
-                />
+                <CoachView userInfo={userInfo} clearUserInfo={clearUserInfo} />
               </PrivateRoute>
             }
           >
@@ -217,9 +163,7 @@ const App = () => {
               <PrivateRoute isAllowed={!!currentUser && userRole === "Client"}>
                 <ClientNavBar
                   userInfo={userInfo}
-                  getUserData={getUserData}
                   clearUserInfo={clearUserInfo}
-                  // getUserWorkouts={getUserWorkouts}
                   workoutStarted={workoutStarted}
                 />
               </PrivateRoute>
@@ -251,7 +195,6 @@ const App = () => {
                 <ClientCalendar
                   clientWorkouts={clientWorkouts}
                   userInfo={userInfo}
-                  // clientWorkoutResults={clientWorkoutResults}
                 />
               }
             />
@@ -282,20 +225,14 @@ const App = () => {
             <Route path="chat" element={<ClientChat />} />
             <Route path="profile" element={<ClientProfile />} />
           </Route>
-          <Route
-            path="/signup"
-            element={<Signup createNewUser={createNewUser} />}
-          />
+          <Route path="/signup" element={<Signup />} />
           <Route
             path="/"
             element={
               <LandingPage
-                getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
                 userInfo={userInfo}
-                // setInitializing={setInitializing}
-                // initializing={initializing}
               />
             }
           />
@@ -303,13 +240,9 @@ const App = () => {
             path="/login"
             element={
               <Login
-                getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
                 userInfo={userInfo}
-                // initializing={initializing}
-                // setInitializing={setInitializing}
-                createNewUser={createNewUser}
               />
             }
           />

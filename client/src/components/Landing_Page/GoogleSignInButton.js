@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 
-const GoogleSignInButton = ({ getUserData }) => {
+const GoogleSignInButton = () => {
   const { signInWithGoogle } = useAuth();
 
   const handleClick = async () => {

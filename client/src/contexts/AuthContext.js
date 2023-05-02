@@ -249,6 +249,7 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  console.log(auth);
   const value = {
     currentUser,
     googleSignup,

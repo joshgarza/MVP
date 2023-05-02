@@ -1,11 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { generateCalendar } from "../../util/calendar.js";
 import { useLastRoute } from "../../contexts/LastRouteContext";
 import { GoogleSignInButton } from "../../components";
 
-const Login = ({ getUserData, createNewUser }) => {
+const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login, logout, loading, setLoading, userObject } = useAuth();
@@ -14,8 +13,10 @@ const Login = ({ getUserData, createNewUser }) => {
   const { lastRoute } = useLastRoute();
 
   useEffect(() => {
+    // when userObject.isLoggedIn -> navigate to appropriate dashboard
     console.log(userObject, "in login component");
     userObject.needsSignup && navigate("/signup");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userObject]);
 
   const onSubmit = async (event) => {
@@ -38,7 +39,7 @@ const Login = ({ getUserData, createNewUser }) => {
         <div className="flex flex-col items-center justify-evenly w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="text-2xl">Sign in with</div>
           <div className="flex items-center gap-2 shadow-md rounded px-4 py-2 m-2 cursor-pointer">
-            <GoogleSignInButton getUserData={getUserData} />
+            <GoogleSignInButton />
           </div>
           <div className="w-28 absolute top-10">
             <img
