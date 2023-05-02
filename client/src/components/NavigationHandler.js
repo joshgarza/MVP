@@ -7,9 +7,9 @@ const NavigationHandler = () => {
   const { setLastRoute } = useLastRoute();
 
   useEffect(() => {
-    if (location.pathname !== "/login" && location.pathname !== "/signup") {
-      setLastRoute(location.pathname);
-    }
+    // if (location.pathname !== "/login" || location.pathname !== "/signup") {
+    //   setLastRoute(location.pathname);
+    // }
   }, [location, setLastRoute]);
 
   return null;

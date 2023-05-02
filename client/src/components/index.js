@@ -12,6 +12,7 @@ import CoachDashboard from "./Coach_Views/CoachDashboard";
 import CoachView from "./Coach_Views/CoachView";
 import ForgotPassword from "./Landing_Page/ForgotPassword";
 import GoogleSignInButton from "./Landing_Page/GoogleSignInButton";
+import LandingPage from "./Landing_Page/LandingPage";
 import Login from "./Landing_Page/Login";
 import NavigationHandler from "./NavigationHandler";
 import PrivateRoute from "./PrivateRoute";
@@ -33,6 +34,7 @@ export {
   CoachView,
   ForgotPassword,
   GoogleSignInButton,
+  LandingPage,
   Login,
   NavigationHandler,
   PrivateRoute,

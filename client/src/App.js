@@ -18,6 +18,7 @@ import {
   CoachDashboard,
   CoachView,
   ForgotPassword,
+  LandingPage,
   Login,
   NavigationHandler,
   PrivateRoute,
@@ -288,7 +289,7 @@ const App = () => {
           <Route
             path="/"
             element={
-              <Login
+              <LandingPage
                 getUserData={getUserData}
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
