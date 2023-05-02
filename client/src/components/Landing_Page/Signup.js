@@ -8,20 +8,20 @@ const Signup = ({ createNewUser, getUserData, userRole }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const { signup, currentUser } = useAuth();
+  const { signup, currentUser, loading, setLoading } = useAuth();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState("");
+  // const [loading, setLoading] = useState("");
   const [userType, setUserType] = useState("Client");
   const navigate = useNavigate();
   const location = useLocation();
   const [isGoogleSignup, setIsGoogleSignup] = useState(false);
 
-  useEffect(() => {
-    if (location.state) {
-      setIsGoogleSignup(true);
-      console.log(currentUser);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (location.state) {
+  //     setIsGoogleSignup(true);
+  //     console.log(currentUser);
+  //   }
+  // }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();

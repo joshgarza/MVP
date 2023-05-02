@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 let apiBaseURL;
-let dev = false;
+let dev = true;
 if (dev) {
   apiBaseURL = "http://localhost:3001";
 } else {
@@ -16,7 +16,7 @@ export const apiRequests = {
     };
     return axios.post(`${apiBaseURL}/api/addClient`, { data });
   },
-  checkGoogleUser: (email, firebaseId) => {
+  getUser: (email, firebaseId) => {
     const data = {
       email,
       firebaseId,

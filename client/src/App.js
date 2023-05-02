@@ -65,33 +65,33 @@ const App = () => {
   const [clientWorkouts, setClientWorkouts] = useState([]);
   const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutStarted, setWorkoutStarted] = useState(false);
-  const [initializing, setInitializing] = useState(true);
+  // const [initializing, setInitializing] = useState(true);
 
   const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
-  useEffect(() => {
-    if (userRole === "Coach") {
-      setLoading(true);
-      populateClientLookupTable();
-      setIsLoggedIn(true);
-      setLoading(false);
-    }
-    if (userRole === "Client") {
-      setLoading(true);
-      axios.get(`${apiBaseURL}/api/workout/${userInfo.id}`).then((result) => {
-        setClientWorkouts(result.data);
-        setIsLoggedIn(true);
-      });
-    }
-    if (currentUser) {
-      setLoading(true);
-      getUserData(currentUser);
-      console.log(userRole);
-      setLoading(false);
-    } else {
-      setInitializing(false);
-    }
-  }, [currentUser, userRole]);
+  // useEffect(() => {
+  //   if (userRole === "Coach") {
+  //     setLoading(true);
+  //     populateClientLookupTable();
+  //     setIsLoggedIn(true);
+  //     setLoading(false);
+  //   }
+  //   if (userRole === "Client") {
+  //     setLoading(true);
+  //     axios.get(`${apiBaseURL}/api/workout/${userInfo.id}`).then((result) => {
+  //       setClientWorkouts(result.data);
+  //       setIsLoggedIn(true);
+  //     });
+  //   }
+  //   if (currentUser) {
+  //     setLoading(true);
+  //     getUserData(currentUser);
+  //     console.log(currentUser);
+  //     setLoading(false);
+  //   } else {
+  //     // setInitializing(false);
+  //   }
+  // }, [currentUser, userRole]);
 
   const getUserData = async (user) => {
     return axios
@@ -151,15 +151,15 @@ const App = () => {
   };
 
   // TODO: resolve bug when getting user info that doesn't have workouts
-  const getUserWorkouts = () => {
-    axios
-      .get(`${apiBaseURL}/api/workout/4`)
-      .then((result) => {
-        // console.log(result);
-        // setWorkout(result.data);
-      })
-      .catch((error) => console.log(error));
-  };
+  // const getUserWorkouts = () => {
+  //   axios
+  //     .get(`${apiBaseURL}/api/workout/4`)
+  //     .then((result) => {
+  //       // console.log(result);
+  //       // setWorkout(result.data);
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   return (
     <>
@@ -219,7 +219,7 @@ const App = () => {
                   userInfo={userInfo}
                   getUserData={getUserData}
                   clearUserInfo={clearUserInfo}
-                  getUserWorkouts={getUserWorkouts}
+                  // getUserWorkouts={getUserWorkouts}
                   workoutStarted={workoutStarted}
                 />
               </PrivateRoute>
@@ -294,8 +294,8 @@ const App = () => {
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
                 userInfo={userInfo}
-                setInitializing={setInitializing}
-                initializing={initializing}
+                // setInitializing={setInitializing}
+                // initializing={initializing}
               />
             }
           />
@@ -307,8 +307,8 @@ const App = () => {
                 isLoggedIn={isLoggedIn}
                 userRole={userRole}
                 userInfo={userInfo}
-                initializing={initializing}
-                setInitializing={setInitializing}
+                // initializing={initializing}
+                // setInitializing={setInitializing}
                 createNewUser={createNewUser}
               />
             }

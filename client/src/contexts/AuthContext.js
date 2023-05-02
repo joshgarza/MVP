@@ -21,11 +21,26 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
+  const [userObject, setUserObject] = useState({
+    id: null,
+    name: null,
+    email: null,
+    firebase_id: null,
+    user_type: null,
+    signInMethod: null,
+    isLoggedIn: false,
+  });
   const [loading, setLoading] = useState(true);
 
   const signup = async (name, email, password, userType) => {
     let user = await createUserWithEmailAndPassword(auth, email, password);
     let currUser = user.user;
+    // let response = {
+    //   name: 'josh',
+    //   email: 'josh@sf-iron.com',
+    //   firebaseId: 'fajsio4j11321ijld',
+    //   userType: 'client',
+    // };
     let response = {
       name: name,
       email: currUser.email,
@@ -40,19 +55,43 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    let user = await signInWithEmailAndPassword(auth, email, password);
-    let currUser = user.user;
-    let response = {
-      email: currUser.email,
-      firebaseId: currUser.uid,
-    };
-    if (currUser) {
-      setCurrentUser(response);
-      return response;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      const { uid } = auth.currentUser;
+      apiRequests.getUser(email, uid).then((res) => {
+        const data = {
+          ...res.data[0],
+          signInMethod: "email",
+        };
+        handleUserObjectChange(data);
+      });
+    } catch (error) {
+      // catches invalid login attempt through firebase
+      console.log(error);
     }
+
+    // console.log(user, "in login in auth");
+    // let currUser = user.user;
+    // let response = {
+    //   email: currUser.email,
+    //   firebaseId: currUser.uid,
+    // };
+    // if (currUser) {
+    //   setCurrentUser(response);
+    //   return response;
+    // }
   };
 
   const logout = () => {
+    const setUserObjectNull = handleUserObjectChange({
+      id: null,
+      name: null,
+      email: null,
+      firebase_id: null,
+      user_type: null,
+      signInMethod: null,
+      isLoggedIn: false,
+    });
     return signOut(auth);
   };
 
@@ -74,13 +113,18 @@ export const AuthProvider = ({ children }) => {
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent
         );
-      let result;
       if (isMobile) {
         await signInWithRedirect(auth, googleProvider);
       } else {
-        result = await signInWithPopup(auth, googleProvider);
-        console.log("through popup");
-        return checkGoogleUser(result);
+        await signInWithPopup(auth, googleProvider);
+        const { email, uid } = auth.currentUser;
+        apiRequests.getUser(email, uid).then((res) => {
+          const data = {
+            ...res.data[0],
+            signInMethod: "google popup",
+          };
+          handleUserObjectChange(data);
+        });
       }
     } catch (error) {
       console.error("Error signing in with Google:", error);
@@ -88,31 +132,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const checkGoogleUser = (result) => {
-    const user = result.user;
-    let response = {
-      email: user.email,
-      firebaseId: user.uid,
-    };
-    return apiRequests
-      .checkGoogleUser(user.email, user.uid)
-      .then((result) => {
-        if (Object.keys(result.data).length > 0) {
-          return { user: response, userExists: true };
-        } else {
-          return { user: response, userExists: false };
-        }
-      })
-      .catch((error) => console.log("error in api request", error));
-  };
-
   const handleRedirectResult = async () => {
     try {
       getRedirectResult(auth).then((result) => {
         if (result) {
-          const googleStatus = checkGoogleUser(result);
-          googleStatus.then((checkResult) => {
-            setCurrentUser(checkResult.user);
+          const { email, uid } = auth.currentUser;
+          apiRequests.getUser(email, uid).then((res) => {
+            const data = {
+              ...res.data[0],
+              signInMethod: "google redirect",
+            };
+            handleUserObjectChange(data);
           });
         } else {
           console.log("No result or user found", result);
@@ -124,13 +154,51 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      let response = {
-        email: user?.email,
-        firebaseId: user?.uid,
+  const handleUserObjectChange = (changedData) => {
+    let copyUserObject = { ...userObject };
+    let changedProperties = [...Object.keys(changedData)];
+    let loginStatus = true;
+
+    changedProperties.forEach((property, i) => {
+      copyUserObject = {
+        ...copyUserObject,
+        [property]:
+          changedData[property] === undefined ? null : changedData[property],
       };
-      setCurrentUser(response);
+    });
+
+    // check if any properties have a null value indicating full login wasn't complete
+    for (let prop in copyUserObject) {
+      if (copyUserObject[prop] === null) {
+        loginStatus = false;
+      }
+    }
+
+    // if all properties have a value, then mark the user as logged in
+    // isLoggedIn will function as a gate to initial routing to private routes
+    if (loginStatus) {
+      copyUserObject = {
+        ...copyUserObject,
+        isLoggedIn: true,
+      };
+    }
+
+    return setUserObject(copyUserObject);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const { email, uid } = auth.currentUser;
+        apiRequests.getUser(email, uid).then((res) => {
+          const data = {
+            ...res.data[0],
+            signInMethod: "refresh",
+          };
+          handleUserObjectChange(data);
+        });
+      }
       setLoading(false);
     });
 
@@ -148,6 +216,7 @@ export const AuthProvider = ({ children }) => {
     updateUserEmail,
     updateUserPassword,
     signInWithGoogle,
+    userObject,
     loading,
     setLoading,
   };

@@ -5,44 +5,40 @@ import { generateCalendar } from "../../util/calendar.js";
 import { useLastRoute } from "../../contexts/LastRouteContext";
 import { GoogleSignInButton } from "../../components";
 
-const Login = ({
-  getUserData,
-  isLoggedIn,
-  userInfo,
-  userRole,
-  initializing,
-  setInitializing,
-  createNewUser,
-}) => {
+const Login = ({ getUserData, createNewUser }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, currentUser, logout, loading, setLoading } = useAuth();
+  const { login, logout, loading, setLoading, userObject } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { lastRoute } = useLastRoute();
 
   useEffect(() => {
-    console.log("logged in", isLoggedIn);
-    if (isLoggedIn) {
-      setLoading(true);
-      console.log("is logged in");
-      setInitializing(false);
-      if (lastRoute === "/") {
-        console.log(userInfo, "in login");
-        navigate(`/${userInfo.user_type}/dashboard`);
-      } else {
-        console.log("navving");
-        setLoading(false);
-        navigate(lastRoute);
-      }
-    } else {
-      console.log("is not logged in");
-      setInitializing(false);
-      if (userInfo === false) {
-        navigate("/signup", { state: true });
-      }
-    }
-  }, [isLoggedIn, userInfo]);
+    console.log(userObject);
+  }, [userObject]);
+
+  // useEffect(() => {
+  //   console.log("logged in", isLoggedIn);
+  //   if (isLoggedIn) {
+  //     setLoading(true);
+  //     console.log("is logged in");
+  //     setInitializing(false);
+  //     if (lastRoute === "/") {
+  //       console.log(userInfo, "in login");
+  //       navigate(`/${userInfo.user_type}/dashboard`);
+  //     } else {
+  //       console.log("navving");
+  //       setLoading(false);
+  //       navigate(lastRoute);
+  //     }
+  //   } else {
+  //     console.log("is not logged in");
+  //     setInitializing(false);
+  //     if (userInfo === false) {
+  //       navigate("/signup", { state: true });
+  //     }
+  //   }
+  // }, [isLoggedIn, userInfo]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -53,18 +49,18 @@ const Login = ({
         emailRef.current.value,
         passwordRef.current.value
       );
-      if (user) {
-        const userRole = await getUserData(user);
-        if (userRole) {
-          if (userRole === "Client") {
-            navigate("/client/dashboard");
-          } else if (userRole === "Coach") {
-            navigate("/coach/dashboard");
-          } else {
-            console.log("not loading");
-          }
-        }
-      }
+      // if (user) {
+      //   const userRole = await getUserData(user);
+      //   if (userRole) {
+      //     if (userRole === "Client") {
+      //       navigate("/client/dashboard");
+      //     } else if (userRole === "Coach") {
+      //       navigate("/coach/dashboard");
+      //     } else {
+      //       console.log("not loading");
+      //     }
+      //   }
+      // }
     } catch (err) {
       setError(err);
     }
@@ -73,13 +69,13 @@ const Login = ({
 
   return (
     <div className="w-screen h-screen flex flex-col relative justify-evenly items-center">
-      {initializing ? (
+      {loading ? (
         <div>Loading...</div>
       ) : (
         <div className="flex flex-col items-center justify-evenly w-72 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="text-2xl">Sign in with</div>
-          <div className="flex items-center gap-2 shadow-md rounded px-4 py-2 m-2">
-            <GoogleSignInButton getUserData={getUserData} userRole={userRole} />
+          <div className="flex items-center gap-2 shadow-md rounded px-4 py-2 m-2 cursor-pointer">
+            <GoogleSignInButton getUserData={getUserData} />
           </div>
           <div className="w-28 absolute top-10">
             <img
@@ -87,6 +83,9 @@ const Login = ({
               alt="cat barbell lifting icon"
               src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
             />
+          </div>
+          <div className="cursor-pointer" onClick={() => logout()}>
+            Logout
           </div>
           <form className="" onSubmit={onSubmit}>
             <div className="mb-4">
