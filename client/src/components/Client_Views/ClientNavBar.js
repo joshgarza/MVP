@@ -15,13 +15,7 @@ import {
 } from "react-icons/ai";
 import { BsChatDots } from "react-icons/bs";
 
-const ClientNavBar = ({
-  userInfo,
-  getUserData,
-  clearUserInfo,
-  getUserWorkouts,
-  workoutStarted,
-}) => {
+const ClientNavBar = ({ userInfo, getUserWorkouts, workoutStarted }) => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState("");

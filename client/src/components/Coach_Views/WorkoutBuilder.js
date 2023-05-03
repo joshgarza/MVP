@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { populateClientLookupTable } from "../../util/populateClientLookupTable";
+import { useAuth } from "../../contexts/AuthContext";
 
-const WorkoutBuilder = ({
-  onClose,
-  date,
-  clientId,
-  populateClientLookupTable,
-  clientLookupTable,
-}) => {
+const WorkoutBuilder = ({ onClose, date, clientId, clientLookupTable }) => {
   const [workout, setWorkout] = useState([]);
   const [edit, setEdit] = useState(false);
+  const { userObject } = useAuth();
   const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -215,7 +212,7 @@ const WorkoutBuilder = ({
       .post(`${apiBaseURL}/api/workout`, data)
       .then((result) => {
         console.log(result);
-        populateClientLookupTable();
+        populateClientLookupTable(userObject.id);
         onClose();
       })
       .catch((err) => console.log(err));
@@ -244,7 +241,7 @@ const WorkoutBuilder = ({
         .put(`${apiBaseURL}/api/workout`, data)
         .then((result) => {
           console.log(result);
-          populateClientLookupTable();
+          populateClientLookupTable(userObject.id);
           onClose();
         })
         .catch((err) => {
@@ -264,7 +261,7 @@ const WorkoutBuilder = ({
       .delete(`${apiBaseURL}/api/workout`, { data: data })
       .then((result) => {
         console.log(result);
-        populateClientLookupTable();
+        populateClientLookupTable(userObject.id);
         onClose();
       })
       .catch((err) => {

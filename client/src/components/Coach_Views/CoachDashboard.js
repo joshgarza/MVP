@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { apiRequests } from "../../util/apiRequests.js";
+import { populateClientLookupTable } from "../../util/populateClientLookupTable";
 
-const CoachDashboard = ({
-  userInfo,
-  populateClientLookupTable,
-  clientLookupTable,
-  clientComments,
-}) => {
-  const navigate = useNavigate();
-  const { currentUser } = useAuth();
+const CoachDashboard = ({ clientLookupTable, setClientLookupTable }) => {
+  const { logout, userObject } = useAuth();
   const [addClientField, setAddClientField] = useState("");
   const [clientAdded, setClientAdded] = useState(false);
   const [error, setError] = useState(false);
+  // const [clientLookupTable, setClientLookupTable] = useState({});
 
   useEffect(() => {
-    populateClientLookupTable();
+    populateClientLookupTable(userObject.id)
+      .then((result) => {
+        setClientLookupTable(result.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const mapClientList = () => {
@@ -32,14 +33,13 @@ const CoachDashboard = ({
 
   const handleAddClient = (e) => {
     e.preventDefault();
-    console.log(userInfo, "in addclient", addClientField);
 
     if (isEmail(addClientField)) {
       apiRequests
-        .addClient(userInfo.id, addClientField)
+        .addClient(userObject.id, addClientField)
         .then((result) => {
           setClientAdded(true);
-          populateClientLookupTable();
+          populateClientLookupTable(userObject.id);
         })
         .catch((error) => {
           console.log(error);
@@ -91,18 +91,6 @@ const CoachDashboard = ({
           </div>
           <div className="h-[90%] w-[60%] overflow-auto bg-[#f5f6f6]/[0.4] rounded-3xl p-[1rem]">
             <div className="text-xl">Comments</div>
-            {clientComments.map((comment, i) => {
-              return (
-                <div
-                  key={i}
-                  className="rounded px-8 pt-6 pb-8 mb-4 flex flex-wrap justify-start items-center"
-                >
-                  <div className="mx-2">{comment.client}</div>
-                  <p className="mx-2">{comment.comment}</p>
-                  <div className="mx-2">{comment.date}</div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </div>
