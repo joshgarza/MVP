@@ -366,7 +366,7 @@ const models = {
         WHERE client_id=${query}`
       );
       if (workouts.rows.length === 0) {
-        callback(null, {});
+        callback(null, []);
       } else {
         callback(null, workouts.rows);
       }
