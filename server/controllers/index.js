@@ -149,6 +149,10 @@ module.exports = {
       res.status(200).send(data);
     });
   },
+  getDateRangeOfWorkouts: (req, res) => {
+    console.log(req.query);
+    res.status(200).end();
+  },
   getSingleWorkout: (req, res) => {
     console.log(req.query, "checking single workout");
     models
