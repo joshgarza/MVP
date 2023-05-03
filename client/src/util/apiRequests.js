@@ -1,5 +1,5 @@
 import axios from "axios";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 let apiBaseURL;
 let dev = true;
 if (dev) {
@@ -17,11 +17,12 @@ export const apiRequests = {
     return axios.post(`${apiBaseURL}/api/addClient`, { data });
   },
   createUser: (userObject) => {
-    console.log(userObject);
-    // const {name, email, userType, firebaseId} = userObject;
     return axios.post(`${apiBaseURL}/api/signup/${userObject.firebaseId}`, {
       params: userObject,
     });
+  },
+  getAllClients: (coachId) => {
+    return axios.get(`${apiBaseURL}/api/getAllClients/${coachId}`);
   },
   getUser: (email, firebaseId) => {
     const data = {
@@ -38,6 +39,20 @@ export const apiRequests = {
     };
     console.log("data being sent", data);
     return axios.get(`${apiBaseURL}/api/workout`, { params: data });
+  },
+  getWorkoutResults: (clientId) => {
+    return axios.get(`${apiBaseURL}/api/workoutResults/${clientId}`);
+  },
+  getWorkouts: (clientId) => {
+    return axios.get(`${apiBaseURL}/api/workouts/${clientId}`);
+  },
+  getDateRangeOfWorkouts: (clientId, startDate, endDate = null) => {
+    const data = {
+      clientId,
+      startDate,
+      endDate,
+    };
+    return axios.get(`${apiBaseURL}/api/dateRangeOfWorkouts`, { params: data });
   },
   getWorkoutByDate: (clientId, date) => {
     const data = {

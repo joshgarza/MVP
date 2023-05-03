@@ -14,8 +14,14 @@ const Login = () => {
 
   useEffect(() => {
     // when userObject.isLoggedIn -> navigate to appropriate dashboard
+    if (userObject.isLoggedIn) {
+      // setLoading(false);
+      navigate(`/${userObject.user_type}/dashboard`);
+    } else if (userObject.needsSignup) {
+      navigate("/signup");
+    }
     console.log(userObject, "in login component");
-    userObject.needsSignup && navigate("/signup");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userObject]);
 

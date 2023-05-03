@@ -155,7 +155,6 @@ export const AuthProvider = ({ children }) => {
             handleUserObjectChange(data);
           }
         });
-        console.log(userObject, "in auth checking non user google popup");
       }
     } catch (error) {
       console.error("Error signing in with Google:", error);
@@ -185,7 +184,6 @@ export const AuthProvider = ({ children }) => {
               handleUserObjectChange(data);
             }
           });
-          console.log(userObject, "in auth checking non user google redirect");
         } else {
           console.log("No result or user found", result);
         }
@@ -249,7 +247,6 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  console.log(auth);
   const value = {
     currentUser,
     googleSignup,

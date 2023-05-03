@@ -18,6 +18,12 @@ const Signup = () => {
   useEffect(() => {
     // when userObject.isLoggedIn -> navigate to appropriate dashboard
     console.log(userObject, "in signup component");
+    if (userObject.isLoggedIn) {
+      // setLoading(false);
+      navigate(`/${userObject.user_type}/dashboard`);
+    } else if (userObject.needsSignup) {
+      navigate("/signup");
+    }
   }, [userObject]);
 
   const onSubmit = async (event) => {

@@ -6,7 +6,8 @@ import dayOfYear from "dayjs/plugin/dayOfYear";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { BsDot } from "react-icons/bs";
 import { Link, Outlet } from "react-router-dom";
-import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
+import { apiRequests } from "../../util/apiRequests";
 
 const ClientCalendar = ({ clientWorkouts, userInfo }) => {
   dayjs.extend(weekOfYear);
@@ -23,16 +24,15 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
   const [clientWorkoutResults, setClientWorkoutResults] = useState([]);
   const [workoutLookupTable, setWorkoutLookupTable] = useState({});
   const [workoutResultLookupTable, setWorkoutResultLookupTable] = useState({});
+  const { userObject } = useAuth();
   const apiBaseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    axios
-      .get(`${apiBaseURL}/api/workoutResults/${userInfo.id}`)
-      .then((result) => {
-        setClientWorkoutResults(result.data);
-        setWorkoutResultLookupTable(constructWorkouts(result.data));
-        setWorkoutLookupTable(constructWorkouts(clientWorkouts));
-      });
+    apiRequests.getWorkoutResults(userObject.id).then((result) => {
+      setClientWorkoutResults(result.data);
+      setWorkoutResultLookupTable(constructWorkouts(result.data));
+      setWorkoutLookupTable(constructWorkouts(clientWorkouts));
+    });
   }, []);
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
@@ -171,7 +171,10 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
         <div>{selectedDate.toDate().toDateString()}</div>
         <div className="flex items-center gap-8">
           <div
-            className="p-3"
+            className="p-3 cursor-pointer"
+            onClick={() => {
+              handlePreviousWeek(0);
+            }}
             onTouchStart={() => {
               handleTouchStart(0);
             }}
@@ -188,7 +191,10 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
             />
           </div>
           <div
-            className=""
+            className="cursor-pointer"
+            onClick={() => {
+              handleSetToday();
+            }}
             onTouchEnd={() => {
               handleSetToday();
             }}
@@ -196,7 +202,10 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
             Today
           </div>
           <div
-            className="p-3"
+            className="p-3 cursor-pointer"
+            onClick={() => {
+              handleNextWeek(1);
+            }}
             onTouchStart={() => {
               handleTouchStart(1);
             }}
@@ -229,8 +238,11 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
           return (
             <div
               key={idx}
-              className={`flex items-center justify-center border-t-2 mb-2 p-2`}
+              className={`cursor-pointer flex items-center justify-center border-t-2 mb-2 p-2`}
               onTouchEnd={() => {
+                setSelectedDate(date.date);
+              }}
+              onClick={() => {
                 setSelectedDate(date.date);
               }}
             >

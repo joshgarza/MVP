@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const emailRef = useRef();
@@ -8,9 +8,16 @@ const ForgotPassword = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // when userObject.isLoggedIn -> navigate to appropriate dashboard
+    if (userObject.isLoggedIn) {
+      // setLoading(false);
+      navigate(`/${userObject.user_type}/dashboard`);
+    } else if (userObject.needsSignup) {
+      navigate("/signup");
+    }
   }, [userObject]);
 
   const onSubmit = async (event) => {

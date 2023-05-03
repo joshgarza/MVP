@@ -3,9 +3,7 @@ import dayjs from "dayjs";
 export const workoutLookupTable = (workoutList) => {
   const constructedWorkouts = constructWorkouts(workoutList);
   const workoutDates = Object.keys(constructedWorkouts);
-  workoutDates.push("Wed Apr 19 2023");
-  // console.log(workoutDates);
-  // console.log(workoutDates.sort((a, b) => dayjs(a) - dayjs(b)));
+  console.log(workoutList, "in workoutLookupTable");
   return {
     workoutLookup: constructedWorkouts,
     workoutDates: workoutDates.sort((a, b) => dayjs(a) - dayjs(b)),
