@@ -175,12 +175,12 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
             onClick={() => {
               handlePreviousWeek(0);
             }}
-            onTouchStart={() => {
-              handleTouchStart(0);
-            }}
-            onTouchEnd={() => {
-              handlePreviousWeek(0);
-            }}
+            // onTouchStart={() => {
+            //   handleTouchStart(0);
+            // }}
+            // onTouchEnd={() => {
+            //   handlePreviousWeek(0);
+            // }}
           >
             <GrFormPrevious
               className={`rounded-full text-xl m-2 ${
@@ -195,9 +195,9 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
             onClick={() => {
               handleSetToday();
             }}
-            onTouchEnd={() => {
-              handleSetToday();
-            }}
+            // onTouchEnd={() => {
+            //   handleSetToday();
+            // }}
           >
             Today
           </div>
@@ -206,12 +206,12 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
             onClick={() => {
               handleNextWeek(1);
             }}
-            onTouchStart={() => {
-              handleTouchStart(1);
-            }}
-            onTouchEnd={() => {
-              handleNextWeek(1);
-            }}
+            // onTouchStart={() => {
+            //   handleTouchStart(1);
+            // }}
+            // onTouchEnd={() => {
+            //   handleNextWeek(1);
+            // }}
           >
             <GrFormNext
               className={`rounded-full text-xl m-2 ${
@@ -239,9 +239,9 @@ const ClientCalendar = ({ clientWorkouts, userInfo }) => {
             <div
               key={idx}
               className={`cursor-pointer flex items-center justify-center border-t-2 mb-2 p-2`}
-              onTouchEnd={() => {
-                setSelectedDate(date.date);
-              }}
+              // onTouchEnd={() => {
+              //   setSelectedDate(date.date);
+              // }}
               onClick={() => {
                 setSelectedDate(date.date);
               }}

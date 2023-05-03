@@ -54,9 +54,9 @@ const Login = () => {
               src="https://i.postimg.cc/t7G1VFrh/purple-with-black.png"
             />
           </div>
-          <div className="cursor-pointer" onClick={() => logout()}>
+          {/* <div className="cursor-pointer" onClick={() => logout()}>
             Logout
-          </div>
+          </div> */}
           <form className="" onSubmit={onSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
