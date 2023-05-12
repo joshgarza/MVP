@@ -68,7 +68,7 @@ const CoachView = () => {
           </Link>
           <Link
             className="mt-1 block px-2 py-1 text-white text-3xl font-semibold rounded hover:bg-gray-800"
-            to="program"
+            to="calendar"
             onClick={() => setIsOpen(!isOpen)}
           >
             Add Workouts

@@ -14,6 +14,7 @@ import {
   ClientWorkoutView,
   CoachDashboard,
   CoachView,
+  DateScreen,
   ForgotPassword,
   LandingPage,
   Login,
@@ -66,9 +67,10 @@ const App = () => {
             />
             <Route path="profile" element={<UpdateProfile />} />
             <Route
-              path="program"
+              path="calendar"
               element={<CalendarView clientLookupTable={clientLookupTable} />}
             />
+            <Route path="workouts/:userId/:date" element={<DateScreen />} />
           </Route>
           <Route
             path="client"
@@ -130,7 +132,7 @@ const App = () => {
             <Route path="profile" element={<ClientProfile />} />
           </Route>
           <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           {/* TODO: replace element with NoMatch element that renders a workable page with a Go Home button */}

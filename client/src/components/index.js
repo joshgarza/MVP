@@ -10,6 +10,7 @@ import ClientWorkoutsDateView from "./Client_Views/Workout_Views/ClientWorkoutsD
 import ClientWorkoutView from "./Client_Views/Workout_Views/ClientWorkoutView";
 import CoachDashboard from "./Coach_Views/CoachDashboard";
 import CoachView from "./Coach_Views/CoachView";
+import DateScreen from "./Coach_Views/Workout_Builder/DateScreen";
 import ForgotPassword from "./Landing_Page/ForgotPassword";
 import GoogleSignInButton from "./Landing_Page/GoogleSignInButton";
 import LandingPage from "./Landing_Page/LandingPage";
@@ -32,6 +33,7 @@ export {
   ClientWorkoutView,
   CoachDashboard,
   CoachView,
+  DateScreen,
   ForgotPassword,
   GoogleSignInButton,
   LandingPage,
