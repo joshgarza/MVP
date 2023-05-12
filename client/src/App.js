@@ -22,6 +22,7 @@ import {
   PrivateRoute,
   Signup,
   UpdateProfile,
+  WorkoutBuilder,
 } from "./components";
 
 const App = () => {
@@ -71,6 +72,10 @@ const App = () => {
               element={<CalendarView clientLookupTable={clientLookupTable} />}
             />
             <Route path="workouts/:userId/:date" element={<DateScreen />} />
+            <Route
+              path="workoutbuilder/:userId/:date"
+              element={<WorkoutBuilder />}
+            />
           </Route>
           <Route
             path="client"

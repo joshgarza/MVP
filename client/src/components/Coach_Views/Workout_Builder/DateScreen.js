@@ -27,25 +27,30 @@ const DateScreen = () => {
           <span>Back to calendar</span>
         </Link>
       </div>
-      <div>
-        <h1 className="flex flex-row items-center justify-center font-bold text-3xl">
-          {/* {dayjs(date).format("MMM D, YYYY")} */}
+      <div className="m-4">
+        <h1 className="flex flex-row items-center justify-center space-x-4 mx-5 py-2 bg-slate-600  rounded-t-xl text-3xl w-3/5 text-neutral-200 font-semibold">
           {formatDate(date)}
         </h1>
-        <div className="flex flex-row items-center justify-center h-96 shadow px-4 m-4 border rounded-xl relative">
+        <div className="flex flex-row items-center justify-center h-96 shadow px-4 border rounded-xl relative">
           {workoutList.length === 0 ? (
-            <div className="flex flex-row items-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold">
+            <Link
+              to={`/coach/workoutbuilder/${userId}/${date}`}
+              className="flex flex-row items-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
+            >
               <GrAddCircle />
               <span>Add workout</span>
-            </div>
+            </Link>
           ) : (
             <div className="relative flex flex-col items-center h-full w-full py-12">
               <div className="font-semibold text-3xl">Strength Workout</div>
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-1/2">
-                <div className="flex flex-row items-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold">
+                <Link
+                  to={`/coach/workoutbuilder/${userId}/${date}`}
+                  className="flex flex-row items-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
+                >
                   <GrAddCircle />
                   <span>Add workout</span>
-                </div>
+                </Link>
               </div>
             </div>
           )}

@@ -19,6 +19,7 @@ import NavigationHandler from "./NavigationHandler";
 import PrivateRoute from "./PrivateRoute";
 import Signup from "./Landing_Page/Signup";
 import UpdateProfile from "./UpdateProfile";
+import WorkoutBuilder from "./Coach_Views/Workout_Builder/WorkoutBuilder";
 
 export {
   CalendarView,
@@ -42,4 +43,5 @@ export {
   PrivateRoute,
   Signup,
   UpdateProfile,
+  WorkoutBuilder,
 };
