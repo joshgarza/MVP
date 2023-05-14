@@ -1,8 +1,16 @@
 import React from "react";
 import { AiOutlineLeft } from "react-icons/ai";
-import { GrAddCircle } from "react-icons/gr";
+import { GrSubtractCircle, GrAddCircle } from "react-icons/gr";
 
-const WorkoutAssignment = ({ screen, setScreen, category, workout }) => {
+const WorkoutAssignment = ({
+  screen,
+  setScreen,
+  category,
+  workout,
+  setCurrentExerciseIdx,
+  deleteExercise,
+  pushExerciseTemplate,
+}) => {
   return (
     <div className="flex flex-col space-y-8">
       <div className="">
@@ -22,18 +30,43 @@ const WorkoutAssignment = ({ screen, setScreen, category, workout }) => {
           {workout.length === 0 ? (
             <div
               className="flex flex-row items-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
-              onClick={() => setScreen(screen + 1)}
+              onClick={() => {
+                pushExerciseTemplate();
+                setCurrentExerciseIdx(workout.length);
+                setScreen(screen + 1);
+              }}
             >
               <GrAddCircle />
               <span>Add exercise</span>
             </div>
           ) : (
             <div className="relative flex flex-col items-center h-full w-full py-12">
-              <div className="font-semibold text-3xl">Workout renders here</div>
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-1/2">
+              {workout.map((exercise, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className="flex flex-row justify-between w-full font-semibold text-3xl"
+                  >
+                    <p
+                      onClick={() => {
+                        setCurrentExerciseIdx(idx);
+                        setScreen(screen + 1);
+                      }}
+                    >
+                      {exercise.name}
+                    </p>
+                    <GrSubtractCircle onClick={() => deleteExercise(idx)} />
+                  </div>
+                );
+              })}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-3/5">
                 <div
                   className="flex flex-row items-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
-                  onClick={() => setScreen(screen + 1)}
+                  onClick={() => {
+                    pushExerciseTemplate();
+                    setCurrentExerciseIdx(workout.length);
+                    setScreen(screen + 1);
+                  }}
                 >
                   <GrAddCircle />
                   <span>Add exercise</span>

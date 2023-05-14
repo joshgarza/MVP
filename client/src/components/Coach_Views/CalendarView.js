@@ -5,11 +5,7 @@ import dayOfYear from "dayjs/plugin/dayOfYear";
 import { useState, useEffect } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FcPlus } from "react-icons/fc";
-import { createPortal } from "react-dom";
-import WorkoutBuilder from "./WorkoutBuilder.js";
-import DateScreen from "./Workout_Builder/DateScreen";
-// import axios from "axios";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // TODO: what format is selectedDate compared to displayDate? choose one and convert dependencies to use that format
 const CalendarView = ({ clientLookupTable }) => {

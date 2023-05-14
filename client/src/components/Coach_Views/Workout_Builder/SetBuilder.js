@@ -2,22 +2,66 @@ import React, { useState } from "react";
 import { AiOutlineLeft, AiOutlineEdit } from "react-icons/ai";
 import { GrAddCircle, GrFormSubtract } from "react-icons/gr";
 
-const SetBuilder = ({ screen, setScreen, exercise = "Squat", fields }) => {
+const SetBuilder = ({
+  screen,
+  setScreen,
+  exercise = "Squat",
+  fields,
+  setFields,
+  resetFieldValues,
+  currentExerciseIdx,
+  workout,
+  setWorkout,
+}) => {
   const [setsToAdd, setSetsToAdd] = useState(1);
-  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  const handleChange = (e, idx) => {
+    const { name, value } = e.target;
+    const copyFields = [...fields];
+
+    if (value === "") {
+      copyFields[idx].value = null;
+    } else if ((name === "reps") & (value === "AMRAP")) {
+      copyFields[idx].value = value;
+    } else if (name === "rpe") {
+      copyFields[idx].value = parseFloat(value);
+    } else {
+      copyFields[idx].value = parseInt(value);
+    }
+
+    setFields(copyFields);
+  };
+
+  const submitSets = () => {
+    const fieldsToPush = fields
+      .filter((field, idx) => {
+        return field.toggled && field.value !== null;
+      })
+      .map((field) => {
+        return { name: field.name, value: field.value };
+      });
+
+    const copyWorkout = [...workout];
+    const sets = copyWorkout[currentExerciseIdx].sets;
+
+    for (let i = 0; i < setsToAdd; i++) {
+      copyWorkout[currentExerciseIdx].sets.push({
+        set: sets.length,
+        fields: fieldsToPush,
+      });
+    }
+    setWorkout(copyWorkout);
+  };
 
   return (
-    <div
-      className="flex flex-col space-y-8 w-screen"
-      style={{ position: isInputFocused ? "fixed" : "relative" }}
-    >
+    <div className="flex flex-col space-y-8 w-screen">
       <div className="">
         <div
           className="flex flex-row items-center space-x-2 px-2 py-4 text-teal-600 font-semibold text-xl"
           onClick={() => setScreen(screen - 1)}
         >
           <AiOutlineLeft />
-          <span>Back to {exercise}</span>
+          <span>Back to {workout[currentExerciseIdx].name}</span>
         </div>
       </div>
       <div className="m-4">
@@ -35,7 +79,12 @@ const SetBuilder = ({ screen, setScreen, exercise = "Squat", fields }) => {
                   >
                     <div>{field.name}</div>
                     {field.options ? (
-                      <select className="border w-1/2">
+                      <select
+                        className="border w-1/2"
+                        name={field.name}
+                        defaultValue={field.name === "reps" ? "AMRAP" : 8}
+                        onChange={(e) => handleChange(e, idx)}
+                      >
                         {field.options.map((option, j) => {
                           return (
                             <option key={j} value={option}>
@@ -49,8 +98,9 @@ const SetBuilder = ({ screen, setScreen, exercise = "Squat", fields }) => {
                         className="border w-1/2"
                         type="number"
                         pattern="[0-9]*"
-                        onFocus={() => setIsInputFocused(true)}
-                        onBlur={() => setIsInputFocused(false)}
+                        name={field.name}
+                        value={field.value === null ? "" : field.value}
+                        onChange={(e) => handleChange(e, idx)}
                       ></input>
                     )}
                   </div>
@@ -78,7 +128,14 @@ const SetBuilder = ({ screen, setScreen, exercise = "Squat", fields }) => {
           <span>{setsToAdd}</span>
           <GrAddCircle onClick={() => setSetsToAdd(setsToAdd + 1)} size={30} />
         </div>
-        <div className="flex flex-row items-center justify-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold">
+        <div
+          className="flex flex-row items-center justify-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
+          onClick={() => {
+            submitSets();
+            resetFieldValues();
+            setScreen(screen - 1);
+          }}
+        >
           Add set
         </div>
       </div>
