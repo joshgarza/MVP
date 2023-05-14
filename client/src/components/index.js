@@ -9,9 +9,7 @@ import ClientWorkouts from "./Client_Views/Workout_Views/ClientWorkouts";
 import ClientWorkoutsDateView from "./Client_Views/Workout_Views/ClientWorkoutsDateView";
 import ClientWorkoutView from "./Client_Views/Workout_Views/ClientWorkoutView";
 import CoachDashboard from "./Coach_Views/CoachDashboard";
-import CoachNavBar from "./Coach_Views/CoachNavBar";
 import CoachView from "./Coach_Views/CoachView";
-import DateScreen from "./Coach_Views/Workout_Builder/DateScreen";
 import ForgotPassword from "./Landing_Page/ForgotPassword";
 import GoogleSignInButton from "./Landing_Page/GoogleSignInButton";
 import LandingPage from "./Landing_Page/LandingPage";
@@ -20,7 +18,6 @@ import NavigationHandler from "./NavigationHandler";
 import PrivateRoute from "./PrivateRoute";
 import Signup from "./Landing_Page/Signup";
 import UpdateProfile from "./UpdateProfile";
-import WorkoutBuilder from "./Coach_Views/Workout_Builder/WorkoutBuilder";
 
 export {
   CalendarView,
@@ -34,9 +31,7 @@ export {
   ClientWorkoutsDateView,
   ClientWorkoutView,
   CoachDashboard,
-  CoachNavBar,
   CoachView,
-  DateScreen,
   ForgotPassword,
   GoogleSignInButton,
   LandingPage,
@@ -45,5 +40,4 @@ export {
   PrivateRoute,
   Signup,
   UpdateProfile,
-  WorkoutBuilder,
 };

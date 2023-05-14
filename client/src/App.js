@@ -13,9 +13,7 @@ import {
   ClientWorkoutsDateView,
   ClientWorkoutView,
   CoachDashboard,
-  CoachNavBar,
   CoachView,
-  DateScreen,
   ForgotPassword,
   LandingPage,
   Login,
@@ -23,7 +21,6 @@ import {
   PrivateRoute,
   Signup,
   UpdateProfile,
-  WorkoutBuilder,
 } from "./components";
 
 const App = () => {
@@ -45,7 +42,7 @@ const App = () => {
                   !!userObject.isLoggedIn && userObject.user_type === "Coach"
                 }
               >
-                <CoachNavBar />
+                <CoachView />
               </PrivateRoute>
             }
           >
@@ -69,13 +66,8 @@ const App = () => {
             />
             <Route path="profile" element={<UpdateProfile />} />
             <Route
-              path="calendar"
+              path="program"
               element={<CalendarView clientLookupTable={clientLookupTable} />}
-            />
-            <Route path="workouts/:userId/:date" element={<DateScreen />} />
-            <Route
-              path="workoutbuilder/:userId/:date"
-              element={<WorkoutBuilder />}
             />
           </Route>
           <Route
@@ -138,7 +130,7 @@ const App = () => {
             <Route path="profile" element={<ClientProfile />} />
           </Route>
           <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           {/* TODO: replace element with NoMatch element that renders a workable page with a Go Home button */}
