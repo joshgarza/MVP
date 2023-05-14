@@ -20,6 +20,7 @@ const workoutTemplate = [
     sets: [
       {
         set: 0,
+        amsap: false,
         fields: [
           { name: "reps", value: 10 },
           { name: "rpe", value: 8 },

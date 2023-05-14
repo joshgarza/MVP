@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { AiOutlineLeft, AiOutlineEdit } from "react-icons/ai";
 import { GrAddCircle, GrFormSubtract } from "react-icons/gr";
+import { BsToggleOff, BsToggleOn } from "react-icons/bs";
 
 const SetBuilder = ({
   screen,
   setScreen,
-  exercise = "Squat",
   fields,
   setFields,
   resetFieldValues,
@@ -14,6 +14,7 @@ const SetBuilder = ({
   setWorkout,
 }) => {
   const [setsToAdd, setSetsToAdd] = useState(1);
+  const [amsap, setAmsap] = useState(false);
 
   const handleChange = (e, idx) => {
     const { name, value } = e.target;
@@ -44,17 +45,27 @@ const SetBuilder = ({
     const copyWorkout = [...workout];
     const sets = copyWorkout[currentExerciseIdx].sets;
 
-    for (let i = 0; i < setsToAdd; i++) {
+    if (amsap) {
       copyWorkout[currentExerciseIdx].sets.push({
         set: sets.length,
+        amsap: true,
         fields: fieldsToPush,
       });
+    } else {
+      for (let i = 0; i < setsToAdd; i++) {
+        copyWorkout[currentExerciseIdx].sets.push({
+          set: sets.length,
+          amsap: false,
+          fields: fieldsToPush,
+        });
+      }
     }
+
     setWorkout(copyWorkout);
   };
 
   return (
-    <div className="flex flex-col space-y-8 w-screen">
+    <div className="flex flex-col space-y-4 w-screen">
       <div className="">
         <div
           className="flex flex-row items-center space-x-2 px-2 py-4 text-teal-600 font-semibold text-xl"
@@ -64,7 +75,7 @@ const SetBuilder = ({
           <span>Back to {workout[currentExerciseIdx].name}</span>
         </div>
       </div>
-      <div className="m-4">
+      <div className="mx-4">
         <h1 className="flex flex-row items-center justify-center space-x-4 mx-5 py-2 bg-slate-600  rounded-t-xl text-3xl w-3/5 text-neutral-200 font-semibold">
           Set Builder
         </h1>
@@ -119,24 +130,39 @@ const SetBuilder = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-row items-center justify-between space-x-4 text-2xl px-6">
-        <div className="flex flex-row items-center justify-between space-x-8 border bg-slate-300 rounded-xl px-4 py-2 font-semibold w-52">
-          <GrFormSubtract
-            onClick={() => setSetsToAdd(Math.max(0, setsToAdd - 1))}
-            size={30}
-          />
-          <span>{setsToAdd}</span>
-          <GrAddCircle onClick={() => setSetsToAdd(setsToAdd + 1)} size={30} />
+      <div className="flex flex-col items-center">
+        <div className="flex flex-row items-center justify-center space-x-4 py-2">
+          <p>AMSAP</p>
+          <span onClick={() => setAmsap(!amsap)}>
+            {amsap ? <BsToggleOn size={40} /> : <BsToggleOff size={40} />}
+          </span>
         </div>
-        <div
-          className="flex flex-row items-center justify-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
-          onClick={() => {
-            submitSets();
-            resetFieldValues();
-            setScreen(screen - 1);
-          }}
-        >
-          Add set
+        <div className="flex flex-row items-center justify-between space-x-4 text-2xl px-6 w-full">
+          {amsap ? (
+            <span className="text-lg underline">As many sets as possible</span>
+          ) : (
+            <div className="flex flex-row items-center justify-between space-x-8 border bg-slate-300 rounded-xl px-4 py-2 font-semibold w-52">
+              <GrFormSubtract
+                onClick={() => setSetsToAdd(Math.max(0, setsToAdd - 1))}
+                size={30}
+              />
+              <span>{setsToAdd}</span>
+              <GrAddCircle
+                onClick={() => setSetsToAdd(setsToAdd + 1)}
+                size={30}
+              />
+            </div>
+          )}
+          <div
+            className="flex flex-row items-center justify-center space-x-4 border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
+            onClick={() => {
+              submitSets();
+              resetFieldValues();
+              setScreen(screen - 1);
+            }}
+          >
+            Add set
+          </div>
         </div>
       </div>
     </div>
