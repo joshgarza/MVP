@@ -5,42 +5,25 @@ import dayOfYear from "dayjs/plugin/dayOfYear";
 import { useState, useEffect } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FcPlus } from "react-icons/fc";
-import { createPortal } from "react-dom";
-import WorkoutBuilder from "./WorkoutBuilder.js";
-import axios from "axios";
+import { Link } from "react-router-dom";
 
 // TODO: what format is selectedDate compared to displayDate? choose one and convert dependencies to use that format
 const CalendarView = ({ clientLookupTable }) => {
   dayjs.extend(weekOfYear);
   dayjs.extend(dayOfYear);
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const currDate = dayjs();
   const [today, setToday] = useState(currDate);
   const initialClient = Object.keys(clientLookupTable)[0];
   const [displayDate, setDisplayDate] = useState(currDate);
   const [selectedClient, setSelectedClient] = useState(initialClient);
   const [selectedDate, setSelectedDate] = useState(currDate);
-  const [showModal, setShowModal] = useState(false);
-
-  const addWorkoutModal = (date) => {
-    setShowModal(true);
-    setSelectedDate(date);
-  };
 
   const displayWorkoutShorthand = (date) => {
     const workout = clientLookupTable[selectedClient].workouts[date];
     return (
       <div
         onClick={() => {
-          setShowModal(true);
           setSelectedDate(date);
         }}
       >
@@ -130,46 +113,22 @@ const CalendarView = ({ clientLookupTable }) => {
               return <h1 key={index}>{day}</h1>;
             })}
           </div>
-          <div className="grid grid-cols-7 h-3/4">
+          <div className="grid grid-cols-7">
             {generateCalendar(today.date(), today.month(), today.year()).map(
               (date, index) => {
+                console.log(selectedClient);
                 return (
-                  <div key={index} className="border grid grid-rows-3">
-                    <h1
-                      onClick={() => {
-                        setDisplayDate(
-                          dayjs()
-                            .set("date", date.day)
-                            .set("month", date.month)
-                            .set("year", date.year)
-                        );
-                      }}
+                  <div
+                    key={index}
+                    className="flex flex-col items-center justify-center p-2"
+                  >
+                    <Link
+                      to={`/coach/workouts/${selectedClient}/${date.date.format(
+                        "MM-DD-YYYY"
+                      )}`}
                     >
                       {date.day}
-                    </h1>
-                    <div
-                      className="flex items-center justify-center gap-2 cursor-pointer"
-                      onClick={() => {
-                        if (
-                          !clientLookupTable[selectedClient].workouts[
-                            date.dateString
-                          ]
-                        ) {
-                          addWorkoutModal(date.dateString);
-                        }
-                      }}
-                    >
-                      {clientLookupTable[selectedClient].workouts[
-                        date.dateString
-                      ] ? (
-                        displayWorkoutShorthand(date.dateString)
-                      ) : (
-                        <div className="flex items-center justify-center gap-2">
-                          <FcPlus className="" />
-                          Add Workout
-                        </div>
-                      )}
-                    </div>
+                    </Link>
                   </div>
                 );
               }
@@ -177,16 +136,6 @@ const CalendarView = ({ clientLookupTable }) => {
           </div>
         </div>
       )}
-      {showModal &&
-        createPortal(
-          <WorkoutBuilder
-            onClose={() => setShowModal(false)}
-            date={selectedDate}
-            clientLookupTable={clientLookupTable}
-            clientId={selectedClient}
-          />,
-          document.getElementById("modal")
-        )}
     </>
   );
 };

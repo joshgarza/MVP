@@ -20,7 +20,7 @@ const CoachView = () => {
   };
 
   return (
-    <>
+    <div>
       <header className="bg-gray-900 h-18">
         <div className="flex items-center justify-between px-4 py-3">
           <div>
@@ -68,7 +68,7 @@ const CoachView = () => {
           </Link>
           <Link
             className="mt-1 block px-2 py-1 text-white text-3xl font-semibold rounded hover:bg-gray-800"
-            to="program"
+            to="calendar"
             onClick={() => setIsOpen(!isOpen)}
           >
             Add Workouts
@@ -89,7 +89,7 @@ const CoachView = () => {
         </div>
       </header>
       <Outlet />
-    </>
+    </div>
   );
 };
 
