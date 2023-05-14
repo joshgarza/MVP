@@ -8,6 +8,7 @@ import { formatDate } from "../../../util/formatDate";
 const DateScreen = () => {
   const { userId, date } = useParams();
   const [workoutList, setWorkoutList] = useState([]);
+
   useEffect(() => {
     apiRequests.getWorkoutByDate(userId, date).then((res) => {
       console.log(res);

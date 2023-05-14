@@ -15,8 +15,8 @@ const WorkoutAssignment = ({ screen, setScreen, category, workout }) => {
         </div>
       </div>
       <div className="m-4">
-        <h1 className="flex flex-row items-center justify-center space-x-4 mx-5 py-2 bg-slate-600  rounded-t-xl text-3xl w-1/2 text-neutral-200 font-semibold">
-          {category}
+        <h1 className="flex flex-row items-center justify-center space-x-4 mx-5 py-2 bg-slate-600  rounded-t-xl text-3xl text-neutral-200 font-semibold">
+          {category} Workout
         </h1>
         <div className="flex flex-row items-center justify-center h-96 shadow px-4 border rounded-xl relative">
           {workout.length === 0 ? (

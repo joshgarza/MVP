@@ -13,6 +13,7 @@ import {
   ClientWorkoutsDateView,
   ClientWorkoutView,
   CoachDashboard,
+  CoachNavBar,
   CoachView,
   DateScreen,
   ForgotPassword,
@@ -44,7 +45,7 @@ const App = () => {
                   !!userObject.isLoggedIn && userObject.user_type === "Coach"
                 }
               >
-                <CoachView />
+                <CoachNavBar />
               </PrivateRoute>
             }
           >

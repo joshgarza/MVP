@@ -27,6 +27,7 @@ const WorkoutCategories = ({ screen, setScreen, setCategory }) => {
             {categoryList.map((category, idx) => {
               return (
                 <div
+                  key={idx}
                   className="bg-slate-400 rounded-xl px-8 py-2 flex items-center justify-center"
                   onClick={() => {
                     setCategory(category);
