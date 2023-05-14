@@ -53,9 +53,9 @@ const WorkoutBuilder = () => {
       ],
     },
     { name: "backoff %", value: null, toggled: true },
-    { name: "e1rm%", value: null, toggled: false },
-    { name: "% of max", value: null, toggled: false },
-    { name: "weight", value: null, toggled: false },
+    { name: "e1rm%", value: null, toggled: true },
+    { name: "% of max", value: null, toggled: true },
+    { name: "weight", value: null, toggled: true },
   ]);
 
   const updateFields = (idx) => {

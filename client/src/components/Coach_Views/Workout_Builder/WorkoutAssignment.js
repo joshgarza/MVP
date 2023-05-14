@@ -1,6 +1,8 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { AiOutlineLeft } from "react-icons/ai";
 import { GrSubtractCircle, GrAddCircle } from "react-icons/gr";
+import { apiRequests } from "../../../util/apiRequests";
 
 const WorkoutAssignment = ({
   screen,
@@ -11,6 +13,7 @@ const WorkoutAssignment = ({
   deleteExercise,
   pushExerciseTemplate,
 }) => {
+  const { userId, date } = useParams();
   return (
     <div className="flex flex-col space-y-8">
       <div className="">
@@ -79,10 +82,10 @@ const WorkoutAssignment = ({
           <div
             className="border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
             onClick={() => {
-              console.log(
-                "send api request here and route back to calendar on success",
-                workout
-              );
+              apiRequests
+                .postWorkout(userId, date, workout)
+                .then((res) => console.log(res))
+                .catch((err) => console.error(err));
             }}
           >
             Submit Workout

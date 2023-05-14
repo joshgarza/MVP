@@ -61,6 +61,15 @@ export const apiRequests = {
     };
     return axios.get(`${apiBaseURL}/api/workoutByDate`, { params: data });
   },
+  postWorkout: (clientId, date, workout) => {
+    const data = {
+      clientId,
+      date,
+      workout,
+    };
+
+    return axios.post(`${apiBaseURL}/api/workout`, data);
+  },
   updateWorkoutResult: (set) => {
     return axios.put(`${apiBaseURL}/api/updateWorkoutResult`, set);
   },
