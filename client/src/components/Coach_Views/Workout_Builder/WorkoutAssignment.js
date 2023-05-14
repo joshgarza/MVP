@@ -75,6 +75,19 @@ const WorkoutAssignment = ({
             </div>
           )}
         </div>
+        <div className="flex flex-row justify-center p-8">
+          <div
+            className="border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
+            onClick={() => {
+              console.log(
+                "send api request here and route back to calendar on success",
+                workout
+              );
+            }}
+          >
+            Submit Workout
+          </div>
+        </div>
       </div>
     </div>
   );

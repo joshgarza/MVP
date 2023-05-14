@@ -30,22 +30,24 @@ const ExerciseAssignment = ({
   const deleteSet = (idx) => {
     const copyWorkout = [...workout];
 
-    console.log(idx, "checking idx in delete set");
     copyWorkout[currentExerciseIdx].sets.splice(idx, 1);
     setWorkout(copyWorkout);
   };
 
   const renderSetShorthand = (exerciseSet) => {
-    const { set, fields } = exerciseSet;
+    const { set, fields, amsap } = exerciseSet;
+    console.log(amsap);
     let setStr = `Set ${set + 1}: `;
+    let amsapStr = "";
+    if (amsap === true) amsapStr = "for AMSAP";
 
     const fieldFormatMap = {
-      weight: (value) => `${value}lbs x`,
-      reps: (value) => (value === "AMRAP" ? `${value}` : `${value} reps`),
-      rpe: (value) => `@ RPE ${value}`,
-      "backoff %": (value) => `@ -${value}%`,
-      "e1rm%": (value) => `@ ${value}% e1RM`,
-      "% of max": (value) => `@ ${value}% max`,
+      weight: (value) => `${value}lbs x `,
+      reps: (value) => (value === "AMRAP" ? `${value} ` : `${value} reps `),
+      rpe: (value) => `@ RPE ${value} `,
+      "backoff %": (value) => `@ -${value}% `,
+      "e1rm%": (value) => `@ ${value}% e1RM `,
+      "% of max": (value) => `@ ${value}% max `,
     };
 
     const priority = [
@@ -60,11 +62,11 @@ const ExerciseAssignment = ({
 
     for (const field of fields) {
       if (fieldFormatMap[field.name] && field.value !== null) {
-        setStr += `${fieldFormatMap[field.name](field.value)} `;
+        setStr += `${fieldFormatMap[field.name](field.value)}`;
       }
     }
 
-    return setStr.trim();
+    return setStr.trim() + " " + amsapStr;
   };
 
   return (
