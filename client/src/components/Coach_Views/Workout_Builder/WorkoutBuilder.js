@@ -52,9 +52,9 @@ const WorkoutBuilder = () => {
         1,
       ],
     },
-    { name: "backoff %", value: null, toggled: true },
-    { name: "e1rm%", value: null, toggled: true },
-    { name: "% of max", value: null, toggled: true },
+    { name: "backoff_percent", value: null, toggled: true },
+    { name: "e1rm_percent", value: null, toggled: true },
+    { name: "max_percent", value: null, toggled: true },
     { name: "weight", value: null, toggled: true },
   ]);
 

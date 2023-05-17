@@ -82,6 +82,7 @@ const WorkoutAssignment = ({
           <div
             className="border bg-slate-300 rounded-xl px-4 py-2 font-semibold"
             onClick={() => {
+              console.log(workout, "checking workout structure");
               apiRequests
                 .postWorkout(userId, date, workout)
                 .then((res) => console.log(res))

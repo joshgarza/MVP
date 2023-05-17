@@ -45,18 +45,18 @@ const ExerciseAssignment = ({
       weight: (value) => `${value}lbs x `,
       reps: (value) => (value === "AMRAP" ? `${value} ` : `${value} reps `),
       rpe: (value) => `@ RPE ${value} `,
-      "backoff %": (value) => `@ -${value}% `,
-      "e1rm%": (value) => `@ ${value}% e1RM `,
-      "% of max": (value) => `@ ${value}% max `,
+      backoff_percent: (value) => `@ -${value}% `,
+      e1rm_percent: (value) => `@ ${value}% e1RM `,
+      max_percent: (value) => `@ ${value}% max `,
     };
 
     const priority = [
       "weight",
       "reps",
       "rpe",
-      "backoff %",
-      "e1rm%",
-      "% of max",
+      "backoff_percent",
+      "e1rm_percent",
+      "max_percent",
     ];
     fields.sort((a, b) => priority.indexOf(a.name) - priority.indexOf(b.name));
 
