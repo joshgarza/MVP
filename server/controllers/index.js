@@ -14,64 +14,82 @@ module.exports = {
     });
   },
   addWorkout: (req, res) => {
-    const { clientId, date, workout } = req.body;
-
-    const query = {
-      clientId: clientId,
-      date: date,
-    };
-
-    let workout_order = 0;
-
-    models.getWorkoutOrder(query).then((result) => {
-      // Increment workout order on multiple workouts for a given date
-      result.rows?.forEach((row, i) => {
-        workout_order = Math.max(workout_order, row.workout_order + 1);
+    // console.log(req.body);
+    // res.status(200).end();
+    models
+      .addWorkout(req.body)
+      .then(() => {
+        res.status(200).send("Workout added successfully");
+      })
+      .catch((error) => {
+        console.log("eror adding workout", error);
+        res.status(500).send("Error adding workout");
       });
-
-      workout.forEach((slot, i) => {
-        const exercise = slot.exercise;
-
-        slot.sets.forEach((set, j) => {
-          const { reps, rir, backoffPercent, weight, rpe } = set;
-
-          const setData = {
-            clientId: clientId,
-            date: date,
-            workout_order: workout_order,
-            exercise: exercise,
-            exerciseOrder: i,
-            set: j,
-            reps: reps === "" ? null : reps,
-            rir: rir === "" ? null : rir,
-            rpe: rpe === "" ? null : rpe,
-            backoffPercent: backoffPercent === "" ? null : backoffPercent,
-            weight: weight === "" ? null : weight,
-          };
-
-          models
-            .addWorkout(setData)
-            .then((result) => {
-              console.log("successful addition workout assignment");
-              models
-                .postWorkoutResult(setData)
-                .then((result) => {
-                  console.log("successful addition workout result");
-                  res.status(201).end();
-                })
-                .catch((error) => {
-                  console.log("error adding workout", error);
-                  res.status(404).end();
-                });
-            })
-            .catch((error) => {
-              console.log("error adding workout", error);
-              res.status(404).end();
-            });
-        });
-      });
-    });
   },
+  // addWorkout: (req, res) => {
+  //   const { clientId, date, workout } = req.body;
+
+  //   console.log(workout, "checking workout");
+  //   console.log(date, "checking workout date");
+  //   console.log(clientId, "checking client id");
+
+  //   res.status(200).end();
+  //   // const query = {
+  //   //   clientId: clientId,
+  //   //   date: date,
+  //   // };
+
+  //   // let workout_order = 0;
+
+  //   // models.getWorkoutOrder(query).then((result) => {
+  //   //   // Increment workout order on multiple workouts for a given date
+  //   //   result.rows?.forEach((row, i) => {
+  //   //     workout_order = Math.max(workout_order, row.workout_order + 1);
+  //   //   });
+
+  //   //   workout.forEach((slot, i) => {
+  //   //     const exercise = slot.exercise;
+
+  //   //     slot.sets.forEach((set, j) => {
+  //   //       const { reps, rir, backoffPercent, weight, rpe } = set;
+
+  //   //       const setData = {
+  //   //         clientId: clientId,
+  //   //         date: date,
+  //   //         workout_order: workout_order,
+  //   //         exercise: exercise,
+  //   //         exerciseOrder: i,
+  //   //         set: j,
+  //   //         reps: reps === "" ? null : reps,
+  //   //         rir: rir === "" ? null : rir,
+  //   //         rpe: rpe === "" ? null : rpe,
+  //   //         backoffPercent: backoffPercent === "" ? null : backoffPercent,
+  //   //         weight: weight === "" ? null : weight,
+  //   //       };
+
+  //   //       models
+  //   //         .addWorkout(setData)
+  //   //         .then((result) => {
+  //   //           console.log("successful addition workout assignment");
+  //   //           models
+  //   //             .postWorkoutResult(setData)
+  //   //             .then((result) => {
+  //   //               console.log("successful addition workout result");
+  //   //               res.status(201).end();
+  //   //             })
+  //   //             .catch((error) => {
+  //   //               console.log("error adding workout", error);
+  //   //               res.status(404).end();
+  //   //             });
+  //   //         })
+  //   //         .catch((error) => {
+  //   //           console.log("error adding workout", error);
+  //   //           res.status(404).end();
+  //   //         });
+  //   //     });
+  //   //   });
+  //   // });
+  // },
   checkGoogleUser: (req, res) => {
     console.log("receiving request", req.query);
     let query = {

@@ -39,50 +39,128 @@ const models = {
       callback(error, null);
     }
   },
-  addWorkout: async (query, callback) => {
-    const {
-      clientId,
-      date,
-      workout_order,
-      exercise,
-      exerciseOrder,
-      set,
-      reps,
-      rir,
-      rpe,
-      backoffPercent,
-      weight,
-    } = query;
+  addWorkout: async (workoutData) => {
+    const { clientId, date, workout } = workoutData;
 
-    return pool.query(
-      `INSERT INTO workouts(
-        client_id,
-        date,
-        workout_order,
-        exercise,
-        exercise_order,
-        set,
-        reps,
-        rir,
-        rpe,
-        backoff_percent,
-        weight
-      )
-      VALUES (
-        ${clientId},
-        '${date}',
-        ${workout_order},
-        '${exercise}',
-        ${exerciseOrder},
-        ${set},
-        ${reps},
-        ${rir},
-        ${rpe},
-        ${backoffPercent},
-        ${weight}
-      )`
-    );
+    // Format the date
+    const formattedDate = new Date(date).toDateString();
+
+    try {
+      // Start transaction
+      await pool.query("BEGIN");
+
+      // Get the current maximum workout_order for this date
+      const res = await pool.query(
+        `
+        SELECT MAX(workout_order) AS max_order
+        FROM workouts
+        WHERE date=$1 AND client_id=$2`,
+        [formattedDate, clientId]
+      );
+
+      const workoutOrder =
+        res.rows[0].max_order !== null ? res.rows[0].max_order + 1 : 0;
+
+      for (let i = 0; i < workout.length; i++) {
+        const exercise = workout[i];
+        for (let j = 0; j < exercise.sets.length; j++) {
+          const set = exercise.sets[j];
+
+          const workout = {
+            client_id: clientId,
+            coach_id: null, // TODO: Replace with actual coach_id
+            date: formattedDate,
+            workout_order: workoutOrder,
+            exercise: exercise.name,
+            exercise_order: i,
+            set: set.set,
+            amsap: set.amsap,
+            reps: null,
+            rir: null,
+            rpe: null,
+            backoff_percent: null,
+            weight: null,
+            e1rm_percent: null,
+            max_percent: null,
+          };
+
+          for (let k = 0; k < set.fields.length; k++) {
+            const field = set.fields[k];
+            if (field.name in workout) {
+              workout[field.name] = field.value;
+            }
+          }
+
+          // Insert into workouts table
+          await pool.query(
+            `
+            INSERT INTO workouts (client_id, coach_id, date, workout_order, exercise, exercise_order, set, amsap, reps, rir, rpe, backoff_percent, weight, e1rm_percent, max_percent)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+            Object.values(workout)
+          );
+
+          // Insert into workoutresults table
+          await pool.query(
+            `
+            INSERT INTO workoutresults (client_id, coach_id, date, workout_order, exercise, exercise_order, set, amsap, reps, rir, rpe, backoff_percent, weight, e1rm_percent, max_percent)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+            Object.values(workout)
+          );
+        }
+      }
+
+      // End transaction
+      await pool.query("COMMIT");
+    } catch (error) {
+      // If an error occurred, rollback changes
+      await pool.query("ROLLBACK");
+      throw error;
+    }
   },
+  // addWorkout: async (query, callback) => {
+  //   const {
+  //     clientId,
+  //     date,
+  //     workout_order,
+  //     exercise,
+  //     exerciseOrder,
+  //     set,
+  //     reps,
+  //     rir,
+  //     rpe,
+  //     backoffPercent,
+  //     weight,
+  //   } = query;
+
+  //   return pool.query(
+  //     `INSERT INTO workouts(
+  //       client_id,
+  //       date,
+  //       workout_order,
+  //       exercise,
+  //       exercise_order,
+  //       set,
+  //       reps,
+  //       rir,
+  //       rpe,
+  //       backoff_percent,
+  //       weight
+  //     )
+  //     VALUES (
+  //       ${clientId},
+  //       '${date}',
+  //       ${workout_order},
+  //       '${exercise}',
+  //       ${exerciseOrder},
+  //       ${set},
+  //       ${reps},
+  //       ${rir},
+  //       ${rpe},
+  //       ${backoffPercent},
+  //       ${weight}
+  //     )`
+  //   );
+  // },
   createUser: async (query, callback) => {
     try {
       pool

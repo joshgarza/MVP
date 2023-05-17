@@ -32,10 +32,13 @@ CREATE TABLE IF NOT EXISTS workouts(
   exercise VARCHAR(100) NOT NULL,
   exercise_order INT NOT NULL,
   set INT NOT NULL,
+  amsap BOOLEAN NOT NULL,
   reps INT NOT NULL,
   rir INT,
   rpe INT,
   backoff_percent INT,
+  max_percent INT,
+  e1rm_percent INT,
   weight INT
 );
 CREATE TABLE IF NOT EXISTS workoutResults(
@@ -47,9 +50,12 @@ CREATE TABLE IF NOT EXISTS workoutResults(
   exercise VARCHAR(100) NOT NULL,
   exercise_order INT NOT NULL,
   set INT NOT NULL,
-  reps INT,
+  amsap BOOLEAN NOT NULL,
+  reps INT NOT NULL,
   rir INT,
   rpe INT,
   backoff_percent INT,
+  max_percent INT,
+  e1rm_percent INT,
   weight INT
 );
